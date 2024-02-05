@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registration{% endblock %}
+
+{% block body %}
+  <div class="container">
+
+    <div>
+
+      {% if notification is defined %}
+        <div class="alert alert-info">{{ notification }}</div>
+        <hr>
+      {% endif %}
+
+      {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.userName) }}
+        {{ form_row(form.lastFmApiKey) }}
+        {{ form_row(form.lastFmApiSessionKey) }}
+        {{ form_row(form.lasFmApiSecret) }}
+        {{ form_row(form.lastFmUserName) }}
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      {{ form_end(form) }}
+
+
+    </div>
+  </div>
+
+{% endblock %}
