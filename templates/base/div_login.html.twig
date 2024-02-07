@@ -1,0 +1,10 @@
+<form class="d-flex">
+  {% if app.user %}
+    <div class="mb-3">
+      You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ path('app_login') }}" class="btn btn-outline-primary me-2">Login</a>
+    <a href="{{ path('app_register') }}" class="btn btn-primary">Register</a>
+  {% endif %}
+</form>
