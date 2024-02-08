@@ -25,6 +25,9 @@ class Import
   #[ORM\JoinColumn(nullable: false)]
   private ?User $user = null;
 
+  #[ORM\Column]
+  private ?bool $successful = null;
+
 
   public function getId(): ?int
   {
@@ -65,5 +68,17 @@ class Import
     $this->lastScrobble = $lastScrobble;
 
     return $this;
+  }
+
+  public function isSuccessful(): ?bool
+  {
+      return $this->successful;
+  }
+
+  public function setSuccessful(bool $successful): static
+  {
+      $this->successful = $successful;
+
+      return $this;
   }
 }

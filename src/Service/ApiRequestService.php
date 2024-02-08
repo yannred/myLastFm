@@ -45,7 +45,7 @@ class ApiRequestService
     return $api_sig;
   }
 
-  public function getLastTracks(User $user): string
+  public function getLastTracks(User $user, int $from = null, int $to = null, int $page = null): string
   {
     $responseContent = null;
 
@@ -56,16 +56,25 @@ class ApiRequestService
     $parameters['sk'] = $user->getLastFmApiSessionKey();
     $parameters['user'] = $user->getLastFmUserName();
     $parameters['format'] = 'json';
+    if ($from) {
+      $parameters['from'] = $from;
+    }
+    if ($to) {
+      $parameters['to'] = $to;
+    }
+    if ($page) {
+      $parameters['page'] = $page;
+    }
     $parameters['method'] = API_METHOD_USER_GET_RECENT_TRACKS;
     $parameters['limit'] = LIMIT_RESPONSE_RECENT_TRACKS;
 
     $parameters['api_sig'] = $this->getSigningCall($parameters, $user->getLasFmApiSecret());
 
-    $reponse = $this->request->request($Methode, $Url, ['query' => $parameters]);
-    $statusCode = $reponse->getStatusCode();
+    $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
+    $statusCode = $response->getStatusCode();
 
     if ($statusCode === 200) {
-      $responseContent = $reponse->getContent();
+      $responseContent = $response->getContent();
     }
 
     return $responseContent;

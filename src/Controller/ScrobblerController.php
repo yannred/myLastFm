@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use AllowDynamicProperties;
+use App\Entity\Import;
 use App\Entity\Scrobble;
 use App\Entity\User;
 use App\Service\ApiRequestService;
@@ -30,65 +31,106 @@ use Symfony\Component\Routing\Annotation\Route;
   #[Route('/myAccount/updateScrobble', name: 'app_update_scrobble')]
   public function updateScrobble(EntityService $entityService, ApiRequestService $apiRequest): Response
   {
+    $i = 0;
+    $import = new Import();
+    $user = null;
+
     try {
 
+      //Get user data
       $currentUser = $this->getUser();
       $userRepository = $this->entityManager->getRepository(User::class);
       $user = $userRepository->findOneBy(['email' => $currentUser->getEmail()]);
+      if ($user === null) {
+        throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't find user");
+      }
 
-      $artists = [];
-      $albums = [];
-      $images = [];
-      $tracks = [];
-      $scrobbles = [];
+      //prepare new import
+      $import->setDate(new \DateTime());
+      $import->setUser($user);
 
-      $i = 0;
+      //Get last import
+      $importRepository = $this->entityManager->getRepository(Import::class);
+      $lastImportCollection = $importRepository->findBy(
+        ['user' => $user, 'successful' => true],
+        ['date' => 'DESC'],
+        1
+      );
+      if (empty($lastImportCollection)) {
+        $lastImportTimestamp = null;
+      } else {
+        $lastImportTimestamp = $lastImportCollection[0]->getDate();
+      }
 
-      $apiResponse = $apiRequest->getLastTracks($user);
-
+      //first API Call for get total pages and total scrobbles
+      $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp);
+      //TODO : handle error response from API
       $jsonResponse = json_decode($apiResponse, true);
-
-
       if ($jsonResponse === false) {
-        throw new \Exception("Error in ApiParsing::getRecentTracks() : Can't decode api response in json");
+        throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't decode api first response in json");
       }
+      $totalPages = $jsonResponse['recenttracks']['@attr']['totalPages'];
+      $totalScrobbles = $jsonResponse['recenttracks']['@attr']['total'];
+      $timestampLimit = $jsonResponse['recenttracks']['track'][0]['date']['uts'];
 
-      $scrobles = $jsonResponse['recenttracks']['track'];
-      if (empty($scrobles)) {
-        throw new \Exception("No data", self::EXCEPTION_NO_DATA);
-      }
+      //next API Calls for get scrobbles
+      for ($page = 1; $page <= 5; $page++) {
 
-      foreach ($scrobles as $arrayScrobble) {
+        $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp->, $timestampLimit, $page);
 
-        $criteriaArtist = ['mbid' => $arrayScrobble['artist']['mbid'], 'name' => $arrayScrobble['artist']['#text']];
-        $artist = $entityService->getExistingArtistOrCreateIt($criteriaArtist);
-
-        $criteriaAlbum = ['mbid' => $arrayScrobble['album']['mbid'], 'name' => $arrayScrobble['album']['#text'], 'artist' => $artist];
-        $album = $entityService->getExistingAlbumOrCreateIt($criteriaAlbum);
-
-        $criteriaTrack = ['mbid' => $arrayScrobble['mbid'], 'name' => $arrayScrobble['name'], 'artist' => $artist, 'album' => $album, 'url' => $arrayScrobble['url']];
-        $track = $entityService->getExistingTrackOrCreateIt($criteriaTrack);
-
-        $criteriaScrobble = ['track' => $track, 'timestamp' => $arrayScrobble['date']['uts']];
-        $scrobble = $this->entityManager->getRepository(Scrobble::class)->findOneBy($criteriaScrobble);
-        if ($scrobble === null) {
-          $scrobble = new Scrobble();
-          $scrobble->setTrack($track);
-          $scrobble->setTimestamp($arrayScrobble['date']['uts']);
-          $scrobble->setUser($user);
-          $this->entityManager->persist($scrobble);
-          $this->entityManager->flush();
+        //Parsing
+        $jsonResponse = json_decode($apiResponse, true);
+        if ($jsonResponse === false) {
+          throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't decode api response in json");
+        }
+        $scrobles = $jsonResponse['recenttracks']['track'];
+        if (empty($scrobles)) {
+          throw new \Exception("No data", self::EXCEPTION_NO_DATA);
         }
 
-        $i++;
+        foreach ($scrobles as $arrayScrobble) {
+
+          $criteriaArtist = ['mbid' => $arrayScrobble['artist']['mbid'], 'name' => $arrayScrobble['artist']['#text']];
+          $artist = $entityService->getExistingArtistOrCreateIt($criteriaArtist);
+
+          $criteriaAlbum = ['mbid' => $arrayScrobble['album']['mbid'], 'name' => $arrayScrobble['album']['#text'], 'artist' => $artist];
+          $album = $entityService->getExistingAlbumOrCreateIt($criteriaAlbum);
+
+          $criteriaTrack = ['mbid' => $arrayScrobble['mbid'], 'name' => $arrayScrobble['name'], 'artist' => $artist, 'album' => $album, 'url' => $arrayScrobble['url']];
+          $track = $entityService->getExistingTrackOrCreateIt($criteriaTrack);
+
+          $criteriaScrobble = ['track' => $track, 'timestamp' => $arrayScrobble['date']['uts']];
+          $scrobble = $this->entityManager->getRepository(Scrobble::class)->findOneBy($criteriaScrobble);
+          if ($scrobble === null) {
+            $scrobble = new Scrobble();
+            $scrobble->setTrack($track);
+            $scrobble->setTimestamp($arrayScrobble['date']['uts']);
+            $scrobble->setUser($user);
+            $this->entityManager->persist($scrobble);
+            $this->entityManager->flush();
+          }
+
+          $i++;
+        }
       }
 
+      $import->setSuccessful(true);
+      $this->entityManager->persist($import);
+      $this->entityManager->flush();
+
       return $this->render('scrobbler/index.html.twig', [
-        'message' => 'nb scrobble integrés : ' . $i,
+        'message' => $i . ' scrobbles added',
       ]);
 
 
     } catch (\Exception $e) {
+
+      if ($user !== null){
+        $import->setSuccessful(false);
+        $import->setLastScrobble(null);
+        $this->entityManager->persist($import);
+        $this->entityManager->flush();
+      }
 
       if ($e->getCode() === self::EXCEPTION_NO_DATA) {
         return $this->render('scrobbler/index.html.twig', [

@@ -21,6 +21,12 @@ class ImportRepository extends ServiceEntityRepository
         parent::__construct($registry, Import::class);
     }
 
+    public function findLastImportByUser($user): ?Import
+    {
+      $query = 'SELECT * FROM import WHERE user_id = :user_id ORDER BY date DESC LIMIT 1';
+      return $this->getEntityManager()->createQuery($query)->getResult();
+    }
+
 //    /**
 //     * @return Import[] Returns an array of Import objects
 //     */
