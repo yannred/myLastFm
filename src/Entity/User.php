@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -46,6 +48,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     //TODO : Convert in base64
     private ?string $lastFmUserName = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Scrobble::class)]
+    private Collection $scrobbles;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Import::class)]
+    private Collection $imports;
+
+    public function __construct()
+    {
+        $this->scrobbles = new ArrayCollection();
+        $this->imports = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -173,6 +187,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastFmUserName(string $lastFmUserName): static
     {
         $this->lastFmUserName = $lastFmUserName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Scrobble>
+     */
+    public function getScrobbles(): Collection
+    {
+        return $this->scrobbles;
+    }
+
+    public function addScrobble(Scrobble $scrobble): static
+    {
+        if (!$this->scrobbles->contains($scrobble)) {
+            $this->scrobbles->add($scrobble);
+            $scrobble->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScrobble(Scrobble $scrobble): static
+    {
+        if ($this->scrobbles->removeElement($scrobble)) {
+            // set the owning side to null (unless already changed)
+            if ($scrobble->getUser() === $this) {
+                $scrobble->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Import>
+     */
+    public function getImports(): Collection
+    {
+        return $this->imports;
+    }
+
+    public function addImport(Import $import): static
+    {
+        if (!$this->imports->contains($import)) {
+            $this->imports->add($import);
+            $import->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImport(Import $import): static
+    {
+        if ($this->imports->removeElement($import)) {
+            // set the owning side to null (unless already changed)
+            if ($import->getUser() === $this) {
+                $import->setUser(null);
+            }
+        }
 
         return $this;
     }
