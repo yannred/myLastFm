@@ -2,39 +2,28 @@
 
 namespace App\Service;
 
-use App\Util\CCurlRequest;
+use App\Entity\User;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 const API_URL = 'http://ws.audioscrobbler.com/2.0/';
 
 const API_METHOD_USER_GET_RECENT_TRACKS = 'user.getrecenttracks';
 
+const LIMIT_RESPONSE_RECENT_TRACKS = 200;
+
 
 class ApiRequestService
 {
 
-  protected $request;
+  protected HttpClientInterface $request;
 
   public function __construct(HttpClientInterface $request)
   {
-    define('API_KEY', $_ENV['LASTFM_API_KEY']);
-    define('API_SESSION_KEY', $_ENV['LASTFM_API_SESSION_KEY']);
-    define('API_SECRET', $_ENV['LASTFM_API_SECRET']);
-    define('API_USER', $_ENV['LASTFM_USERNAME']);
-
     $this->request = $request;
   }
 
 
-
-  public function helloWorld(): string
-  {
-    $curl = new CCurlRequest();
-    $tabReponseHttp = $curl->exec( "http://perdu.com");
-    return $tabReponseHttp['response'];
-  }
-
-  private function getSigningCall(array $p_Parameters) : string
+  private function getSigningCall(array $p_Parameters, string $apiScret) : string
   {
     //Sort the parameters alphabetically
     ksort($p_Parameters);
@@ -48,7 +37,7 @@ class ApiRequestService
     }
 
     //Append the secret to the string
-    $parametersString .= API_SECRET;
+    $parametersString .= $apiScret;
 
     //Create md5 hash
     $api_sig = md5($parametersString);
@@ -56,22 +45,21 @@ class ApiRequestService
     return $api_sig;
   }
 
-  public function getLastTracks(): string
+  public function getLastTracks(User $user): string
   {
     $responseContent = null;
 
     $parameters = array();
-    $Methode = CCurlRequest::METHOD_GET;
+    $Methode = "GET";
     $Url = API_URL;
-    $parameters['api_key'] = API_KEY;
+    $parameters['api_key'] = $user->getLastFmApiKey();
+    $parameters['sk'] = $user->getLastFmApiSessionKey();
+    $parameters['user'] = $user->getLastFmUserName();
     $parameters['format'] = 'json';
     $parameters['method'] = API_METHOD_USER_GET_RECENT_TRACKS;
-    $parameters['sk'] = API_SESSION_KEY;
-    $parameters['user'] = API_USER;
-    $parameters['limit'] = 200;
-//    $parameters['page'] = 1;
+    $parameters['limit'] = LIMIT_RESPONSE_RECENT_TRACKS;
 
-    $parameters['api_sig'] = $this->getSigningCall($parameters);
+    $parameters['api_sig'] = $this->getSigningCall($parameters, $user->getLasFmApiSecret());
 
     $reponse = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $reponse->getStatusCode();

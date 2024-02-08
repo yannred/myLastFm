@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Import from LastFm{% endblock %}
+
+{% block body %}
+  <div>
+    <h1>My Account</h1>
+  </div>
+
+  <div>
+    <h2>Last imports</h2>
+
+    {% if imports is empty %}
+      <p>No imports yet</p>
+    {% else %}
+      <ul>
+        {% for import in lastImports %}
+          <li>{{ import.date|date('Y-m-d H:i:s') }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+  </div>
+
+  <div>
+    <h2>Get last scrobbles from Last Fm</h2>
+    <p><a href="/myAccount/updateScrobble">Start import</a></p>
+  </div>
+
+{% endblock %}

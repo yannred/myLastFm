@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use AllowDynamicProperties;
 use App\Entity\Scrobble;
-use App\Service\ApiRequest;
+use App\Entity\User;
+use App\Service\ApiRequestService;
 use App\Service\EntityService\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[AllowDynamicProperties] class ScrobblerController extends AbstractController
 {
 
-  //TODO move exception constants
+  protected EntityManagerInterface $entityManager;
+
+  //TODO : move exception constants
   const EXCEPTION_ERROR = 0;
   const EXCEPTION_NO_DATA = 1;
 
@@ -23,19 +26,15 @@ use Symfony\Component\Routing\Annotation\Route;
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/scrobbler', name: 'app_scrobbler')]
-  public function index(): Response
-  {
-    return $this->render('scrobbler/index.html.twig', [
-      'controller_name' => 'ScrobblerController',
-    ]);
-  }
 
-
-  #[Route('/updateScrobble', name: 'app_update_scrobble')]
-  public function updateScrobble(EntityService $entityService, ApiRequest $apiRequest): Response
+  #[Route('/myAccount/updateScrobble', name: 'app_update_scrobble')]
+  public function updateScrobble(EntityService $entityService, ApiRequestService $apiRequest): Response
   {
     try {
+
+      $currentUser = $this->getUser();
+      $userRepository = $this->entityManager->getRepository(User::class);
+      $user = $userRepository->findOneBy(['email' => $currentUser->getEmail()]);
 
       $artists = [];
       $albums = [];
@@ -45,7 +44,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
       $i = 0;
 
-      $apiResponse = $apiRequest->getLastTracks();
+      $apiResponse = $apiRequest->getLastTracks($user);
 
       $jsonResponse = json_decode($apiResponse, true);
 
@@ -76,6 +75,7 @@ use Symfony\Component\Routing\Annotation\Route;
           $scrobble = new Scrobble();
           $scrobble->setTrack($track);
           $scrobble->setTimestamp($arrayScrobble['date']['uts']);
+          $scrobble->setUser($user);
           $this->entityManager->persist($scrobble);
           $this->entityManager->flush();
         }
