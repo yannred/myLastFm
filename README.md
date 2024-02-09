@@ -1,4 +1,6 @@
 # My Last Fm
+
+## Description
 MylastFm is a web application using the Last.fm API and allowing to manage your scrobbles and your statistics.
 
 > What is Last.fm ?
