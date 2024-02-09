@@ -21,7 +21,7 @@
           from
           <span class="bold">{{ scrobble.track.artist.name }} </span>
           in
-          <span class="bold">{{ scrobble.track.album.name }} album - </span>
+          <span>"{{ scrobble.track.album.name }}" album - </span>
           {{ scrobble.timestamp|date('m/d/Y H:i:s') }}
 
         </li>
