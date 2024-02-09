@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use AllowDynamicProperties;
+use App\Entity\Image;
 use App\Entity\Import;
 use App\Entity\Scrobble;
 use App\Entity\User;
@@ -82,9 +83,10 @@ use Symfony\Component\Routing\Annotation\Route;
       }
       $timestampLimit = $jsonResponse['recenttracks']['track'][$j]['date']['uts'];
 
-      //next API Calls for get scrobbles
-      for ($page = $totalPages; $page >= 1; $page--) {
-//      for ($page = $totalPages; $page >= $totalPages - 5; $page--) {
+      //API Calls for get scrobbles segmented by pages of API
+      //TODO : uncomment the for loop below
+//      for ($page = $totalPages; $page >= 1; $page--) {
+      for ($page = $totalPages; $page >= $totalPages - 1; $page--) {
 
         $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp, $timestampLimit, $page);
 
@@ -124,9 +126,23 @@ use Symfony\Component\Routing\Annotation\Route;
             $this->entityManager->persist($album);
           }
 
+          //Image
+          $images = array();
+          foreach ($arrayScrobble['image'] as $jsonImage) {
+            $size = Image::SIZE_UNDEFINED;
+            if (array_key_exists($jsonImage['size'], Image::SIZES)){
+              $size = Image::SIZES[$jsonImage['size']];
+            }
+            $image = $entityService->getExistingImageOrCreateIt(['url' => $jsonImage['#text'], 'size' => $size]);
+            if ($image->getId() == 0){
+              $this->entityManager->persist($image);
+            }
+            $images[] = $image;
+          }
+
           //Track
           $criteriaTrack = ['mbid' => $arrayScrobble['mbid'], 'name' => $arrayScrobble['name'], 'artist' => $artist, 'album' => $album, 'url' => $arrayScrobble['url']];
-          $track = $entityService->getExistingTrackOrCreateIt($criteriaTrack);
+          $track = $entityService->getExistingTrackOrCreateIt($criteriaTrack, $images);
           if ($track->getId() == 0){
             $this->entityManager->persist($track);
           }

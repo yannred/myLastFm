@@ -12,6 +12,7 @@ DELETE FROM scrobble WHERE 1;
 DELETE FROM track WHERE 1;
 DELETE FROM album WHERE 1;
 DELETE FROM artist WHERE 1;
+DELETE FROM image WHERE 1;
 
 -- count of scrobbles
 select count(*) from scrobble;

@@ -4,6 +4,7 @@ namespace App\Service\EntityService;
 
 use App\Entity\Album;
 use App\Entity\Artist;
+use App\Entity\Image;
 use App\Entity\Track;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -11,6 +12,8 @@ class EntityService
 {
 
   private EntityManagerInterface $em;
+
+  //TODO : add indexes to the database for the researched fields
 
   public function __construct(EntityManagerInterface $em)
   {
@@ -59,7 +62,7 @@ class EntityService
    * @param array $criteria
    * @return Track
    */
-  public function getExistingTrackOrCreateIt(array $criteria): Track
+  public function getExistingTrackOrCreateIt(array $criteria, array $images): Track
   {
     $repo = $this->em->getRepository(Track::class);
     $track = $repo->findOneBy($criteria);
@@ -70,9 +73,30 @@ class EntityService
       $track->setArtist($criteria['artist']);
       $track->setAlbum($criteria['album']);
       $track->setUrl($criteria['url']);
+      foreach ($images as $image){
+        $track->addImage($image);
+      }
     }
 
     return $track;
+  }
+
+  /**
+   * Get an existing image or create it (without flush it and persist it, it's the caller's responsibility to do it)
+   * @param array $criteria
+   * @return void
+   */
+  public function getExistingImageOrCreateIt(array $criteria)
+  {
+    $repo = $this->em->getRepository(Image::class);
+    $image = $repo->findOneBy($criteria);
+    if (!$image) {
+      $image = new Image();
+      $image->setUrl($criteria['url']);
+      $image->setSize($criteria['size']);
+    }
+
+    return $image;
   }
 
 }
