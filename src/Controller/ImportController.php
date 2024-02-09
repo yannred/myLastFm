@@ -26,8 +26,6 @@ class ImportController extends AbstractController
     $importRepository = $this->entityManager->getRepository(Import::class);
     $imports = $importRepository->findAll();
 
-    dump($imports);
-
     return $this->render('import/index.html.twig', [
       'controller_name' => 'ImportController',
       'imports' => $imports

@@ -58,10 +58,11 @@ use Symfony\Component\Routing\Annotation\Route;
         ['date' => 'DESC'],
         1
       );
+      //TODO : Check if last import contains a scrobble and a datetime
       if (empty($lastImportCollection)) {
         $lastImportTimestamp = null;
       } else {
-        $lastImportTimestamp = $lastImportCollection[0]->getDate();
+        $lastImportTimestamp = $lastImportCollection[0]->getLastScrobble()->getTimestamp();
       }
 
       //first API Call for get total pages and total scrobbles
@@ -82,7 +83,8 @@ use Symfony\Component\Routing\Annotation\Route;
       $timestampLimit = $jsonResponse['recenttracks']['track'][$j]['date']['uts'];
 
       //next API Calls for get scrobbles
-      for ($page = 1; $page <= 6; $page++) {
+      for ($page = $totalPages; $page >= 1; $page--) {
+//      for ($page = $totalPages; $page >= $totalPages - 5; $page--) {
 
         $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp, $timestampLimit, $page);
 
@@ -91,12 +93,17 @@ use Symfony\Component\Routing\Annotation\Route;
         if ($jsonResponse === false) {
           throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't decode api response in json");
         }
-        $scrobles = $jsonResponse['recenttracks']['track'];
-        if (empty($scrobles)) {
+        $scrobbles = $jsonResponse['recenttracks']['track'];
+        if (empty($scrobbles)) {
           throw new \Exception("No data", self::EXCEPTION_NO_DATA);
         }
 
-        foreach ($scrobles as $arrayScrobble) {
+        //inverse array to get the oldest scrobble first
+        $scrobbles = array_reverse($scrobbles);
+
+        foreach ($scrobbles as $arrayScrobble) {
+
+          //TODO : Put the loop statement in a function
 
           //Don't add scrobble if it's in playing state
           if (isset($arrayScrobble['@attr']['nowplaying'])) {
