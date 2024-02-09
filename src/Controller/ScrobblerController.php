@@ -8,6 +8,7 @@ use App\Entity\Scrobble;
 use App\Entity\User;
 use App\Service\ApiRequestService;
 use App\Service\EntityService\EntityService;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,12 +72,18 @@ use Symfony\Component\Routing\Annotation\Route;
       }
       $totalPages = $jsonResponse['recenttracks']['@attr']['totalPages'];
       $totalScrobbles = $jsonResponse['recenttracks']['@attr']['total'];
-      $timestampLimit = $jsonResponse['recenttracks']['track'][0]['date']['uts'];
+
+      //The first scrobble can be in playing state, so we need to get the next scrobble
+      $j = 0;
+      while(!isset($jsonResponse['recenttracks']['track'][$j]['date']['uts'])){
+        $j++;
+      }
+      $timestampLimit = $jsonResponse['recenttracks']['track'][$j]['date']['uts'];
 
       //next API Calls for get scrobbles
-      for ($page = 1; $page <= 5; $page++) {
+      for ($page = 1; $page <= 6; $page++) {
 
-        $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp->, $timestampLimit, $page);
+        $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp, $timestampLimit, $page);
 
         //Parsing
         $jsonResponse = json_decode($apiResponse, true);
@@ -90,14 +97,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
         foreach ($scrobles as $arrayScrobble) {
 
+          //Don't add scrobble if it's in playing state
+          if (isset($arrayScrobble['@attr']['nowplaying'])) {
+            continue;
+          }
+
           $criteriaArtist = ['mbid' => $arrayScrobble['artist']['mbid'], 'name' => $arrayScrobble['artist']['#text']];
           $artist = $entityService->getExistingArtistOrCreateIt($criteriaArtist);
+          if ($artist->getId() == 0){
+            $this->entityManager->persist($artist);
+          }
 
           $criteriaAlbum = ['mbid' => $arrayScrobble['album']['mbid'], 'name' => $arrayScrobble['album']['#text'], 'artist' => $artist];
           $album = $entityService->getExistingAlbumOrCreateIt($criteriaAlbum);
+          if ($album->getId() == 0){
+            $this->entityManager->persist($album);
+          }
 
           $criteriaTrack = ['mbid' => $arrayScrobble['mbid'], 'name' => $arrayScrobble['name'], 'artist' => $artist, 'album' => $album, 'url' => $arrayScrobble['url']];
           $track = $entityService->getExistingTrackOrCreateIt($criteriaTrack);
+          if ($track->getId() == 0){
+            $this->entityManager->persist($track);
+          }
 
           $criteriaScrobble = ['track' => $track, 'timestamp' => $arrayScrobble['date']['uts']];
           $scrobble = $this->entityManager->getRepository(Scrobble::class)->findOneBy($criteriaScrobble);
@@ -107,14 +128,15 @@ use Symfony\Component\Routing\Annotation\Route;
             $scrobble->setTimestamp($arrayScrobble['date']['uts']);
             $scrobble->setUser($user);
             $this->entityManager->persist($scrobble);
-            $this->entityManager->flush();
           }
 
+          $this->entityManager->flush();
           $i++;
         }
       }
 
       $import->setSuccessful(true);
+      $import->setLastScrobble($scrobble);
       $this->entityManager->persist($import);
       $this->entityManager->flush();
 
@@ -125,12 +147,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
     } catch (\Exception $e) {
 
-      if ($user !== null){
-        $import->setSuccessful(false);
-        $import->setLastScrobble(null);
-        $this->entityManager->persist($import);
-        $this->entityManager->flush();
-      }
+//      if ($user !== null){
+//        $import->setSuccessful(false);
+//        $import->setLastScrobble(null);
+//        $this->entityManager->persist($import);
+//        $this->entityManager->flush();
+//      }
 
       if ($e->getCode() === self::EXCEPTION_NO_DATA) {
         return $this->render('scrobbler/index.html.twig', [

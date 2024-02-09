@@ -18,6 +18,7 @@ class EntityService
   }
 
   /**
+   * Get an existing artist or create it (without flush it and persist it, it's the caller's responsibility to do it)
    * @param array $criteria
    * @return Artist
    */
@@ -29,13 +30,16 @@ class EntityService
       $artist = new Artist();
       $artist->setMbid($criteria['mbid']);
       $artist->setName($criteria['name']);
-      $this->em->persist($artist);
-      $this->em->flush();
     }
 
     return $artist;
   }
 
+  /**
+   * Get an existing album or create it (without flush it and persist it, it's the caller's responsibility to do it)
+   * @param array $criteria
+   * @return Album
+   */
   public function getExistingAlbumOrCreateIt(array $criteria): Album
   {
     $repo = $this->em->getRepository(Album::class);
@@ -45,13 +49,16 @@ class EntityService
       $album->setMbid($criteria['mbid']);
       $album->setName($criteria['name']);
       $album->setArtist($criteria['artist']);
-      $this->em->persist($album);
-      $this->em->flush();
     }
 
     return $album;
   }
 
+  /**
+   * Get an existing track or create it (without flush it and persist it, it's the caller's responsibility to do it)
+   * @param array $criteria
+   * @return Track
+   */
   public function getExistingTrackOrCreateIt(array $criteria): Track
   {
     $repo = $this->em->getRepository(Track::class);
@@ -63,8 +70,6 @@ class EntityService
       $track->setArtist($criteria['artist']);
       $track->setAlbum($criteria['album']);
       $track->setUrl($criteria['url']);
-      $this->em->persist($track);
-      $this->em->flush();
     }
 
     return $track;
