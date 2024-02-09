@@ -14,8 +14,8 @@
       <p>No imports yet</p>
     {% else %}
       <ul>
-        {% for import in lastImports %}
-          <li>{{ import.date|date('Y-m-d H:i:s') }}</li>
+        {% for import in imports %}
+          <li>{{ import.date|date('m/d/Y H:i:s') }}</li>
         {% endfor %}
       </ul>
     {% endif %}

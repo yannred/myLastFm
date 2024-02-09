@@ -18,7 +18,6 @@ class Import
   private ?\DateTimeInterface $date = null;
 
   #[ORM\ManyToOne]
-  #[ORM\JoinColumn(nullable: false)]
   private ?Scrobble $lastScrobble = null;
 
   #[ORM\ManyToOne(inversedBy: 'imports')]

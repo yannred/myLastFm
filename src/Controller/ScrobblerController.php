@@ -49,6 +49,7 @@ use Symfony\Component\Routing\Annotation\Route;
       //prepare new import
       $import->setDate(new \DateTime());
       $import->setUser($user);
+      $import->setSuccessful(false);
 
       //Get last import
       $importRepository = $this->entityManager->getRepository(Import::class);
@@ -102,24 +103,28 @@ use Symfony\Component\Routing\Annotation\Route;
             continue;
           }
 
+          //Artist
           $criteriaArtist = ['mbid' => $arrayScrobble['artist']['mbid'], 'name' => $arrayScrobble['artist']['#text']];
           $artist = $entityService->getExistingArtistOrCreateIt($criteriaArtist);
           if ($artist->getId() == 0){
             $this->entityManager->persist($artist);
           }
 
+          //Album
           $criteriaAlbum = ['mbid' => $arrayScrobble['album']['mbid'], 'name' => $arrayScrobble['album']['#text'], 'artist' => $artist];
           $album = $entityService->getExistingAlbumOrCreateIt($criteriaAlbum);
           if ($album->getId() == 0){
             $this->entityManager->persist($album);
           }
 
+          //Track
           $criteriaTrack = ['mbid' => $arrayScrobble['mbid'], 'name' => $arrayScrobble['name'], 'artist' => $artist, 'album' => $album, 'url' => $arrayScrobble['url']];
           $track = $entityService->getExistingTrackOrCreateIt($criteriaTrack);
           if ($track->getId() == 0){
             $this->entityManager->persist($track);
           }
 
+          //Scrobble
           $criteriaScrobble = ['track' => $track, 'timestamp' => $arrayScrobble['date']['uts']];
           $scrobble = $this->entityManager->getRepository(Scrobble::class)->findOneBy($criteriaScrobble);
           if ($scrobble === null) {
@@ -130,13 +135,17 @@ use Symfony\Component\Routing\Annotation\Route;
             $this->entityManager->persist($scrobble);
           }
 
+          //Import
+          $import->setLastScrobble($scrobble);
+          $this->entityManager->persist($import);
+
           $this->entityManager->flush();
           $i++;
         }
       }
 
       $import->setSuccessful(true);
-      $import->setLastScrobble($scrobble);
+      isset($scrobble) ? $import->setLastScrobble($scrobble) : null;
       $this->entityManager->persist($import);
       $this->entityManager->flush();
 
@@ -146,14 +155,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
     } catch (\Exception $e) {
-
-//      if ($user !== null){
-//        $import->setSuccessful(false);
-//        $import->setLastScrobble(null);
-//        $this->entityManager->persist($import);
-//        $this->entityManager->flush();
-//      }
-
       if ($e->getCode() === self::EXCEPTION_NO_DATA) {
         return $this->render('scrobbler/index.html.twig', [
           'message' => 'No data',
