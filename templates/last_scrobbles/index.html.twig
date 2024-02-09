@@ -6,4 +6,20 @@
   <div>
     <h1>Your last Scrobbles</h1>
   </div>
+  <div>
+    <ul>
+      {% for scrobble in scrobbles %}
+        <li>
+          <span class="bold">{{ scrobble.track.name }} </span>
+          from
+          <span class="bold">{{ scrobble.track.artist.name }} </span>
+          in
+          <span class="bold">{{ scrobble.track.album.name }} album - </span>
+          {{ scrobble.timestamp|date('m/d/Y H:i:s') }}
+        </li>
+      {% endfor %}
+    </ul>
+    {{ knp_pagination_render(scrobbles) }}
+
+  </div>
 {% endblock %}
