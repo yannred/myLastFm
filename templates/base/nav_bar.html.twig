@@ -13,6 +13,13 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
 
+        {# ***** My Page ***** #}
+        {% if app.user %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/myPage">My Page</a>
+          </li>
+        {% endif %}
+
         {# ***** Last scrobbles ***** #}
         {% if app.user %}
           <li class="nav-item">

@@ -3,11 +3,13 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 const API_URL = 'http://ws.audioscrobbler.com/2.0/';
 
 const API_METHOD_USER_GET_RECENT_TRACKS = 'user.getrecenttracks';
+const API_METHOD_USER_GET_INFO = 'user.getinfo';
 
 const LIMIT_RESPONSE_RECENT_TRACKS = 200;
 
@@ -69,6 +71,29 @@ class ApiRequestService
     $parameters['limit'] = LIMIT_RESPONSE_RECENT_TRACKS;
 
     $parameters['api_sig'] = $this->getSigningCall($parameters, $user->getLasFmApiSecret());
+
+    $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
+    $statusCode = $response->getStatusCode();
+
+    if ($statusCode === 200) {
+      $responseContent = $response->getContent();
+    }
+
+    return $responseContent;
+  }
+
+
+  public function getUserInfo(User $user): string
+  {
+    $responseContent = null;
+
+    $parameters = array();
+    $Methode = "GET";
+    $Url = API_URL;
+    $parameters['user'] = $user->getLastFmUserName();
+    $parameters['api_key'] = $user->getLastFmApiKey();
+    $parameters['format'] = 'json';
+    $parameters['method'] = API_METHOD_USER_GET_INFO;
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();
