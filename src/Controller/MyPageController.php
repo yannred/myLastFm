@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Artist;
 use App\Entity\Scrobble;
-use App\Entity\User;
 use App\Service\ApiRequestService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -57,10 +57,22 @@ class MyPageController extends AbstractController
       LastScrobblesController::LIMIT_PER_PAGE
     );
 
+    //artists
+    $artistRepository = $this->entityManager->getRepository(Artist::class);
+
+    $query = $artistRepository->createQueryBuilder('a')->orderBy('a.id', 'ASC')->getQuery();
+
+    $artistPagination = $paginator->paginate(
+      $query,
+      $request->query->getInt('page', 1),
+      LastScrobblesController::LIMIT_PER_PAGE
+    );
+
 
     return $this->render('my_page/index.html.twig', [
       'userPageInfo' => $userPageInfo,
       'scrobbles' => $scrobblePagination,
+      'artists' => $artistPagination,
     ]);
   }
 }

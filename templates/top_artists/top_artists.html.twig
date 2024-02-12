@@ -5,31 +5,21 @@
 
 
         <div class="card" style="width: 18rem;">
-          <img src="{{ artist. }}" class="card-img-top" alt="...">
+          {% for image in artist.image %}
+            {% if image.size == 3 %}
+              <img src="{{ image.url }}" class="card-img-top" alt='{{ artist.name }}'>
+            {% endif %}
+          {% endfor %}
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <h5 class="card-title">{{ artist.name }}</h5>
+            <p class="card-text">{{ artist.bioSummary|u truncate(150) }} ...</p>
+            <a href="#" class="btn btn-primary">More ...</a>
           </div>
         </div>
 
-
-{#        {% for image in scrobble.track.image %}#}
-{#          {% if image.size == 1 %}#}
-{#            <img src='{{ image.url }}' alt='{{ scrobble.track.name }}'>#}
-{#          {% endif %}#}
-{#        {% endfor %}#}
-
-{#        <span class="bold">{{ scrobble.track.name }} </span>#}
-{#        from#}
-{#        <span class="bold">{{ scrobble.track.artist.name }} </span>#}
-{#        in#}
-{#        <span>"{{ scrobble.track.album.name }}" album - </span>#}
-{#        {{ scrobble.timestamp|date('m/d/Y H:i:s') }}#}
-
-{#      </li>#}
-{#    {% endfor %}#}
-{#  </ul>#}
-{#  {{ knp_pagination_render(scrobbles) }}#}
+      </li>
+    {% endfor %}
+  </ul>
+  {{ knp_pagination_render(scrobbles) }}
 
 </div>
