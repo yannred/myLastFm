@@ -14,6 +14,12 @@ DELETE FROM album WHERE 1;
 DELETE FROM artist WHERE 1;
 DELETE FROM image WHERE 1;
 
--- count of scrobbles
-select count(*) from scrobble;
+-- count of ...
+select count(*) from import; #1 2
+select count(*) from scrobble; #20 39
+select count(*) from track; #20 39
+select count(*) from album; #6 22
+select count(*) from artist; #4 13
+select count(*) from image; #24 80
+
 
