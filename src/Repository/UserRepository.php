@@ -40,28 +40,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     *
+     */
+    public function deleteAllScrobbles(User $user): void
+    {
+      $queries = [];
+      $queries[] = 'DELETE App\Entity\Import i WHERE i.user = ' . $user->getId();
+      $queries[] = 'DELETE App\Entity\Scrobble s WHERE s.user = ' . $user->getId();
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+      Foreach($queries as $query) {
+        $this->getEntityManager()->createQuery($query)->execute();
+      }
+    }
+
 }

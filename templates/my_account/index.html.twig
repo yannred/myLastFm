@@ -7,12 +7,21 @@
     <h1>My Account</h1>
   </div>
 
+
+  {% if notification is defined %}
+    <div class="alert alert-info">{{ notification }}</div>
+    <hr>
+  {% endif %}
+
   <div>
     <h2>Last FM</h2>
     <ul>
 
       <li>
         <a href="/myAccount/import">Import data from Last Fm</a>
+      </li>
+      <li>
+        <a href="/myAccount/deleteAllScrobbles">Delete all my imported scrobbles</a>
       </li>
 
     </ul>

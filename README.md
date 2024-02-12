@@ -10,6 +10,6 @@ The main functionalitie of Last.fm is scrobbling
 > What is Scrobbling ?
 >>Scrobbling is the process of tracking the music you listen to. The Last.fm app on your computer or phone will scrobble the music you play on your device (streaming app like Spotify or media player like Winamp). This means that when you listen to a song, the name of the song is sent to Last.fm and added to your music profile.
  
-## Features
+## Features of My Last Fm
 
 - 
