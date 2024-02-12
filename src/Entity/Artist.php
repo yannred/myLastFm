@@ -46,6 +46,8 @@ class Artist
   #[ORM\Column(type: Types::TEXT, nullable: true)]
   private ?string $bioContent = null;
 
+  private ?string $userPlaycount = null;
+
   public function __construct()
   {
     $this->albums = new ArrayCollection();
@@ -222,6 +224,18 @@ class Artist
   public function setBioContent(?string $bioContent): static
   {
     $this->bioContent = $bioContent;
+
+    return $this;
+  }
+
+  public function getUserPlaycount(): ?string
+  {
+    return $this->userPlaycount;
+  }
+
+  public function setUserPlaycount(?string $userPlaycount): static
+  {
+    $this->userPlaycount = $userPlaycount;
 
     return $this;
   }

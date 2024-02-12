@@ -60,19 +60,15 @@ class MyPageController extends AbstractController
     //artists
     $artistRepository = $this->entityManager->getRepository(Artist::class);
 
-    $query = $artistRepository->createQueryBuilder('a')->orderBy('a.id', 'ASC')->getQuery();
-
-    $artistPagination = $paginator->paginate(
-      $query,
-      $request->query->getInt('page', 1),
-      LastScrobblesController::LIMIT_PER_PAGE
-    );
+    $artists = $artistRepository->getTop10Artists();
 
 
     return $this->render('my_page/index.html.twig', [
       'userPageInfo' => $userPageInfo,
       'scrobbles' => $scrobblePagination,
-      'artists' => $artistPagination,
+      'artists' => $artists,
+      'pagination' => 0,
+      'userPlaycount' => 1,
     ]);
   }
 }

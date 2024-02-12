@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Artist;
+use App\Entity\Scrobble;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Artist>
@@ -16,33 +19,45 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ArtistRepository extends ServiceEntityRepository
 {
-  public function __construct(ManagerRegistry $registry)
+
+  protected Security $security;
+
+  public function __construct(ManagerRegistry $registry, Security $security)
   {
     parent::__construct($registry, Artist::class);
+    $this->security = $security;
   }
 
-//    /**
-//     * @return Artist[] Returns an array of Artist objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Artist
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+  public function getTop10Artists (): array {
+
+    $user = $this->security->getUser();
+    $artists = array();
+
+
+    $artistTop10 = $this->createQueryBuilder('a')
+      ->select('a.id, count(s.id) as count')
+      ->join('a.tracks', 't')
+      ->join('t.scrobbles', 's')
+      ->where('s.user = :user')
+      ->setParameter('user', $user->getId())
+      ->groupBy('a.name')
+      ->orderBy('count(a.name)', 'DESC')
+      ->getQuery()
+      ->getResult();
+
+    foreach ($artistTop10 as $artist) {
+
+      if (count($artists) >= 2) {
+        break;
+      }
+
+      $artistEntity = $this->findOneBy(['id' => $artist['id']]);
+      $artistEntity->setUserPlaycount($artist['count']);
+      $artists[] = $artistEntity;
+    }
+
+    return $artists;
+  }
+
 }

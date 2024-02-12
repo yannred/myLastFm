@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TopArtistsController extends AbstractController
+class MyArtistsController extends AbstractController
 {
 
   protected EntityManagerInterface $entityManager;
@@ -31,12 +31,12 @@ class TopArtistsController extends AbstractController
 
     //TODO : re use the ScrobblerController::updateScrobble() method
 
-    #[Route('/top/artists', name: 'app_top_artists')]
+    #[Route('/myPage/myArtists', name: 'app_my_artists')]
     public function index(Request $request, PaginatorInterface $paginator): Response
     {
       $artistRepository = $this->entityManager->getRepository(Artist::class);
 
-      $query = $artistRepository->createQueryBuilder('a')->orderBy('s.id', 'ASC')->getQuery();
+      $query = $artistRepository->createQueryBuilder('a')->getQuery();
 
       $artistPagination = $paginator->paginate(
         $query,
@@ -44,7 +44,7 @@ class TopArtistsController extends AbstractController
         self::LIMIT_PER_PAGE
       );
 
-      return $this->render('last_scrobbles/index.html.twig', [
+      return $this->render('my_artists/index.html.twig', [
         'artists' => $artistPagination,
       ]);
     }
