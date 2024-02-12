@@ -27,14 +27,14 @@ class LastScrobblesController extends AbstractController
   {
     $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
 
-    $pagination = $paginator->paginate(
+    $scrobblePagination = $paginator->paginate(
       $scrobbleRepository->paginationQuery(),
       $request->query->getInt('page', 1),
       self::LIMIT_PER_PAGE
     );
 
     return $this->render('last_scrobbles/index.html.twig', [
-      'scrobbles' => $pagination,
+      'scrobbles' => $scrobblePagination,
     ]);
   }
 }

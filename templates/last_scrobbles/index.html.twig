@@ -6,28 +6,5 @@
   <div>
     <h1>Your last Scrobbles</h1>
   </div>
-  <div>
-    <ul>
-      {% for scrobble in scrobbles %}
-        <li>
-
-          {% for image in scrobble.track.image %}
-            {% if image.size == 1 %}
-              <img src='{{ image.url }}' alt='{{ scrobble.track.name }}' >
-            {% endif %}
-          {% endfor %}
-
-          <span class="bold">{{ scrobble.track.name }} </span>
-          from
-          <span class="bold">{{ scrobble.track.artist.name }} </span>
-          in
-          <span>"{{ scrobble.track.album.name }}" album - </span>
-          {{ scrobble.timestamp|date('m/d/Y H:i:s') }}
-
-        </li>
-      {% endfor %}
-    </ul>
-    {{ knp_pagination_render(scrobbles) }}
-
-  </div>
+  {% include 'last_scrobbles/last_scrobbles.html.twig' %}
 {% endblock %}

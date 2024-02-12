@@ -67,7 +67,6 @@ class MyPageController extends AbstractController
     );
 
 
-
     return $this->render('my_page/index.html.twig', [
       'userPageInfo' => $userPageInfo,
       'scrobbles' => $scrobblePagination,
