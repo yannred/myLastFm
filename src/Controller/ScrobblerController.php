@@ -11,6 +11,7 @@ use App\Service\ApiRequestService;
 use App\Service\EntityService\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,6 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 {
 
   protected EntityManagerInterface $entityManager;
+  protected EntityService $entityService;
+  protected ApiRequestService $apiRequestService;
+  protected Security $security;
 
   //TODO : move exception constants
   const EXCEPTION_ERROR = 0;
@@ -25,10 +29,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
   const MAX_SCROBBLES_BY_IMPORT = 20;
 
-  public function __construct(EntityManagerInterface $entityManager, EntityService $entityService,)
+  public function __construct(EntityManagerInterface $entityManager, Security $security, EntityService $entityService, ApiRequestService $apiRequestService)
   {
     $this->entityManager = $entityManager;
     $this->entityService = $entityService;
+    $this->apiRequestService = $apiRequestService;
+    $this->security = $security;
   }
 
 
@@ -41,16 +47,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
     try {
 
-      //Get user data
-      $currentUser = $this->getUser();
-      $userRepository = $this->entityManager->getRepository(User::class);
-      $user = $userRepository->findOneBy(['email' => $currentUser->getEmail()]);
-      if ($user === null) {
-        throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't find user");
-      }
-
       //prepare new import
       $import->setDate(new \DateTime());
+      $user = $this->security->getUser();
       $import->setUser($user);
       $import->setSuccessful(false);
 
@@ -69,7 +68,7 @@ use Symfony\Component\Routing\Annotation\Route;
       }
 
       //first API Call for get total pages and total scrobbles
-      $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp);
+      $apiResponse = $apiRequest->getLastTracks($lastImportTimestamp);
       //TODO : handle error response from API
       $jsonResponse = json_decode($apiResponse, true);
       if ($jsonResponse === false) {
@@ -88,7 +87,7 @@ use Symfony\Component\Routing\Annotation\Route;
       //API Calls for get scrobbles segmented by pages of API
       for ($page = $totalPages; $page >= 1; $page--) {
 
-        $apiResponse = $apiRequest->getLastTracks($user, $lastImportTimestamp, $timestampLimit, $page);
+        $apiResponse = $apiRequest->getLastTracks($lastImportTimestamp, $timestampLimit, $page);
 
         //Parsing
         $jsonResponse = json_decode($apiResponse, true);
@@ -117,7 +116,7 @@ use Symfony\Component\Routing\Annotation\Route;
             continue;
           }
 
-          $scrobbleGenerated = $this->createScrobble($arrayScrobble, $user);
+          $scrobbleGenerated = $this->createScrobble($arrayScrobble);
 
           //Import
           $import->setLastScrobble($scrobbleGenerated);
@@ -157,7 +156,7 @@ use Symfony\Component\Routing\Annotation\Route;
   }
 
 
-  private function createScrobble($lastFmScrobble, $user)
+  private function createScrobble($lastFmScrobble)
   {
 
     //Artist
@@ -202,6 +201,7 @@ use Symfony\Component\Routing\Annotation\Route;
       $scrobble = new Scrobble();
       $scrobble->setTrack($track);
       $scrobble->setTimestamp($lastFmScrobble['date']['uts']);
+      $user = $this->security->getUser();
       $scrobble->setUser($user);
       $this->entityManager->persist($scrobble);
     }

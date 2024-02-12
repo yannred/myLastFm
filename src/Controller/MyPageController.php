@@ -26,17 +26,8 @@ class MyPageController extends AbstractController
   public function index(ApiRequestService $apiRequestService, Request $request, PaginatorInterface $paginator): Response
   {
 
-    //Get user data
-    $currentUser = $this->getUser();
-    $userRepository = $this->entityManager->getRepository(User::class);
-    $user = $userRepository->findOneBy(['email' => $currentUser->getEmail()]);
-    if ($user === null) {
-      throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't find user");
-    }
-
-
     //User infos
-    $userInfo = $apiRequestService->getUserInfo($user);
+    $userInfo = $apiRequestService->getUserInfo();
     //TODO : handle error response from API
     $userInfo = json_decode($userInfo, true);
     if ($userInfo === false) {
