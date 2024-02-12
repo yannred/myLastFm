@@ -1,25 +1,38 @@
-<div>
-  <ul>
-    {% for artist in artists %}
-      <li>
+{% set nb = 0 %}
 
+<div class="container text-center">
 
-        <div class="card" style="width: 18rem;">
-          {% for image in artist.image %}
-            {% if image.size == 3 %}
-              <img src="{{ image.url }}" class="card-img-top" alt='{{ artist.name }}'>
-            {% endif %}
-          {% endfor %}
-          <div class="card-body">
-            <h5 class="card-title">{{ artist.name }}</h5>
-            <p class="card-text">{{ artist.bioSummary|u truncate(150) }} ...</p>
-            <a href="#" class="btn btn-primary">More ...</a>
-          </div>
+  {% for artist in artists %}
+
+  {% if nb == 0 %}
+  <div class="row">
+    {% endif %}
+
+    <div class="col mb-3">
+      <div class="card" style="width: 18rem;">
+        {% for image in artist.image %}
+          {% if image.size == 3 %}
+            <img src="{{ image.url }}" class="card-img-top" alt='{{ artist.name }}' style="width: 286px">
+          {% endif %}
+        {% endfor %}
+        <div class="card-body">
+          <h5 class="card-title">{{ artist.name }}</h5>
+          <p class="card-text">{{ artist.bioSummary|u.truncate(150, ' ...') }}</p>
+          <a href="#" class="btn btn-primary">More</a>
         </div>
+      </div>
+    </div>
 
-      </li>
+    {% if nb == 2 %}
+      {% set nb = 0 %}
+    {% else %}
+      {% set nb = nb + 1 %}
+    {% endif %}
+
     {% endfor %}
-  </ul>
-  {{ knp_pagination_render(scrobbles) }}
+
+    {{ knp_pagination_render(artists) }}
+  </div>
+
 
 </div>
