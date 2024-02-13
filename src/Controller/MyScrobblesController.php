@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Scrobble;
+use App\Form\QueryType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,9 @@ class MyScrobblesController extends AbstractController
   #[Route('/myAccount/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
+    $queryForm = $this->createForm(QueryType::class);
+    $queryForm->handleRequest($request);
+
     $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
 
     $scrobblePagination = $paginator->paginate(
@@ -35,6 +39,7 @@ class MyScrobblesController extends AbstractController
 
     return $this->render('my_scrobbles/index.html.twig', [
       'scrobbles' => $scrobblePagination,
+      'form' => $queryForm->createView()
     ]);
   }
 }
