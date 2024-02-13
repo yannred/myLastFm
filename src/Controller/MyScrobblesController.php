@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class LastScrobblesController extends AbstractController
+class MyScrobblesController extends AbstractController
 {
 
   protected EntityManagerInterface $entityManager;
@@ -22,7 +22,7 @@ class LastScrobblesController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/myAccount/lastScrobbles', name: 'app_last_scrobbles')]
+  #[Route('/myAccount/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
     $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
@@ -33,7 +33,7 @@ class LastScrobblesController extends AbstractController
       self::LIMIT_PER_PAGE
     );
 
-    return $this->render('last_scrobbles/index.html.twig', [
+    return $this->render('my_scrobbles/index.html.twig', [
       'scrobbles' => $scrobblePagination,
     ]);
   }
