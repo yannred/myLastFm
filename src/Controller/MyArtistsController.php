@@ -3,9 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Artist;
-use App\Entity\Import;
-use App\Entity\Scrobble;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

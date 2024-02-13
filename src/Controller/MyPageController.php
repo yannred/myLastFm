@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Artist;
 use App\Entity\Scrobble;
+use App\Entity\Track;
 use App\Service\ApiRequestService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -59,8 +60,11 @@ class MyPageController extends AbstractController
 
     //artists
     $artistRepository = $this->entityManager->getRepository(Artist::class);
-
     $artists = $artistRepository->getTop10Artists();
+
+    //tracks
+    $trackRepository = $this->entityManager->getRepository(Track::class);
+    $tracks = $trackRepository->getTop10Tracks();
 
 
     return $this->render('my_page/index.html.twig', [
@@ -69,6 +73,7 @@ class MyPageController extends AbstractController
       'artists' => $artists,
       'pagination' => 0,
       'userPlaycount' => 1,
+      'tracks' => $tracks
     ]);
   }
 }

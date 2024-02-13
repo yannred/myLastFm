@@ -3,9 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Artist;
-use App\Entity\Scrobble;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -29,7 +27,9 @@ class ArtistRepository extends ServiceEntityRepository
   }
 
 
-  public function getTop10Artists (): array {
+  public function getTop10Artists(): array
+  {
+    define('LIMIT_TOP_ARTIST', 10);
 
     $user = $this->security->getUser();
     $artists = array();
@@ -48,7 +48,7 @@ class ArtistRepository extends ServiceEntityRepository
 
     foreach ($artistTop10 as $artist) {
 
-      if (count($artists) >= 2) {
+      if (count($artists) >= LIMIT_TOP_ARTIST) {
         break;
       }
 
