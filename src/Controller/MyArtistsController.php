@@ -43,6 +43,7 @@ class MyArtistsController extends AbstractController
 
       return $this->render('my_artists/index.html.twig', [
         'artists' => $artistPagination,
+        'pagination' => "1"
       ]);
     }
 }
