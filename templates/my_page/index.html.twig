@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Page{% endblock %}
+
+{% block body %}
+  <div>
+    <h1>My Page</h1>
+  </div>
+
+
+  {% if notification is defined %}
+    <div class="alert alert-info">{{ notification }}</div>
+    <hr>
+  {% endif %}
+
+  <div>
+    <h2>Last Fm User</h2>
+    {% include 'my_page/userCard.html.twig' %}
+  </div>
+
+  <div>
+    <h2>Last scrobbles</h2>
+    {% include 'last_scrobbles/last_scrobbles.html.twig' %}
+  </div>
+
+  <div>
+    <h2 style="display: inline-block">Top artists</h2><span style="margin-left: 50px"><a href="/myPage/myArtists">See more</a></span>
+    {% include 'my_artists/artists.html.twig' %}
+  </div>
+
+  <div>
+    <h2 style="display: inline-block">Top tracks</h2><span style="margin-left: 50px"><a href="/myPage/myTracks">See more</a></span>
+    {% include 'my_tracks/tracks.html.twig' %}
+  </div>
+
+{% endblock %}

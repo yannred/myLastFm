@@ -1,0 +1,17 @@
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4 d-flex">
+      <img src="{{ lastFmUser.image }}" class="img-fluid rounded-start align-self-center m-2  " alt="{{ lastFmUser.userRealName }}" style="border-radius: 100px 100px !important;">
+    </div>
+    <div class="col-md-8 d-flex">
+      <div class="card-body align-self-center" style="padding-left: 50px;">
+        <h5 class="card-title">{{ lastFmUser.userRealName }}</h5>
+{#        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Scrobbles : {{ lastFmUser.scrobbleCount }}</small></span>
+          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Your tracks : {{ lastFmUser.trackCount }}</small></span>
+          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Your albums : {{ lastFmUser.albumCount }}</small></span>
+          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Your artists : {{ lastFmUser.artistCount }}</small></span>
+      </div>
+    </div>
+  </div>
+</div>

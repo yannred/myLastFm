@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Track;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Track>
@@ -16,33 +17,45 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TrackRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Track::class);
+  protected Security $security;
+
+  public function __construct(ManagerRegistry $registry, Security $security)
+  {
+    parent::__construct($registry, Track::class);
+    $this->security = $security;
+  }
+
+  public function getTop10Tracks()
+  {
+
+    define('LIMIT_TOP_TRACK', 10);
+
+    $user = $this->security->getUser();
+    $tracks = array();
+
+    $trackTop10 = $this->createQueryBuilder('t')
+      ->select('t.id, count(t.id) as count')
+      ->join('t.scrobbles', 's')
+      ->where('s.user = :user')
+      ->setParameter('user', $user->getId())
+      ->groupBy('t.id')
+      ->orderBy('count(t.id)', 'DESC')
+      ->getQuery()
+      ->getResult();
+
+    foreach ($trackTop10 as $track) {
+
+      if (count($tracks) >= LIMIT_TOP_TRACK) {
+        break;
+      }
+
+      $trackEntity = $this->findOneBy(['id' => $track['id']]);
+      $trackEntity->setUserPlaycount($track['count']);
+      $tracks[] = $trackEntity;
     }
 
-//    /**
-//     * @return Track[] Returns an array of Track objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    return $tracks;
 
-//    public function findOneBySomeField($value): ?Track
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+  }
+
 }
