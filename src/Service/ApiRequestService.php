@@ -87,7 +87,7 @@ class ApiRequestService
   }
 
 
-  public function getUserInfo(): string
+  public function getLastFmUserInfo(): string
   {
     $responseContent = null;
 

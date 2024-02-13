@@ -14,10 +14,8 @@
   {% endif %}
 
   <div>
-    <h2>INFOS</h2>
-    {% for info, valueInfo in userPageInfo %}
-      <p>{{ info }} : {{ valueInfo }}</p>
-    {% endfor %}
+    <h2>Last Fm User</h2>
+    {% include 'my_page/userCard.html.twig' %}
   </div>
 
   <div>

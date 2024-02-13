@@ -28,26 +28,26 @@ class MyPageController extends AbstractController
   {
 
     //User infos
-    $userInfo = $apiRequestService->getUserInfo();
+    $lastFmUserInfo = $apiRequestService->getLastFmUserInfo();
     //TODO : handle error response from API
-    $userInfo = json_decode($userInfo, true);
-    if ($userInfo === false) {
+    $lastFmUserInfo = json_decode($lastFmUserInfo, true);
+    if ($lastFmUserInfo === false) {
       throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't decode api first response in json");
     }
 
-    $userPageInfo = array();
-    $userPageInfo['userName'] = $userInfo['user']['name'];
-    $userPageInfo['userRealName'] = $userInfo['user']['realname'];
-    $userPageInfo['scrobbleCount'] = $userInfo['user']['playcount'];
-    foreach ($userInfo['user']['image'] as $image) {
+    $lastFmUser = array();
+    $lastFmUser['userName'] = $lastFmUserInfo['user']['name'];
+    $lastFmUser['userRealName'] = $lastFmUserInfo['user']['realname'];
+    $lastFmUser['scrobbleCount'] = $lastFmUserInfo['user']['playcount'];
+    foreach ($lastFmUserInfo['user']['image'] as $image) {
       if ($image['size'] == 'large') {
-        $userPageInfo['image'] = $image['#text'];
+        $lastFmUser['image'] = $image['#text'];
         break;
       }
     }
-    $userPageInfo['trackCount'] = $userInfo['user']['track_count'];
-    $userPageInfo['albumCount'] = $userInfo['user']['album_count'];
-    $userPageInfo['artistCount'] = $userInfo['user']['artist_count'];
+    $lastFmUser['trackCount'] = $lastFmUserInfo['user']['track_count'];
+    $lastFmUser['albumCount'] = $lastFmUserInfo['user']['album_count'];
+    $lastFmUser['artistCount'] = $lastFmUserInfo['user']['artist_count'];
 
 
     //Last scrobbles
@@ -68,7 +68,7 @@ class MyPageController extends AbstractController
 
 
     return $this->render('my_page/index.html.twig', [
-      'userPageInfo' => $userPageInfo,
+      'lastFmUser' => $lastFmUser,
       'scrobbles' => $scrobblePagination,
       'artists' => $artists,
       'pagination' => 0,
