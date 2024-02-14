@@ -36,7 +36,7 @@ class MyScrobblesController extends AbstractController
     $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
     $queryForm->handleRequest($request);
 
-    //returned form
+    //returned search form
     if ($queryForm->isSubmitted() && $queryForm->isValid()) {
 
       $from = 0;
@@ -65,7 +65,7 @@ class MyScrobblesController extends AbstractController
       $response->setStatusCode(Response::HTTP_SEE_OTHER);
 
     } else {
-
+      //Blank search form
       $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
       $scrobblePagination = $paginator->paginate(
         $scrobbleRepository->paginationQuery(),

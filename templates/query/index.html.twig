@@ -12,13 +12,13 @@
       {{ field_label(form.from) }}
     </label>
     <input type="{{ form.from.vars.type }}" id="{{ form.from.vars.id }}" name="{{ field_name(form.from) }}" {{ form.from.vars.required ? 'required="required"' }}
-           class="{{ form.from.vars.required ? 'required' }}">{{ form_help(form.from) }}{{ form_errors(form.from) }}
+           value="{{ form.from.vars.value }}" class="{{ form.from.vars.required ? 'required' }}">{{ form_help(form.from) }}{{ form_errors(form.from) }}
 
     <label for="{{ form.to.vars.id }}" class="{{ form.to.vars.required ? 'required' }}">
       {{ field_label(form.to) }}
     </label>
-    <input type="{{ form.to.vars.type }}" id="{{ form.to.vars.id }}" name="{{ field_name(form.to) }} {{ form.to.vars.required ? 'required="required"' }}
-           class="{{ form.to.vars.required ? 'required' }}">{{ form_help(form.to) }}{{ form_errors(form.to) }}
+    <input type="{{ form.to.vars.type }}" id="{{ form.to.vars.id }}" name="{{ field_name(form.to) }}" {{ form.to.vars.required ? 'required="required"' }}
+           value="{{ form.to.vars.value }}" class="{{ form.to.vars.required ? 'required' }}">{{ form_help(form.to) }}{{ form_errors(form.to) }}
 
     {{ form_widget(form._token) }}
 
