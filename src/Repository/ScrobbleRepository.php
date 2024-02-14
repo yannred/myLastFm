@@ -40,19 +40,41 @@ class ScrobbleRepository extends ServiceEntityRepository
       ->getQuery();
   }
 
-  public function paginationQueryByDate(int $from = 0, int $to = 0)
+  public function paginationQueryByDate(SearchBarData $dataSearchBar)
   {
     $user = $this->security->getUser();
 
     $query = $this->createQueryBuilder('s')
+      ->join('s.track', 't')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->orderBy('s.timestamp', 'ASC');
 
-    if ($from !== 0 || $to !== 0) {
-      $query->andWhere('s.timestamp BETWEEN :from AND :to')
-        ->setParameter('to', $to)
-        ->setParameter('from', $from);
+    if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
+      $query
+        ->andWhere('s.timestamp BETWEEN :from AND :to')
+        ->setParameter('from', $dataSearchBar->from)
+        ->setParameter('to', $dataSearchBar->to);
+    }
+
+    if (isset($dataSearchBar->trackName) && $dataSearchBar->trackName !== null && $dataSearchBar->trackName !== '') {
+      $query
+        ->andWhere('t.name LIKE :trackName')
+        ->setParameter('trackName', '%' . trim($dataSearchBar->trackName) . '%');
+    }
+
+    if (isset($dataSearchBar->artistName) && $dataSearchBar->artistName !== null && $dataSearchBar->artistName !== '') {
+      $query
+        ->join('t.artist', 'artist')
+        ->andWhere('artist.name LIKE :artistName')
+        ->setParameter('artistName', '%' . trim($dataSearchBar->artistName) . '%');
+    }
+
+    if (isset($dataSearchBar->albumName) && $dataSearchBar->albumName !== null && $dataSearchBar->albumName !== '') {
+      $query
+        ->join('t.album', 'album')
+        ->andWhere('album.name LIKE :albumName')
+        ->setParameter('albumName', '%' . trim($dataSearchBar->albumName) . '%');
     }
 
     return $query->getQuery();

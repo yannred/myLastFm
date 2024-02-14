@@ -3,8 +3,8 @@
 namespace App\Form;
 
 use App\Data\SearchBarData;
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +16,9 @@ class SearchBarType extends AbstractType
   {
     $builder
       ->add('type', HiddenType::class, ['data' => 'query'])
+      ->add('trackName', TextType::class, ['required' => false])
+      ->add('artistName', TextType::class, ['required' => false])
+      ->add('albumName', TextType::class, ['required' => false])
       ->add('from', DateType::class, ['required' => false])
       ->add('to', DateType::class, ['required' => false]);
   }

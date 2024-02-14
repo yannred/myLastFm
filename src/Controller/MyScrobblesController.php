@@ -31,6 +31,8 @@ class MyScrobblesController extends AbstractController
     $view = 'my_scrobbles/index.html.twig';
     $paramView = [];
 
+    $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
+
     $searchBarData = new SearchBarData();
 
     $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
@@ -49,8 +51,7 @@ class MyScrobblesController extends AbstractController
         }
       }
 
-      $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
-      $query = $scrobbleRepository->paginationQueryByDate($from, $to);
+      $query = $scrobbleRepository->paginationQueryByDate($searchBarData);
       $scrobblePagination = $paginator->paginate(
         $query,
         $request->query->getInt('page', 1),
@@ -66,7 +67,6 @@ class MyScrobblesController extends AbstractController
 
     } else {
       //Blank search form
-      $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
       $scrobblePagination = $paginator->paginate(
         $scrobbleRepository->paginationQuery(),
         $request->query->getInt('page', 1),
