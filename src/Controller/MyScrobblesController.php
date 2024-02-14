@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
+use App\Data\SearchBarData;
 use App\Entity\Scrobble;
-use App\Form\QueryType;
+use App\Form\SearchBarType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,20 +27,61 @@ class MyScrobblesController extends AbstractController
   #[Route('/myAccount/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
-    $queryForm = $this->createForm(QueryType::class);
+    $response = new Response();
+    $view = 'my_scrobbles/index.html.twig';
+    $paramView = [];
+
+    $searchBarData = new SearchBarData();
+
+    $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
     $queryForm->handleRequest($request);
 
-    $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
+    //returned form
+    if ($queryForm->isSubmitted() && $queryForm->isValid()) {
 
-    $scrobblePagination = $paginator->paginate(
-      $scrobbleRepository->paginationQuery(),
-      $request->query->getInt('page', 1),
-      self::LIMIT_PER_PAGE
-    );
+      $from = 0;
+      $to = 0;
+      if ($queryForm->get('from')->getData() && $queryForm->get('to')->getData()){
+        $from = $queryForm->get('from')->getData()->getTimestamp();
+        $to = $queryForm->get('to')->getData()->getTimestamp();
+        if ($from == $to){
+          $to = $to + 86400;
+        }
+      }
 
-    return $this->render('my_scrobbles/index.html.twig', [
-      'scrobbles' => $scrobblePagination,
-      'form' => $queryForm->createView()
-    ]);
+      $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
+      $query = $scrobbleRepository->paginationQueryByDate($from, $to);
+      $scrobblePagination = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1),
+        self::LIMIT_PER_PAGE
+      );
+
+      $paramView = [
+        'scrobbles' => $scrobblePagination,
+        'form' => $queryForm->createView(),
+        'pagination' => 1,
+      ];
+      $response->setStatusCode(Response::HTTP_SEE_OTHER);
+
+    } else {
+
+      $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
+      $scrobblePagination = $paginator->paginate(
+        $scrobbleRepository->paginationQuery(),
+        $request->query->getInt('page', 1),
+        self::LIMIT_PER_PAGE
+      );
+
+      $paramView = [
+        'scrobbles' => $scrobblePagination,
+        'form' => $queryForm->createView(),
+        'pagination' => 1,
+      ];
+      $response = null;
+
+    }
+
+    return $this->render($view, $paramView, $response);
   }
 }
