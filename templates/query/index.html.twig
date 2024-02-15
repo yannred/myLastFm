@@ -1,0 +1,49 @@
+<div>
+  {{ form_start(form) }}
+
+  <div>
+      {{ form_errors(form) }}
+  </div>
+
+  <div>
+    {{ form_row(form.type) }}
+
+    <label for="{{ form.from.vars.id }}" class="{{ form.from.vars.required ? 'required' }} mx-2">
+      {{ field_label(form.from) }}
+    </label>
+    <input type="{{ form.from.vars.type }}" id="{{ form.from.vars.id }}" name="{{ field_name(form.from) }}" {{ form.from.vars.required ? 'required="required"' }}
+           value="{{ form.from.vars.value }}" class="{{ form.from.vars.required ? 'required' }}">{{ form_help(form.from) }}{{ form_errors(form.from) }}
+
+    <label for="{{ form.to.vars.id }}" class="{{ form.to.vars.required ? 'required' }} mx-2">
+      {{ field_label(form.to) }}
+    </label>
+    <input type="{{ form.to.vars.type }}" id="{{ form.to.vars.id }}" name="{{ field_name(form.to) }}" {{ form.to.vars.required ? 'required="required"' }}
+           value="{{ form.to.vars.value }}" class="{{ form.to.vars.required ? 'required' }}">{{ form_help(form.to) }}{{ form_errors(form.to) }}
+
+    <label for="{{ form.trackName.vars.id }}" class="{{ form.trackName.vars.required ? 'required' }} mx-2">
+      Track name
+    </label>
+    <input id="{{ form.trackName.vars.id }}" name="{{ field_name(form.trackName) }}" {{ form.trackName.vars.required ? 'required="required"' }}
+           value="{{ form.trackName.vars.value }}" class="{{ form.trackName.vars.required ? 'required' }}">{{ form_help(form.trackName) }}{{ form_errors(form.trackName) }}
+
+    <label for="{{ form.artistName.vars.id }}" class="{{ form.artistName.vars.required ? 'required' }} mx-2">
+      Artist name
+    </label>
+    <input id="{{ form.artistName.vars.id }}" name="{{ field_name(form.artistName) }}" {{ form.artistName.vars.required ? 'required="required"' }}
+           value="{{ form.artistName.vars.value }}" class="{{ form.artistName.vars.required ? 'required' }}">{{ form_help(form.artistName) }}{{ form_errors(form.artistName) }}
+
+    <label for="{{ form.albumName.vars.id }}" class="{{ form.albumName.vars.required ? 'required' }} mx-2">
+      Album name
+    </label>
+    <input id="{{ form.albumName.vars.id }}" name="{{ field_name(form.albumName) }}" {{ form.albumName.vars.required ? 'required="required"' }}
+           value="{{ form.albumName.vars.value }}" class="{{ form.albumName.vars.required ? 'required' }}">{{ form_help(form.albumName) }}{{ form_errors(form.albumName) }}
+
+    {{ form_widget(form._token) }}
+
+    <button type="submit" class="btn btn-primary">Find</button>
+
+  </div>
+
+  {{ form_end(form, {'render_rest': false}) }}
+  {{ form_end(form) }}
+</div>

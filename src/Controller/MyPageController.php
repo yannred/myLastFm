@@ -55,7 +55,7 @@ class MyPageController extends AbstractController
     $scrobblePagination = $paginator->paginate(
       $scrobbleRepository->paginationQuery(),
       $request->query->getInt('page', 1),
-      LastScrobblesController::LIMIT_PER_PAGE
+      MyScrobblesController::LIMIT_PER_PAGE
     );
 
     //artists
