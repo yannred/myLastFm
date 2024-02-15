@@ -58,13 +58,15 @@ class MyPageController extends AbstractController
       MyScrobblesController::LIMIT_PER_PAGE
     );
 
-    //artists
+    //top artists
     $artistRepository = $this->entityManager->getRepository(Artist::class);
-    $artists = $artistRepository->getTop10Artists();
+    $artists = $artistRepository->getTopArtists();
+    $artists = array_slice($artists, 0, Artist::LIMIT_TOP_ARTIST);
 
-    //tracks
+    //top tracks
     $trackRepository = $this->entityManager->getRepository(Track::class);
-    $tracks = $trackRepository->getTop10Tracks();
+    $tracks = $trackRepository->getTopTracks();
+    $tracks = array_slice($tracks, 0, Track::LIMIT_TOP_TRACKS);
 
 
     return $this->render('my_page/index.html.twig', [

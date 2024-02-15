@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ArtistRepository::class)]
 class Artist
 {
+
+  const LIMIT_TOP_ARTIST = 4;
+
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]

@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Data\SearchBarData;
 use App\Entity\Artist;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -27,16 +29,12 @@ class ArtistRepository extends ServiceEntityRepository
   }
 
 
-  public function getTop10Artists(): array
+  public function getTopArtists(): array
   {
-    define('LIMIT_TOP_ARTIST', 10);
-
     $user = $this->security->getUser();
-    $artists = array();
 
-
-    $artistTop10 = $this->createQueryBuilder('a')
-      ->select('a.id, count(s.id) as count')
+    $artists = $this->createQueryBuilder('a')
+      ->select('a, count(s.id) as count')
       ->join('a.tracks', 't')
       ->join('t.scrobbles', 's')
       ->where('s.user = :user')
@@ -44,20 +42,36 @@ class ArtistRepository extends ServiceEntityRepository
       ->groupBy('a.name')
       ->orderBy('count(a.name)', 'DESC')
       ->getQuery()
-      ->getResult();
-
-    foreach ($artistTop10 as $artist) {
-
-      if (count($artists) >= LIMIT_TOP_ARTIST) {
-        break;
-      }
-
-      $artistEntity = $this->findOneBy(['id' => $artist['id']]);
-      $artistEntity->setUserPlaycount($artist['count']);
-      $artists[] = $artistEntity;
-    }
+      ->getResult()
+    ;
 
     return $artists;
+  }
+
+
+  public function paginationFilteredQuery(SearchBarData $dataSearchBar): Query
+  {
+    $user = $this->security->getUser();
+
+    $query = $this->createQueryBuilder('a')
+      ->select('a, count(s.id) as count')
+      ->join('a.tracks', 't')
+      ->join('t.scrobbles', 's')
+      ->where('s.user = :user')
+      ->setParameter('user', $user->getId())
+      ->groupBy('a.name')
+      ->orderBy('count(a.name)', 'DESC')
+    ;
+
+    if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
+      $query
+        ->andWhere('s.timestamp BETWEEN :from AND :to')
+        ->setParameter('from', $dataSearchBar->from)
+        ->setParameter('to', $dataSearchBar->to)
+      ;
+    }
+
+    return $query->getQuery();
   }
 
 }

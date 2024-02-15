@@ -24,7 +24,7 @@ class MyScrobblesController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/myAccount/myScrobbles', name: 'app_my_scrobbles')]
+  #[Route('/myPage/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
     $response = new Response();
@@ -34,7 +34,6 @@ class MyScrobblesController extends AbstractController
     $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
 
     $searchBarData = new SearchBarData();
-
     $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
     $queryForm->handleRequest($request);
 
@@ -71,6 +70,7 @@ class MyScrobblesController extends AbstractController
         'scrobbles' => $scrobblePagination,
         'form' => $queryForm->createView(),
         'pagination' => 1,
+        'searchBar' => 'full',
       ];
       $response = null;
 

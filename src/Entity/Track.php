@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
 class Track
 {
+
+  const LIMIT_TOP_TRACKS = 4;
+
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]

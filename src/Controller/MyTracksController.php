@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Data\SearchBarData;
 use App\Entity\Track;
+use App\Form\SearchBarType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,7 +35,11 @@ class MyTracksController extends AbstractController
   {
     $trackRepository = $this->entityManager->getRepository(Track::class);
 
-    $query = $trackRepository->createQueryBuilder('t')->getQuery();
+    $searchBarData = new SearchBarData();
+    $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
+    $queryForm->handleRequest($request);
+
+    $query = $trackRepository->paginationFilteredQuery($searchBarData);
 
     $tracksPagination = $paginator->paginate(
       $query,
@@ -43,7 +49,10 @@ class MyTracksController extends AbstractController
 
     return $this->render('my_tracks/index.html.twig', [
       'tracks' => $tracksPagination,
-      'pagination' => "1"
+      'pagination' => "1",
+      'userPlaycount' => "1",
+      'searchBar' => 'date',
+      'form' => $queryForm->createView()
     ]);
   }
 }

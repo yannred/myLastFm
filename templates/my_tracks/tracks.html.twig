@@ -4,17 +4,17 @@
     {% for track in tracks %}
       <div class="col mb-3">
         <div class="card" style="width: 18rem;">
-          {% for image in track.image %}
+          {% for image in track[0].image %}
             {% if image.size == 3 %}
               {% if userPlaycount is defined and userPlaycount == 1 %}
-                <span>{{ track.userPlaycount }} scrobbles</span>
+                <span>{{ track.count }} scrobbles</span>
               {% endif %}
-              <img src="{{ image.url }}" class="card-img-top" alt='{{ track.name }}' style="width: 286px">
+              <img src="{{ image.url }}" class="card-img-top" alt='{{ track[0].name }}' style="width: 286px">
             {% endif %}
           {% endfor %}
           <div class="card-body">
-            <h5 class="card-title">{{ track.name }}</h5>
-            {#          <p class="card-text">{{ track.bioSummary|u.truncate(150, ' ...') }}</p> #}
+            <h5 class="card-title">{{ track[0].name }}</h5>
+            {#          <p class="card-text">{{ track[0].bioSummary|u.truncate(150, ' ...') }}</p> #}
             <a href="#" class="btn btn-primary">More</a>
           </div>
         </div>

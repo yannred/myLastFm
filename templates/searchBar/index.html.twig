@@ -8,6 +8,13 @@
   <div>
     {{ form_row(form.type) }}
 
+
+    {% if searchBar == 'date' or searchBar == 'full' %}
+      {% set visibilityInputClass = '' %}
+    {% else %}
+      {% set visibilityInputClass = 'inputFormInvisible' %}
+    {% endif %}
+
     <label for="{{ form.from.vars.id }}" class="{{ form.from.vars.required ? 'required' }} mx-2">
       {{ field_label(form.from) }}
     </label>
@@ -20,23 +27,33 @@
     <input type="{{ form.to.vars.type }}" id="{{ form.to.vars.id }}" name="{{ field_name(form.to) }}" {{ form.to.vars.required ? 'required="required"' }}
            value="{{ form.to.vars.value }}" class="{{ form.to.vars.required ? 'required' }}">{{ form_help(form.to) }}{{ form_errors(form.to) }}
 
-    <label for="{{ form.trackName.vars.id }}" class="{{ form.trackName.vars.required ? 'required' }} mx-2">
+
+
+    {% if searchBar == 'wording' or searchBar == 'full' %}
+      {% set visibilityInputClass = '' %}
+    {% else %}
+      {% set visibilityInputClass = 'inputFormInvisible' %}
+    {% endif %}
+
+    <label for="{{ form.trackName.vars.id }}" class="{{ form.trackName.vars.required ? 'required' }} {{ visibilityInputClass }} mx-2">
       Track name
     </label>
     <input id="{{ form.trackName.vars.id }}" name="{{ field_name(form.trackName) }}" {{ form.trackName.vars.required ? 'required="required"' }}
-           value="{{ form.trackName.vars.value }}" class="{{ form.trackName.vars.required ? 'required' }}">{{ form_help(form.trackName) }}{{ form_errors(form.trackName) }}
+           value="{{ form.trackName.vars.value }}" class="{{ form.trackName.vars.required ? 'required' }} {{ visibilityInputClass }}">{{ form_help(form.trackName) }}{{ form_errors(form.trackName) }}
 
-    <label for="{{ form.artistName.vars.id }}" class="{{ form.artistName.vars.required ? 'required' }} mx-2">
+    <label for="{{ form.artistName.vars.id }}" class="{{ form.artistName.vars.required ? 'required' }} {{ visibilityInputClass }} mx-2">
       Artist name
     </label>
     <input id="{{ form.artistName.vars.id }}" name="{{ field_name(form.artistName) }}" {{ form.artistName.vars.required ? 'required="required"' }}
-           value="{{ form.artistName.vars.value }}" class="{{ form.artistName.vars.required ? 'required' }}">{{ form_help(form.artistName) }}{{ form_errors(form.artistName) }}
+           value="{{ form.artistName.vars.value }}" class="{{ form.artistName.vars.required ? 'required' }} {{ visibilityInputClass }}">{{ form_help(form.artistName) }}{{ form_errors(form.artistName) }}
 
-    <label for="{{ form.albumName.vars.id }}" class="{{ form.albumName.vars.required ? 'required' }} mx-2">
+    <label for="{{ form.albumName.vars.id }}" class="{{ form.albumName.vars.required ? 'required' }} {{ visibilityInputClass }} mx-2">
       Album name
     </label>
     <input id="{{ form.albumName.vars.id }}" name="{{ field_name(form.albumName) }}" {{ form.albumName.vars.required ? 'required="required"' }}
-           value="{{ form.albumName.vars.value }}" class="{{ form.albumName.vars.required ? 'required' }}">{{ form_help(form.albumName) }}{{ form_errors(form.albumName) }}
+           value="{{ form.albumName.vars.value }}" class="{{ form.albumName.vars.required ? 'required' }} {{ visibilityInputClass }}">{{ form_help(form.albumName) }}{{ form_errors(form.albumName) }}
+
+
 
     {{ form_widget(form._token) }}
 
