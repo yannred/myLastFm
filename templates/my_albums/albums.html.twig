@@ -15,7 +15,7 @@
           {% endfor %}
           <div class="card-body">
             <h5 class="card-title">{{ album[0].name }}</h5>
-            {#          <p class="card-text">{{ album[0].bioSummary|u.truncate(150, ' ...') }}</p> #}
+            <p class="card-text">from <span style="font-weight: bold;">{{ album[0].artist.name }}</span></p>
             <a href="#" class="btn btn-primary">More</a>
           </div>
         </div>
