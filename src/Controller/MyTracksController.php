@@ -17,18 +17,12 @@ class MyTracksController extends AbstractController
 
   protected EntityManagerInterface $entityManager;
 
-  //TODO : move exception constants
-  const EXCEPTION_ERROR = 0;
-  const EXCEPTION_NO_DATA = 1;
-
   const LIMIT_PER_PAGE = 20;
 
   public function __construct(EntityManagerInterface $entityManager)
   {
     $this->entityManager = $entityManager;
   }
-
-  //TODO : re use the ScrobblerController::updateScrobble() method
 
   #[Route('/myPage/myTracks', name: 'app_my_tracks')]
   public function index(Request $request, PaginatorInterface $paginator): Response
@@ -47,12 +41,21 @@ class MyTracksController extends AbstractController
       self::LIMIT_PER_PAGE
     );
 
-    return $this->render('my_tracks/index.html.twig', [
-      'tracks' => $tracksPagination,
-      'pagination' => "1",
-      'userPlaycount' => "1",
-      'searchBar' => 'date',
-      'form' => $queryForm->createView()
-    ]);
+    $response = new Response();
+    if ($queryForm->isSubmitted() && $queryForm->isValid()) {
+      $response->setStatusCode(Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render(
+      'my_tracks/index.html.twig',
+      [
+        'tracks' => $tracksPagination,
+        'pagination' => "1",
+        'userPlaycount' => "1",
+        'searchBar' => 'date',
+        'form' => $queryForm->createView()
+      ],
+      $response
+    );
   }
 }

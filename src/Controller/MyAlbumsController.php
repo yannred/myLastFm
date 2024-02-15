@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Data\SearchBarData;
-use App\Entity\Artist;
+use App\Entity\Album;
 use App\Form\SearchBarType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyArtistsController extends AbstractController
+class MyAlbumsController extends AbstractController
 {
 
   protected EntityManagerInterface $entityManager;
@@ -24,17 +24,16 @@ class MyArtistsController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/myPage/myArtists', name: 'app_my_artists')]
+  #[Route('/myPage/myAlbums', name: 'app_my_albums')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
-
-    $artistRepository = $this->entityManager->getRepository(Artist::class);
+    $albumRepository = $this->entityManager->getRepository(Album::class);
 
     $searchBarData = new SearchBarData();
     $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
     $queryForm->handleRequest($request);
 
-    $query = $artistRepository->paginationFilteredQuery($searchBarData);
+    $query = $albumRepository->paginationFilteredQuery($searchBarData);
 
     $artistPagination = $paginator->paginate(
       $query,
@@ -48,14 +47,15 @@ class MyArtistsController extends AbstractController
     }
 
     return $this->render(
-      'my_artists/index.html.twig',
+      'my_albums/index.html.twig',
       [
-        'artists' => $artistPagination,
+        'albums' => $artistPagination,
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
         'form' => $queryForm->createView(),
       ],
-      $response);
+      $response
+    );
   }
 }

@@ -33,17 +33,16 @@ class ArtistRepository extends ServiceEntityRepository
   {
     $user = $this->security->getUser();
 
-    $artists = $this->createQueryBuilder('a')
-      ->select('a, count(s.id) as count')
-      ->join('a.tracks', 't')
-      ->join('t.scrobbles', 's')
-      ->where('s.user = :user')
+    $artists = $this->createQueryBuilder('artist')
+      ->select('artist, count(scrobble.id) as count')
+      ->join('artist.tracks', 'track')
+      ->join('track.scrobbles', 'scrobble')
+      ->where('scrobble.user = :user')
       ->setParameter('user', $user->getId())
-      ->groupBy('a.name')
-      ->orderBy('count(a.name)', 'DESC')
+      ->groupBy('artist.name')
+      ->orderBy('count(scrobble.id)', 'DESC')
       ->getQuery()
-      ->getResult()
-    ;
+      ->getResult();
 
     return $artists;
   }
@@ -60,15 +59,13 @@ class ArtistRepository extends ServiceEntityRepository
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->groupBy('a.name')
-      ->orderBy('count(a.name)', 'DESC')
-    ;
+      ->orderBy('count(a.name)', 'DESC');
 
     if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
       $query
         ->andWhere('s.timestamp BETWEEN :from AND :to')
-        ->setParameter('from', $dataSearchBar->from)
-        ->setParameter('to', $dataSearchBar->to)
-      ;
+        ->setParameter('from', $dataSearchBar->from->getTimestamp())
+        ->setParameter('to', $dataSearchBar->to->getTimestamp());
     }
 
     return $query->getQuery();

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Albums{% endblock %}
+
+{% block body %}
+  <div>
+    <h1>Your Albums</h1>
+  </div>
+  {% include 'searchBar/index.html.twig' %}
+  {% include 'my_albums/albums.html.twig' %}
+{% endblock %}

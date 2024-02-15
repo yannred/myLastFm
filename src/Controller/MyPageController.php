@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Album;
 use App\Entity\Artist;
 use App\Entity\Scrobble;
 use App\Entity\Track;
@@ -58,21 +59,29 @@ class MyPageController extends AbstractController
       MyScrobblesController::LIMIT_PER_PAGE
     );
 
+    //top tracks
+    $trackRepository = $this->entityManager->getRepository(Track::class);
+    $tracks = $trackRepository->getTopTracks();
+    $tracks = array_slice($tracks, 0, Track::LIMIT_TOP_TRACKS);
+
     //top artists
     $artistRepository = $this->entityManager->getRepository(Artist::class);
     $artists = $artistRepository->getTopArtists();
     $artists = array_slice($artists, 0, Artist::LIMIT_TOP_ARTIST);
 
-    //top tracks
-    $trackRepository = $this->entityManager->getRepository(Track::class);
-    $tracks = $trackRepository->getTopTracks();
-    $tracks = array_slice($tracks, 0, Track::LIMIT_TOP_TRACKS);
+    //top albums
+    $albumRepository = $this->entityManager->getRepository(Album::class);
+    $albums = $albumRepository->getTopAlbums();
+    $albums = array_slice($albums, 0, Album::LIMIT_TOP_ALBUMS);
+
+
 
 
     return $this->render('my_page/index.html.twig', [
       'lastFmUser' => $lastFmUser,
       'scrobbles' => $scrobblePagination,
       'artists' => $artists,
+      'albums' => $albums,
       'pagination' => 0,
       'userPlaycount' => 1,
       'tracks' => $tracks

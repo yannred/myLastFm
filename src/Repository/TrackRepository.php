@@ -39,8 +39,7 @@ class TrackRepository extends ServiceEntityRepository
       ->groupBy('t.id')
       ->orderBy('count(t.id)', 'DESC')
       ->getQuery()
-      ->getResult()
-    ;
+      ->getResult();
 
     return $topTrack;
 
@@ -57,20 +56,17 @@ class TrackRepository extends ServiceEntityRepository
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->groupBy('t.id')
-      ->orderBy('count(t.id)', 'DESC')
-    ;
+      ->orderBy('count(t.id)', 'DESC');
 
     if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
       $query
         ->andWhere('s.timestamp BETWEEN :from AND :to')
-        ->setParameter('from', $dataSearchBar->from)
-        ->setParameter('to', $dataSearchBar->to)
-      ;
+        ->setParameter('from', $dataSearchBar->from->getTimestamp())
+        ->setParameter('to', $dataSearchBar->to->getTimestamp());
     }
 
     return $query->getQuery();
   }
-
 
 
 }
