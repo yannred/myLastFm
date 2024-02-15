@@ -16,11 +16,14 @@ class SearchBarType extends AbstractType
   {
     $builder
       ->add('type', HiddenType::class, ['data' => 'query'])
+
+      ->add('from', DateType::class, ['required' => false])
+      ->add('to', DateType::class, ['required' => false])
+
       ->add('trackName', TextType::class, ['required' => false])
       ->add('artistName', TextType::class, ['required' => false])
       ->add('albumName', TextType::class, ['required' => false])
-      ->add('from', DateType::class, ['required' => false])
-      ->add('to', DateType::class, ['required' => false]);
+    ;
   }
 
   public function configureOptions(OptionsResolver $resolver): void

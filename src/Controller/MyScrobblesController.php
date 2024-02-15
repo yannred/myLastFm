@@ -41,17 +41,11 @@ class MyScrobblesController extends AbstractController
     //returned search form
     if ($queryForm->isSubmitted() && $queryForm->isValid()) {
 
-      $from = 0;
-      $to = 0;
-      if ($queryForm->get('from')->getData() && $queryForm->get('to')->getData()){
-        $from = $queryForm->get('from')->getData()->getTimestamp();
-        $to = $queryForm->get('to')->getData()->getTimestamp();
-        if ($from == $to){
-          $to = $to + 86400;
-        }
-      }
+      // TODO : Control the dates
+      //  if only one date is set, the other is set to the curent date
+      //  if the same date is set, the "to" date is set to the timestamp of the end of the day
 
-      $query = $scrobbleRepository->paginationQueryByDate($searchBarData);
+      $query = $scrobbleRepository->paginationFilteredQuery($searchBarData);
       $scrobblePagination = $paginator->paginate(
         $query,
         $request->query->getInt('page', 1),
