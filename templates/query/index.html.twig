@@ -38,6 +38,8 @@
     <input id="{{ form.albumName.vars.id }}" name="{{ field_name(form.albumName) }}" {{ form.albumName.vars.required ? 'required="required"' }}
            value="{{ form.albumName.vars.value }}" class="{{ form.albumName.vars.required ? 'required' }}">{{ form_help(form.albumName) }}{{ form_errors(form.albumName) }}
 
+    {{ form_row(form.groupBy) }}
+
     {{ form_widget(form._token) }}
 
     <button type="submit" class="btn btn-primary">Find</button>
