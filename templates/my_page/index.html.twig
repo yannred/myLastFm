@@ -13,8 +13,13 @@
   </div>
 
   <div>
-    <h2>Last scrobbles</h2>
+    <h2 style="display: inline-block">Last scrobbles</h2><span style="margin-left: 50px"><a href="/myPage/myScrobbles">See more</a></span>
     {% include 'my_scrobbles/my_scrobbles.html.twig' %}
+  </div>
+
+  <div>
+    <h2 style="display: inline-block">Top tracks</h2><span style="margin-left: 50px"><a href="/myPage/myTracks">See more</a></span>
+    {% include 'my_tracks/tracks.html.twig' %}
   </div>
 
   <div>
@@ -23,8 +28,10 @@
   </div>
 
   <div>
-    <h2 style="display: inline-block">Top tracks</h2><span style="margin-left: 50px"><a href="/myPage/myTracks">See more</a></span>
-    {% include 'my_tracks/tracks.html.twig' %}
+    <h2 style="display: inline-block">Top albums</h2><span style="margin-left: 50px"><a href="/myPage/myAlbums">See more</a></span>
+    {% include 'my_albums/albums.html.twig' %}
   </div>
+
+
 
 {% endblock %}

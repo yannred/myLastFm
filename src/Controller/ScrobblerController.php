@@ -6,7 +6,6 @@ use AllowDynamicProperties;
 use App\Entity\Image;
 use App\Entity\Import;
 use App\Entity\Scrobble;
-use App\Entity\User;
 use App\Service\ApiRequestService;
 use App\Service\EntityService\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -166,13 +165,6 @@ use Symfony\Component\Routing\Annotation\Route;
       $this->entityManager->persist($artist);
     }
 
-    //Album
-    $criteriaAlbum = ['mbid' => $lastFmScrobble['album']['mbid'], 'name' => $lastFmScrobble['album']['#text'], 'artist' => $artist];
-    $album = $this->entityService->getExistingAlbumOrCreateIt($criteriaAlbum);
-    if ($album->getId() == 0) {
-      $this->entityManager->persist($album);
-    }
-
     //Image
     $images = array();
     foreach ($lastFmScrobble['image'] as $jsonImage) {
@@ -185,6 +177,13 @@ use Symfony\Component\Routing\Annotation\Route;
         $this->entityManager->persist($image);
       }
       $images[] = $image;
+    }
+
+    //Album
+    $criteriaAlbum = ['mbid' => $lastFmScrobble['album']['mbid'], 'name' => $lastFmScrobble['album']['#text'], 'artist' => $artist];
+    $album = $this->entityService->getExistingAlbumOrCreateIt($criteriaAlbum, $images);
+    if ($album->getId() == 0) {
+      $this->entityManager->persist($album);
     }
 
     //Track

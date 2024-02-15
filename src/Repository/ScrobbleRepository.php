@@ -71,8 +71,8 @@ class ScrobbleRepository extends ServiceEntityRepository
     if ($dateFilter) {
       $query
         ->andWhere('s.timestamp BETWEEN :from AND :to')
-        ->setParameter('from', $dataSearchBar->from)
-        ->setParameter('to', $dataSearchBar->to);
+        ->setParameter('from', $dataSearchBar->from->getTimestamp())
+        ->setParameter('to', $dataSearchBar->to->getTimestamp());
     }
 
     if ($trackFilter) {

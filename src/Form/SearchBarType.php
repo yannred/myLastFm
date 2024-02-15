@@ -15,7 +15,7 @@ class SearchBarType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
-      ->add('type', HiddenType::class, ['data' => 'query'])
+      ->add('type', HiddenType::class, ['data' => 'searchBar'])
 
       ->add('from', DateType::class, ['required' => false])
       ->add('to', DateType::class, ['required' => false])

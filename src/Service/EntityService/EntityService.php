@@ -61,7 +61,7 @@ class EntityService
           $images[] = $imageEntity;
         }
       }
-      foreach ($images as $image){
+      foreach ($images as $image) {
         $artist->addImage($image);
       }
 
@@ -76,7 +76,7 @@ class EntityService
    * @param array $criteria
    * @return Album
    */
-  public function getExistingAlbumOrCreateIt(array $criteria): Album
+  public function getExistingAlbumOrCreateIt(array $criteria, array $images): Album
   {
     $repo = $this->em->getRepository(Album::class);
     $album = $repo->findOneBy($criteria);
@@ -85,6 +85,9 @@ class EntityService
       $album->setMbid($criteria['mbid']);
       $album->setName($criteria['name']);
       $album->setArtist($criteria['artist']);
+      foreach ($images as $image) {
+        $album->addImage($image);
+      }
     }
 
     return $album;
@@ -106,7 +109,7 @@ class EntityService
       $track->setArtist($criteria['artist']);
       $track->setAlbum($criteria['album']);
       $track->setUrl($criteria['url']);
-      foreach ($images as $image){
+      foreach ($images as $image) {
         $track->addImage($image);
       }
     }

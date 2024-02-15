@@ -23,7 +23,28 @@
         {# ***** My scrobbles ***** #}
         {% if app.user %}
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/myAccount/myScrobbles">My Scrobbles</a>
+            <a class="nav-link active" aria-current="page" href="/myPage/myScrobbles">My Scrobbles</a>
+          </li>
+        {% endif %}
+
+        {# ***** My artists ***** #}
+        {% if app.user %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/myPage/myArtists">My Artists</a>
+          </li>
+        {% endif %}
+
+        {# ***** My albums ***** #}
+        {% if app.user %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/myPage/myAlbums">My Albums</a>
+          </li>
+        {% endif %}
+
+        {# ***** My tracks ***** #}
+        {% if app.user %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/myPage/myTracks">My Tracks</a>
           </li>
         {% endif %}
 

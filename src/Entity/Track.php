@@ -5,12 +5,14 @@ namespace App\Entity;
 use App\Repository\TrackRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
 class Track
 {
+
+  const LIMIT_TOP_TRACKS = 4;
+
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]

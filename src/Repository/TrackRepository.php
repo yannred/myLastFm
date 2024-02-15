@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Data\SearchBarData;
 use App\Entity\Track;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -25,16 +27,12 @@ class TrackRepository extends ServiceEntityRepository
     $this->security = $security;
   }
 
-  public function getTop10Tracks()
+  public function getTopTracks()
   {
-
-    define('LIMIT_TOP_TRACK', 10);
-
     $user = $this->security->getUser();
-    $tracks = array();
 
-    $trackTop10 = $this->createQueryBuilder('t')
-      ->select('t.id, count(t.id) as count')
+    $topTrack = $this->createQueryBuilder('t')
+      ->select('t, count(t.id) as count')
       ->join('t.scrobbles', 's')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
@@ -43,19 +41,32 @@ class TrackRepository extends ServiceEntityRepository
       ->getQuery()
       ->getResult();
 
-    foreach ($trackTop10 as $track) {
-
-      if (count($tracks) >= LIMIT_TOP_TRACK) {
-        break;
-      }
-
-      $trackEntity = $this->findOneBy(['id' => $track['id']]);
-      $trackEntity->setUserPlaycount($track['count']);
-      $tracks[] = $trackEntity;
-    }
-
-    return $tracks;
+    return $topTrack;
 
   }
+
+
+  public function paginationFilteredQuery(SearchBarData $dataSearchBar): Query
+  {
+    $user = $this->security->getUser();
+
+    $query = $this->createQueryBuilder('t')
+      ->select('t, count(t.id) as count')
+      ->join('t.scrobbles', 's')
+      ->where('s.user = :user')
+      ->setParameter('user', $user->getId())
+      ->groupBy('t.id')
+      ->orderBy('count(t.id)', 'DESC');
+
+    if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
+      $query
+        ->andWhere('s.timestamp BETWEEN :from AND :to')
+        ->setParameter('from', $dataSearchBar->from->getTimestamp())
+        ->setParameter('to', $dataSearchBar->to->getTimestamp());
+    }
+
+    return $query->getQuery();
+  }
+
 
 }
