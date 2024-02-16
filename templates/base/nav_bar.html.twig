@@ -50,18 +50,9 @@
 
         {# ***** Statistics ***** #}
         {% if app.user %}
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-              Statistics
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/myPage/myStatistics">My statistics</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Settings</a>
-            </div>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/myPage/myStatistics">My Stats</a>
           </li>
-
         {% endif %}
 
         {# ***** My Account ***** #}
