@@ -29,6 +29,14 @@ class WidgetGrid
   #[ORM\Column]
   private ?bool $defaultGrid = null;
 
+  #[ORM\OneToMany(mappedBy: 'widgetGrid', targetEntity: Widget::class)]
+  private Collection $widgets;
+
+  public function __construct()
+  {
+    $this->widgets = new ArrayCollection();
+  }
+
   public function getId(): ?int
   {
     return $this->id;
@@ -78,6 +86,36 @@ class WidgetGrid
   public function setDefaultGrid(bool $defaultGrid): static
   {
     $this->defaultGrid = $defaultGrid;
+
+    return $this;
+  }
+
+  /**
+   * @return Collection<int, Widget>
+   */
+  public function getWidgets(): Collection
+  {
+    return $this->widgets;
+  }
+
+  public function addWidget(Widget $widget): static
+  {
+    if (!$this->widgets->contains($widget)) {
+      $this->widgets->add($widget);
+      $widget->setWidgetGrid($this);
+    }
+
+    return $this;
+  }
+
+  public function removeWidget(Widget $widget): static
+  {
+    if ($this->widgets->removeElement($widget)) {
+      // set the owning side to null (unless already changed)
+      if ($widget->getWidgetGrid() === $this) {
+        $widget->setWidgetGrid(null);
+      }
+    }
 
     return $this;
   }

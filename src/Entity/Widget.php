@@ -26,9 +26,6 @@ class Widget
   #[ORM\Column(length: 1020, nullable: true)]
   private ?string $wording = null;
 
-  #[ORM\OneToMany(mappedBy: 'widgetGrid', targetEntity: Widget::class)]
-  private Collection $widgets;
-
   #[ORM\Column(type: Types::TEXT, nullable: true)]
   private ?string $comment = null;
 
@@ -58,11 +55,6 @@ class Widget
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $backgroundColor = null;
-
-  public function __construct()
-  {
-    $this->widgets = new ArrayCollection();
-  }
 
   public function getId(): ?int
   {
@@ -101,36 +93,6 @@ class Widget
   public function setWording(?string $wording): static
   {
     $this->wording = $wording;
-
-    return $this;
-  }
-
-  /**
-   * @return Collection<int, Widget>
-   */
-  public function getWidgets(): Collection
-  {
-    return $this->widgets;
-  }
-
-  public function addWidget(Widget $widget): static
-  {
-    if (!$this->widgets->contains($widget)) {
-      $this->widgets->add($widget);
-      $widget->setWidgetGrid($this);
-    }
-
-    return $this;
-  }
-
-  public function removeWidget(Widget $widget): static
-  {
-    if ($this->widgets->removeElement($widget)) {
-      // set the owning side to null (unless already changed)
-      if ($widget->getWidgetGrid() === $this) {
-        $widget->setWidgetGrid(null);
-      }
-    }
 
     return $this;
   }
