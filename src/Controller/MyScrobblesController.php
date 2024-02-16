@@ -27,6 +27,9 @@ class MyScrobblesController extends AbstractController
   #[Route('/myPage/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
+
+    //TODO : use a GET request
+
     $response = new Response();
     $view = 'my_scrobbles/index.html.twig';
     $paramView = [];
