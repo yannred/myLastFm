@@ -7,10 +7,6 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 
-// GridStack
-import './scripts/gridstack/gridstack-h5.js';
-import './scripts/gridstack/gridstack.min.js';
-import './styles/gridstack.css';
-
-//Widgets
+// GridStack & widgets
 import './scripts/widget.js';
+import './styles/gridstack.css';

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My statistics{% endblock %}
+
+{% block javascriptsplus %}
+
+{% endblock %}
+
+
+{% block body %}
+
+  <div>
+    <div>
+      <h1>Statistics</h1>
+    </div>
+
+    <div class="grid-stack"></div>
+
+    <button onclick="addWidget(grid)">Add widget</button>
+  </div>
+
+  {# TODO : use Encore Bundle for Js includes  #}
+  <script src="{{ asset('scripts/gridstack/gridstack.min.js') }}"></script>
+  <script src="{{ asset('scripts/widget.js') }}"></script>
+  <script>var grid = initGridStack()</script>
+
+{% endblock %}
