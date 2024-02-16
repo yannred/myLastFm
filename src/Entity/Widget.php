@@ -11,6 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: WidgetRepository::class)]
 class Widget
 {
+
+  const TYPE_WIDGET_QUERY = 1;
+
+  const TYPE_WIDGET = [
+    'Query' => self::TYPE_WIDGET_QUERY,
+  ];
+
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
