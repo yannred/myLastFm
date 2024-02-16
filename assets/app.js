@@ -7,4 +7,10 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// GridStack
+import './scripts/gridstack/gridstack-h5.js';
+import './scripts/gridstack/gridstack.min.js';
+import './styles/gridstack.css';
+
+//Widgets
+import './scripts/widget.js';
