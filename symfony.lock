@@ -5,7 +5,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.10",
-            "ref": "310a02a22033e35640468f48ff6bf31a25891537"
+            "ref": "c170ded8fc587d6bd670550c43dafcf093762245"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -41,21 +41,6 @@
             ".env.test",
             "phpunit.xml.dist",
             "tests/bootstrap.php"
-        ]
-    },
-    "symfony/asset-mapper": {
-        "version": "7.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "6.4",
-            "ref": "4ff49f66191ce9356098e588684c27b935958b33"
-        },
-        "files": [
-            "assets/app.js",
-            "assets/styles/app.css",
-            "config/packages/asset_mapper.yaml",
-            "importmap.php"
         ]
     },
     "symfony/console": {
@@ -126,7 +111,7 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.53",
+        "version": "1.54",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -156,18 +141,6 @@
         },
         "files": [
             "config/packages/monolog.yaml"
-        ]
-    },
-    "symfony/notifier": {
-        "version": "7.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "5.0",
-            "ref": "178877daf79d2dbd62129dd03612cb1a2cb407cc"
-        },
-        "files": [
-            "config/packages/notifier.yaml"
         ]
     },
     "symfony/phpunit-bridge": {
@@ -211,20 +184,6 @@
             "config/routes/security.yaml"
         ]
     },
-    "symfony/stimulus-bundle": {
-        "version": "2.14",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.13",
-            "ref": "6acd9ff4f7fd5626d2962109bd4ebab351d43c43"
-        },
-        "files": [
-            "assets/bootstrap.js",
-            "assets/controllers.json",
-            "assets/controllers/hello_controller.js"
-        ]
-    },
     "symfony/translation": {
         "version": "7.0",
         "recipe": {
@@ -250,9 +209,6 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
-    },
-    "symfony/ux-turbo": {
-        "version": "v2.14.0"
     },
     "symfony/validator": {
         "version": "7.0",
