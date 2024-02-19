@@ -27,16 +27,14 @@ class WidgetGridRepository extends ServiceEntityRepository
   }
 
 
-  public function getNextPositionY()
+  public function getNextPositionY(WidgetGrid $widgetGrid)
   {
-    $user = $this->security->getUser();
-
     $positionY = $this->createQueryBuilder('grid')
       ->distinct()
       ->select('widget.positionY')
       ->join('grid.widgets', 'widget')
-      ->where('grid.user = :user')
-      ->setParameter('user', $user->getId())
+      ->where('grid = :grid')
+      ->setParameter('grid', $widgetGrid)
       ->getQuery()
       ->getResult();
 
@@ -48,7 +46,6 @@ class WidgetGridRepository extends ServiceEntityRepository
     }
 
     return $maxPositionY + 1;
-
   }
 
 

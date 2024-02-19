@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
-use App\Data\gridStackWidgetData;
+use App\Data\gridstackItem;
 use App\Entity\Widget;
 use App\Entity\WidgetGrid;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,112 +18,142 @@ class WidgetController extends AbstractController
 
   protected EntityManagerInterface $entityManager;
   protected LoggerInterface $logger;
+  protected Security $security;
 
-  public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
+  protected WidgetGrid $userWidgetGrid;
+
+  public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, Security $security)
   {
     $this->entityManager = $entityManager;
     $this->logger = $logger;
+    $this->security = $security;
+
+    //create a new grid if no grid is found
+    $grid = $this->entityManager->getRepository(WidgetGrid::class)->findOneBy(['user' => $this->security->getUser(), 'defaultGrid' => true]);
+    if ($grid === null) {
+      $this->createGrid();
+    } else {
+      $this->userWidgetGrid = $grid;
+    }
   }
 
-  #[Route('/myPage/widget/load/grid', name: 'app_widget_load_grid', methods: ['GET'])]
-  public function loadGrid(Request $request): Response
+  #[Route('/myPage/grid', name: 'app_widget_load_grid', methods: ['GET'])]
+  public function loadGrid(): Response
   {
     $response = new Response();
 
-    $gridStackWidgets = [];
+    $gridStackItems = [];
 
-    $widgetRepository = $this->entityManager->getRepository(Widget::class);
-    $widgetEntities = $widgetRepository->findBy(['widgetGrid' => 1]);
+    $widgetEntities = $this->userWidgetGrid->getWidgets();
 
     foreach ($widgetEntities as $widgetEntity) {
-      $gridStackWidget = new gridStackWidgetData($widgetEntity);
-      $gridStackWidgets[] = $gridStackWidget;
+      $gridStackWidget = new gridstackItem($widgetEntity);
+
+      //delete button
+      $javascriptFunction = 'deleteWidget("' . $widgetEntity->getId() . '")';
+      $gridStackWidget->content = 'ID ' . $widgetEntity->getId() . ' BR <button onclick=' . $javascriptFunction . '>Delete me</button>';
+
+      $gridStackItems[] = $gridStackWidget;
     }
 
     $response->setStatusCode(Response::HTTP_OK);
-    $response->setContent(json_encode($gridStackWidgets));
+    $response->setContent(json_encode($gridStackItems));
 
     return $response;
   }
 
 
   #[Route('/myPage/widget/new', name: 'app_widget_new', methods: ['GET'])]
-  public function createWidget(Request $request, ): Response
+  public function createWidget(): Response
   {
-
-    //TODO : add error control
-
     $response = new Response();
 
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
 
-    $widgetGrid = $gridRepository->find(1);
-
     $widget = new Widget();
-    $widget->setCode("widget_code");
+    $widget->setCode(' (' . date('Y-m-d H:i:s').') ');
     $widget->setTypeWidget(Widget::TYPE_WIDGET_QUERY);
-    $widget->setWidgetGrid($widgetGrid);
+    $widget->setWidgetGrid($this->userWidgetGrid);
 
     $widget->setWidth(2);
     $widget->setHeight(1);
     $widget->setPositionX(0);
-    $widget->setPositionY($gridRepository->getNextPositionY());
+    $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
 
 
     $this->entityManager->persist($widget);
     $this->entityManager->flush();
 
-    $gridStackWidget = new gridStackWidgetData($widget);
-
+    $gridstackItem = new gridstackItem($widget);
 
     $response->setStatusCode(Response::HTTP_CREATED);
-    $response->setContent(json_encode($gridStackWidget));
+    $response->setContent(json_encode($gridstackItem));
 
     return $response;
   }
 
 
 
-  #[Route('/myPage/widget/save', name: 'app_widget_save', methods: ['POST'])]
-  public function saveWidget(Request $request, ): Response
+  #[Route('/myPage/widget/{id}', name: 'app_widget_update', methods: ['UPDATE'])]
+  public function updateWidget(Request $request, ): Response
   {
-
-    //TODO : add error control
-
     $response = new Response();
 
     $body = $request->getContent();
     $parameters = json_decode($body, true);
 
+    $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $parameters['id'], 'widgetGrid' => $this->userWidgetGrid]);
 
-    $this->logger->info('incoming data :');
-    $this->logger->info(print_r($parameters, true));
-
-    if ($parameters['id'] == 0){
-      $widgetGrid = $this->entityManager->getRepository(WidgetGrid::class)->find(1);
-
-      $widget = new Widget();
-      $widget->setCode("widget_code");
-      $widget->setTypeWidget(Widget::TYPE_WIDGET_QUERY);
-      $widget->setWidgetGrid($widgetGrid);
+    if ($widget === null) {
+      $response->setStatusCode(Response::HTTP_NOT_FOUND);
     } else {
-      $widget = $this->entityManager->getRepository(Widget::class)->find($parameters['id']);
+      $widget->setWidth($parameters['w']);
+      $widget->setHeight($parameters['h']);
+      $widget->setPositionX($parameters['x']);
+      $widget->setPositionY($parameters['y']);
+
+      $this->entityManager->persist($widget);
+      $this->entityManager->flush();
+
+      $response->setStatusCode(Response::HTTP_CREATED);
+      $response->setContent(json_encode(['id' => $widget->getId()]));
     }
 
-    $widget->setWidth($parameters['w']);
-    $widget->setHeight($parameters['h']);
-    $widget->setPositionX($parameters['x']);
-    $widget->setPositionY($parameters['y']);
+    return $response;
+  }
 
 
-    $this->entityManager->persist($widget);
-    $this->entityManager->flush();
+  #[Route('/myPage/widget/{id}', name: 'app_widget_delete', methods: ['DELETE'])]
+  public function deleteWidget(Request $request, ): Response
+  {
+    $response = new Response();
 
+    $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $request->get('id'), 'widgetGrid' => $this->userWidgetGrid]);
 
-    $response->setStatusCode(Response::HTTP_CREATED);
-    $response->setContent(json_encode(['id' => $widget->getId()]));
+    if ($widget === null) {
+      $response->setStatusCode(Response::HTTP_NOT_FOUND);
+    } else {
+      $this->entityManager->remove($widget);
+      $this->entityManager->flush();
+      $response->setStatusCode(Response::HTTP_OK);
+    }
 
     return $response;
+  }
+
+
+  private function createGrid()
+  {
+    $grid = new WidgetGrid();
+    $grid->setUser($this->security->getUser());
+    $grid->setDefaultGrid(true);
+    $grid->setCode('default');
+    $grid->setWording('Created by default (' . date('Y-m-d H:i:s').')');
+
+    $this->entityManager->persist($grid);
+    $this->entityManager->flush();
+
+    $this->userWidgetGrid = $grid;
   }
 
 }
