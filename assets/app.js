@@ -8,5 +8,4 @@ import './bootstrap.js';
 import './styles/app.css';
 
 // GridStack & widgets
-import './scripts/widget.js';
 import './styles/gridstack.css';

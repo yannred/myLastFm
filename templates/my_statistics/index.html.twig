@@ -16,12 +16,9 @@
 
     <div class="grid-stack"></div>
 
-    <button onclick="addWidget(grid)">Add widget</button>
-  </div>
+    <p><button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button></p>
 
-  {# TODO : use Encore Bundle for Js includes  #}
-  <script src="{{ asset('scripts/gridstack/gridstack.min.js') }}"></script>
-  <script src="{{ asset('scripts/widget.js') }}"></script>
-  <script>var grid = initGridStack()</script>
+    <p><button onclick="loadGrid()">Load widgets</button></p>
+  </div>
 
 {% endblock %}

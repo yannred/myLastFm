@@ -1,61 +1,82 @@
-function initGridStack () {
+window.grid = null;
 
-  let widgetItems = [
-    {content: 'my first widget'}, // will default to location (0,0) and 1x1
-  ];
+function loadGrid () {
 
-  // TODO : control grid options
-  const gridOption = {
-    "minRow": 2,
-    "cellHeight": "7rem",
-    //"cellHeight" : 'initial', // start square but will set to % of window width later
-    "animate": false, // show immediate (animate : true is nice for user dragging though)
-    "disableOneColumnMode": true, // will manually do 1 column
-    "float": true
+  console.log('loadGrid');
+
+  let url = '/myPage/widget/load/grid';
+  // url = url + '?XDEBUG_SESSION_START=1';
+
+  const myHeaders = new Headers();
+  // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
+  myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow"
   };
-  let grid = GridStack.init(gridOption);
-  grid.load(widgetItems);
 
-  //Add saving events
-  let gridStackItems = document.getElementsByClassName('grid-stack-item')
-  for (let i = 0; i < gridStackItems.length; i++) {
-    gridStackItems[i].onmouseleave = function () {
-      addWidgetSavingEvent(gridStackItems[i]);
-    }
-  }
+  fetch(url, requestOptions)
+    .then(response => response.json())
+    .then((widgetResponse) => {
+      console.log('JsonWidgetResponse')
+      console.log(widgetResponse)
+      // TODO : control grid options
+      const gridOption = {
+        "minRow": 2,
+        "cellHeight": "7rem",
+        //"cellHeight" : 'initial', // start square but will set to % of window width later
+        "animate": false, // show immediate (animate : true is nice for user dragging though)
+        "disableOneColumnMode": true, // will manually do 1 column
+        "float": true
+      };
+      window.grid = GridStack.init(gridOption);
+      setGridstackEvents(grid);
+      grid.load(widgetResponse);
+      $('#button-add-widget').css("display", "inline");
+    })
+    .catch((error) => {
+      console.log('error loading widget grid, detail bellow');
+      console.log(error);
+    })
 
-  return grid;
 }
 
-function addWidgetSavingEvent (widget) {
-  widget.onmouseleave = function () {
-    saveWidget(widget);
-  }
+
+
+function setGridstackEvents () {
+
+  grid.on('change', function(event, gridStackItems) {
+    gridStackItems.forEach(function(gridStackItem) {
+      saveWidget(gridStackItem);
+    });
+  });
+
 }
 
-function addWidget (grid) {
-  console.log('add widget');
-  let widget = grid.addWidget('<div class="grid-stack-item" id="0"><div class="grid-stack-item-content"></div></div>', {w: 3});
-  saveWidget(widget);
-  addWidgetSavingEvent(widget);
+function addWidget () {
+  console.log('adding widget');
+  let gridStackItem = grid.addWidget('<div class="grid-stack-item" gs-id="0"><div class="grid-stack-item-content"></div></div>', {id : "0", x : 0, y : 2, w: 3, h: 3});
+  //TODO : Call the API for getting the widget id
+  //TODO : test jQuery UI Layout Plugin (https://www.formget.com/jquery-layout-plugins/ from https://gridstackjs.com/#getStarted)
 }
 
-function saveWidget (widget) {
+function saveWidget (gridStackItem) {
 
-  console.log('saving widget');
-  console.log('id: ' + widget.id);
-  console.log('width: ' + widget.getAttribute('gs-w'));
-  console.log('height: ' + widget.getAttribute('gs-h'));
-  console.log('x: ' + widget.getAttribute('gs-x'));
-  console.log('y: ' + widget.getAttribute('gs-y'));
+  console.log('gridStackItem in saveWidget bellow');
+  console.log(gridStackItem);
 
   let widgetData = JSON.stringify({
-    "id": widget.id + "",
-    "w": widget.getAttribute('gs-w'),
-    "h": widget.getAttribute('gs-h'),
-    "x": widget.getAttribute('gs-x'),
-    "y": widget.getAttribute('gs-y'),
+    "id": gridStackItem.id + "",
+    "w": gridStackItem.w + "",
+    "h": gridStackItem.h + "",
+    "x": gridStackItem.x + "",
+    "y": gridStackItem.y + ""
   })
+
+  console.log('widgetData for saving request bellow');
+  console.log(widgetData);
 
   let url = '/myPage/widget/save';
   // url = url + '?XDEBUG_SESSION_START=1';
@@ -76,7 +97,7 @@ function saveWidget (widget) {
     .then((widgetResponse) => {
       console.log('widget saved')
       console.log(widgetResponse)
-      widget.id = widgetResponse.id;
+      gridStackItem.id = widgetResponse.id;
     })
     .catch((error) => {
       console.log('error saving widget, detail bellow');

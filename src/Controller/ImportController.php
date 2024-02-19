@@ -27,7 +27,6 @@ class ImportController extends AbstractController
     $imports = $importRepository->findAll();
 
     return $this->render('import/index.html.twig', [
-      'controller_name' => 'ImportController',
       'imports' => $imports
     ]);
   }
