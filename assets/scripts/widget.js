@@ -2,6 +2,8 @@ window.grid = null;
 
 function loadGrid () {
 
+  //TODO : test jQuery UI Layout Plugin (https://www.formget.com/jquery-layout-plugins/ from https://gridstackjs.com/#getStarted)
+
   console.log('loadGrid');
 
   let url = '/myPage/widget/load/grid';
@@ -57,9 +59,35 @@ function setGridstackEvents () {
 
 function addWidget () {
   console.log('adding widget');
-  let gridStackItem = grid.addWidget('<div class="grid-stack-item" gs-id="0"><div class="grid-stack-item-content"></div></div>', {id : "0", x : 0, y : 2, w: 3, h: 3});
-  //TODO : Call the API for getting the widget id
-  //TODO : test jQuery UI Layout Plugin (https://www.formget.com/jquery-layout-plugins/ from https://gridstackjs.com/#getStarted)
+
+  let url = '/myPage/widget/new';
+  url = url + '?XDEBUG_SESSION_START=1';
+
+  const myHeaders = new Headers();
+  // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
+  myHeaders.append("Content-Type", "application/json");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow"
+  };
+
+  fetch(url, requestOptions)
+    .then(response => response.json())
+    .then((widgetResponse) => {
+      console.log('NEW widget')
+      console.log(widgetResponse)
+
+      const gridStackItem = grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>', widgetResponse);
+      console.log('gridStackItem bellow');
+      console.log(gridStackItem);
+    })
+    .catch((error) => {
+      console.log('error creating new widget, detail bellow');
+      console.log(error);
+    })
+
 }
 
 function saveWidget (gridStackItem) {

@@ -35,14 +35,48 @@ class WidgetController extends AbstractController
     $widgetEntities = $widgetRepository->findBy(['widgetGrid' => 1]);
 
     foreach ($widgetEntities as $widgetEntity) {
-      $gridStackWidget = new gridStackWidgetData();
-      $gridStackWidget->id = $widgetEntity->getId();
-      $gridStackWidget->content = $widgetEntity->getcode();
+      $gridStackWidget = new gridStackWidgetData($widgetEntity);
       $gridStackWidgets[] = $gridStackWidget;
     }
 
     $response->setStatusCode(Response::HTTP_OK);
     $response->setContent(json_encode($gridStackWidgets));
+
+    return $response;
+  }
+
+
+  #[Route('/myPage/widget/new', name: 'app_widget_new', methods: ['GET'])]
+  public function createWidget(Request $request, ): Response
+  {
+
+    //TODO : add error control
+
+    $response = new Response();
+
+    $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
+
+    $widgetGrid = $gridRepository->find(1);
+
+    $widget = new Widget();
+    $widget->setCode("widget_code");
+    $widget->setTypeWidget(Widget::TYPE_WIDGET_QUERY);
+    $widget->setWidgetGrid($widgetGrid);
+
+    $widget->setWidth(2);
+    $widget->setHeight(1);
+    $widget->setPositionX(0);
+    $widget->setPositionY($gridRepository->getNextPositionY());
+
+
+    $this->entityManager->persist($widget);
+    $this->entityManager->flush();
+
+    $gridStackWidget = new gridStackWidgetData($widget);
+
+
+    $response->setStatusCode(Response::HTTP_CREATED);
+    $response->setContent(json_encode($gridStackWidget));
 
     return $response;
   }

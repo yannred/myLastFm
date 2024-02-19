@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\WidgetGrid;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<WidgetGrid>
@@ -16,33 +17,39 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WidgetGridRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, WidgetGrid::class);
+
+  protected Security $security;
+
+  public function __construct(ManagerRegistry $registry, Security $security)
+  {
+    parent::__construct($registry, WidgetGrid::class);
+    $this->security = $security;
+  }
+
+
+  public function getNextPositionY()
+  {
+    $user = $this->security->getUser();
+
+    $positionY = $this->createQueryBuilder('grid')
+      ->distinct()
+      ->select('widget.positionY')
+      ->join('grid.widgets', 'widget')
+      ->where('grid.user = :user')
+      ->setParameter('user', $user->getId())
+      ->getQuery()
+      ->getResult();
+
+    $maxPositionY = 0;
+    foreach ($positionY as $pos) {
+      if ($pos['positionY'] > $maxPositionY) {
+        $maxPositionY = $pos['positionY'];
+      }
     }
 
-//    /**
-//     * @return WidgetGrid[] Returns an array of WidgetGrid objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('w.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    return $maxPositionY + 1;
 
-//    public function findOneBySomeField($value): ?WidgetGrid
-//    {
-//        return $this->createQueryBuilder('w')
-//            ->andWhere('w.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+  }
+
+
 }
