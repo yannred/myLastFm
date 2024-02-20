@@ -53,7 +53,7 @@ function setGridstackEvents () {
 function addWidget () {
 
   let url = '/myPage/widget/new';
-  // url = url + '?XDEBUG_SESSION_START=1';
+  url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
@@ -68,7 +68,8 @@ function addWidget () {
   fetch(url, requestOptions)
     .then(response => response.json())
     .then((widgetResponse) => {
-      grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>', widgetResponse);
+      console.log('widget created, detail : ', widgetResponse);
+      grid.addWidget(widgetResponse);
     })
     .catch((error) => {
       console.error('error creating new widget, detail : ', error);

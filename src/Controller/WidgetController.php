@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Data\gridstackItem;
+use App\Data\Widget\TopArtistModel;
 use App\Entity\Widget;
 use App\Entity\WidgetGrid;
 use Doctrine\ORM\EntityManagerInterface;
@@ -67,12 +68,46 @@ class WidgetController extends AbstractController
   public function createWidget(): Response
   {
     $response = new Response();
-
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
+    $widgetRepository = $this->entityManager->getRepository(Widget::class);
+
+    $typeWidget = Widget::TYPE__QUERY;
+    $subTypeWidget = Widget::SUB_TYPE__TOP_ARTIST;
+
+    $model = null;
+    switch ($typeWidget) {
+
+      case Widget::TYPE__QUERY:{
+
+        /** ********** */
+        /** QUERY TYPE */
+        /** ********** */
+        switch ($subTypeWidget) {
+
+          /** QUERY TOP ARTIST */
+          case Widget::SUB_TYPE__TOP_ARTIST:{
+            $model = new TopArtistModel();
+            break;
+          }
+        }
+        break;
+      }
+
+      /** ********** */
+      /**            */
+      /** ********** */
+      case 'else':{
+
+        break;
+      }
+    }
 
     $widget = new Widget();
+    $widget->createFrom($model);
+    $widget->setQuery($widgetRepository->createWidgetQuery($model->getQueryParameters(), $this->security->getUser())->getDQL());
+
     $widget->setCode(' (' . date('Y-m-d H:i:s').') ');
-    $widget->setTypeWidget(Widget::TYPE_WIDGET_QUERY);
+    $widget->setTypeWidget(Widget::TYPE__QUERY);
     $widget->setWidgetGrid($this->userWidgetGrid);
 
     $widget->setWidth(2);
@@ -85,6 +120,15 @@ class WidgetController extends AbstractController
     $this->entityManager->flush();
 
     $gridstackItem = new gridstackItem($widget);
+
+    $results = $widgetRepository->createWidgetQuery($model->getQueryParameters(), $this->security->getUser())->getResult();
+
+    //first 3 results
+    $results = array_slice($results, 0, 3);
+    $gridstackItem->content = 'Top Artist : <br />';
+    foreach ($results as $result) {
+      $gridstackItem->content .= $result['name'] . " " . $result['count'] . 'x<br />';
+    }
 
     $response->setStatusCode(Response::HTTP_CREATED);
     $response->setContent(json_encode($gridstackItem));

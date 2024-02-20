@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\WidgetRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,11 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Widget
 {
 
-  const TYPE_WIDGET_QUERY = 1;
+  const TYPE__QUERY = 1;
 
-  const TYPE_WIDGET = [
-    'Query' => self::TYPE_WIDGET_QUERY,
+  const TYPE = [
+    'Query' => self::TYPE__QUERY,
   ];
+
+  const SUB_TYPE__TOP_ARTIST = 1;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -223,4 +223,24 @@ class Widget
 
     return $this;
   }
+
+  public function createFrom(mixed $widgetModel): void
+  {
+    $this->id = $widgetModel->getId();
+    $this->widgetGrid = $widgetModel->getWidgetGrid();
+    $this->code = $widgetModel->getCode();
+    $this->wording = $widgetModel->getWording();
+    $this->comment = $widgetModel->getComment();
+    $this->typeWidget = $widgetModel->getTypeWidget();
+    $this->subTypeWidget = $widgetModel->getSubTypeWidget();
+    $this->width = $widgetModel->getWidth();
+    $this->height = $widgetModel->getHeight();
+    $this->positionX = $widgetModel->getPositionX();
+    $this->positionY = $widgetModel->getPositionY();
+    $this->fontColor = $widgetModel->getFontColor();
+    $this->backgroundColor = $widgetModel->getBackgroundColor();
+
+  }
+
 }
+
