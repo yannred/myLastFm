@@ -84,4 +84,21 @@ class WidgetRepository extends ServiceEntityRepository
     return $queryBuilder->getQuery();
   }
 
+
+  public function getWidgetFromUser(int $widgetId, int $userId): ?Widget
+  {
+    $query = $this->createQueryBuilder('w')
+      ->select('w')
+      ->join('w.widgetGrid', 'grid')
+      ->join('grid.user', 'user')
+      ->where('w.id = :widgetId')
+      ->setParameter('widgetId', $widgetId)
+      ->andWhere('user.id = :userId')
+      ->setParameter('userId', $userId)
+      ->getQuery()
+    ;
+
+    return $query->getResult()[0];
+  }
+
 }

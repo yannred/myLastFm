@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Widget
 {
 
-  const TYPE__QUERY = 1;
+  const TYPE__TOP_ARTIST = 1;
 
   const TYPE = [
-    'Query' => self::TYPE__QUERY,
+    'Query' => self::TYPE__TOP_ARTIST,
   ];
 
-  const SUB_TYPE__TOP_ARTIST = 1;
+  const SUB_TYPE__BAR = 1;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -253,7 +253,7 @@ class Widget
     $model = null;
     switch ($typeWidget) {
 
-      case Widget::TYPE__QUERY:{
+      case Widget::TYPE__TOP_ARTIST:{
 
         /** ********** */
         /** QUERY TYPE */
@@ -261,7 +261,7 @@ class Widget
         switch ($subTypeWidget) {
 
           /** QUERY TOP ARTIST */
-          case Widget::SUB_TYPE__TOP_ARTIST:{
+          case Widget::SUB_TYPE__BAR:{
             $model = new TopArtistModel();
             break;
           }
@@ -285,6 +285,29 @@ class Widget
   {
     return self::getWidgetModelFromType($this->typeWidget, $this->subTypeWidget);
   }
+
+
+  public static function getChartTypeFromSubType(int $subTypeWidget): string
+  {
+    $chartType = '';
+
+    switch ($subTypeWidget) {
+      case Widget::SUB_TYPE__BAR:
+        $chartType = 'bar';
+        break;
+    }
+
+
+
+    return $chartType;
+  }
+
+  public function getChartType(): string
+  {
+    return self::getChartTypeFromSubType($this->subTypeWidget);
+  }
+
+
 
 }
 

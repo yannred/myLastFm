@@ -33,7 +33,7 @@ function loadGrid () {
       $('#button-add-widget').css("display", "inline");
     })
     .then(() => {
-      helloChart();
+      loadCharts();
     })
     .catch((error) => {
       console.error('error loading widget grid, detail : ', error);

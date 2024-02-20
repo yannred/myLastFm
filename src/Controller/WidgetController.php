@@ -72,8 +72,8 @@ class WidgetController extends AbstractController
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
     $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
-    $typeWidget = Widget::TYPE__QUERY;
-    $subTypeWidget = Widget::SUB_TYPE__TOP_ARTIST;
+    $typeWidget = Widget::TYPE__TOP_ARTIST;
+    $subTypeWidget = Widget::SUB_TYPE__BAR;
 
     $model = Widget::getWidgetModelFromType($typeWidget, $subTypeWidget);
 
@@ -88,7 +88,7 @@ class WidgetController extends AbstractController
     );
 
     $widget->setCode(' (' . date('Y-m-d H:i:s').') ');
-    $widget->setTypeWidget(Widget::TYPE__QUERY);
+    $widget->setTypeWidget(Widget::TYPE__TOP_ARTIST);
     $widget->setWidgetGrid($this->userWidgetGrid);
 
     $widget->setWidth(2);

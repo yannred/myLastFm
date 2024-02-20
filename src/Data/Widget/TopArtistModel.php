@@ -7,12 +7,13 @@ use App\Entity\Widget;
 class TopArtistModel extends TopModel
 {
 
-  public function __construct()
+  public function __construct($subTypeWidget = Widget::SUB_TYPE__BAR)
   {
 
     parent::__construct();
 
-    $this->subTypeWidget = Widget::SUB_TYPE__TOP_ARTIST;
+    $this->typeWidget = Widget::TYPE__TOP_ARTIST;
+    $this->subTypeWidget = $subTypeWidget;
 
     $this->setQueryParameters(
       [

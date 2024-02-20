@@ -9,8 +9,6 @@ abstract class TopModel extends WidgetModel
   public function __construct()
   {
     parent::__construct();
-
-    $this->typeWidget = Widget::TYPE__QUERY;
   }
 
 }
