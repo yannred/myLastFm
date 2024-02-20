@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My statistics{% endblock %}
+
+{% block javascriptsplus %}
+
+{% endblock %}
+
+
+{% block body %}
+
+  <div>
+    <div>
+      <h1>Statistics</h1>
+    </div>
+
+    <div class="grid-stack"></div>
+
+    <p><button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button></p>
+
+    <script>
+      //TODO : add spinner
+      loadGrid()
+    </script>
+  </div>
+
+{% endblock %}

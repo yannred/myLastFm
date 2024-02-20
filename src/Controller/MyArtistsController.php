@@ -28,6 +28,8 @@ class MyArtistsController extends AbstractController
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
 
+    //TODO : use a GET request
+
     $artistRepository = $this->entityManager->getRepository(Artist::class);
 
     $searchBarData = new SearchBarData();

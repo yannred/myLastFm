@@ -55,10 +55,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Import::class)]
     private Collection $imports;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: WidgetGrid::class)]
+    private Collection $widgetGrids;
+
     public function __construct()
     {
         $this->scrobbles = new ArrayCollection();
         $this->imports = new ArrayCollection();
+        $this->widgetGrids = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,6 +249,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($import->getUser() === $this) {
                 $import->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WidgetGrid>
+     */
+    public function getWidgetGrids(): Collection
+    {
+        return $this->widgetGrids;
+    }
+
+    public function addWidgetGrid(WidgetGrid $widgetGrid): static
+    {
+        if (!$this->widgetGrids->contains($widgetGrid)) {
+            $this->widgetGrids->add($widgetGrid);
+            $widgetGrid->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWidgetGrid(WidgetGrid $widgetGrid): static
+    {
+        if ($this->widgetGrids->removeElement($widgetGrid)) {
+            // set the owning side to null (unless already changed)
+            if ($widgetGrid->getUser() === $this) {
+                $widgetGrid->setUser(null);
             }
         }
 

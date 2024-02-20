@@ -2,13 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Import;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ImportController extends AbstractController
+class MyStatisticsController extends AbstractController
 {
 
   protected EntityManagerInterface $entityManager;
@@ -18,16 +17,11 @@ class ImportController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/myAccount/import', name: 'app_import')]
+  #[Route('/myPage/myStatistics', name: 'app_my_statistics')]
   public function index(): Response
   {
 
-    //Get all imports
-    $importRepository = $this->entityManager->getRepository(Import::class);
-    $imports = $importRepository->findAll();
-
-    return $this->render('import/index.html.twig', [
-      'imports' => $imports
-    ]);
+    return $this->render('my_statistics/index.html.twig');
   }
+
 }

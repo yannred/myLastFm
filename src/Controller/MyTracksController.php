@@ -27,6 +27,9 @@ class MyTracksController extends AbstractController
   #[Route('/myPage/myTracks', name: 'app_my_tracks')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
+
+    //TODO : use a GET request
+
     $trackRepository = $this->entityManager->getRepository(Track::class);
 
     $searchBarData = new SearchBarData();

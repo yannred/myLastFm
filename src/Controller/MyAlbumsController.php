@@ -27,6 +27,9 @@ class MyAlbumsController extends AbstractController
   #[Route('/myPage/myAlbums', name: 'app_my_albums')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
+
+    //TODO : use a GET request
+
     $albumRepository = $this->entityManager->getRepository(Album::class);
 
     $searchBarData = new SearchBarData();
