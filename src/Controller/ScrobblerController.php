@@ -7,7 +7,7 @@ use App\Entity\Image;
 use App\Entity\Import;
 use App\Entity\Scrobble;
 use App\Service\ApiRequestService;
-use App\Service\EntityService\EntityService;
+use App\Service\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;

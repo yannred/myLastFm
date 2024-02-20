@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Service\EntityService;
+namespace App\Service;
 
 use App\Entity\Album;
 use App\Entity\Artist;
 use App\Entity\Image;
 use App\Entity\Track;
-use App\Service\ApiRequestService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EntityService

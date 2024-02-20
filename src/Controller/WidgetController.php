@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Data\gridstackItem;
-use App\Data\Widget\TopArtistModel;
 use App\Entity\Widget;
 use App\Entity\WidgetGrid;
+use App\Service\StatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,14 +20,16 @@ class WidgetController extends AbstractController
   protected EntityManagerInterface $entityManager;
   protected LoggerInterface $logger;
   protected Security $security;
+  protected StatisticsService $statisticsService;
 
   protected WidgetGrid $userWidgetGrid;
 
-  public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, Security $security)
+  public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, Security $security, StatisticsService $statisticsService)
   {
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->security = $security;
+    $this->statisticsService = $statisticsService;
 
     //create a new grid if no grid is found
     $grid = $this->entityManager->getRepository(WidgetGrid::class)->findOneBy(['user' => $this->security->getUser(), 'defaultGrid' => true]);
@@ -49,8 +51,9 @@ class WidgetController extends AbstractController
 
     foreach ($widgetEntities as $widgetEntity) {
       $gridStackWidget = new gridstackItem($widgetEntity);
+      $modelWidget = $widgetEntity->getWidgetModel();
 
-      $gridStackWidget->content = $this->generateContent($widgetEntity) . ' <br />' . $widgetEntity->getDeleteButton();
+      $gridStackWidget->content = $this->statisticsService->generateContent($widgetEntity, $modelWidget->getContentParameters());
 
       $gridStackItems[] = $gridStackWidget;
     }
@@ -72,37 +75,17 @@ class WidgetController extends AbstractController
     $typeWidget = Widget::TYPE__QUERY;
     $subTypeWidget = Widget::SUB_TYPE__TOP_ARTIST;
 
-    $model = null;
-    switch ($typeWidget) {
+    $model = Widget::getWidgetModelFromType($typeWidget, $subTypeWidget);
 
-      case Widget::TYPE__QUERY:{
-
-        /** ********** */
-        /** QUERY TYPE */
-        /** ********** */
-        switch ($subTypeWidget) {
-
-          /** QUERY TOP ARTIST */
-          case Widget::SUB_TYPE__TOP_ARTIST:{
-            $model = new TopArtistModel();
-            break;
-          }
-        }
-        break;
-      }
-
-      /** ********** */
-      /**            */
-      /** ********** */
-      case 'else':{
-
-        break;
-      }
-    }
+    // TODO: Implement model not found exception
 
     $widget = new Widget();
     $widget->createFrom($model);
-    $widget->setQuery($widgetRepository->createWidgetQuery($model->getQueryParameters(), $this->security->getUser())->getDQL());
+    $widget->setQuery(
+      $widgetRepository
+      ->createWidgetQuery($model->getQueryParameters())
+      ->getDQL()
+    );
 
     $widget->setCode(' (' . date('Y-m-d H:i:s').') ');
     $widget->setTypeWidget(Widget::TYPE__QUERY);
@@ -118,7 +101,7 @@ class WidgetController extends AbstractController
     $this->entityManager->flush();
 
     $gridstackItem = new gridstackItem($widget);
-    $gridstackItem->content = $this->generateContent($widget) . ' <br />' . $widget->getDeleteButton();
+    $gridstackItem->content = $this->statisticsService->generateContent($widget, $model->getContentParameters());
 
     $response->setStatusCode(Response::HTTP_CREATED);
     $response->setContent(json_encode($gridstackItem));
@@ -188,19 +171,6 @@ class WidgetController extends AbstractController
     $this->entityManager->flush();
 
     $this->userWidgetGrid = $grid;
-  }
-
-
-  private function generateContent($widget): ?string
-  {
-
-    $results = $this->entityManager->createQuery($widget->getQuery())->getResult();
-    $results = array_slice($results, 0, 3);
-    $content = 'Top Artist : <br />';
-    foreach ($results as $result) {
-      $content .= $result['name'] . " " . $result['count'] . 'x<br />';
-    }
-    return $content;
   }
 
 }

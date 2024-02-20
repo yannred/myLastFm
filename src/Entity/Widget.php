@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Data\Widget\TopArtistModel;
+use App\Data\Widget\WidgetModel;
 use App\Repository\WidgetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -226,8 +228,6 @@ class Widget
 
   public function createFrom(mixed $widgetModel): void
   {
-    $this->id = $widgetModel->getId();
-    $this->widgetGrid = $widgetModel->getWidgetGrid();
     $this->code = $widgetModel->getCode();
     $this->wording = $widgetModel->getWording();
     $this->comment = $widgetModel->getComment();
@@ -245,7 +245,45 @@ class Widget
   public function getDeleteButton(): string
   {
     $javascriptFunction = 'deleteWidget("' . $this->getId() . '")';
-    return '<button onclick=' . $javascriptFunction . '>Delete me</button>';
+    return '<button onclick=' . $javascriptFunction . '>X</button>';
+  }
+
+  public static function getWidgetModelFromType(int $typeWidget, int $subTypeWidget): ?WidgetModel
+  {
+    $model = null;
+    switch ($typeWidget) {
+
+      case Widget::TYPE__QUERY:{
+
+        /** ********** */
+        /** QUERY TYPE */
+        /** ********** */
+        switch ($subTypeWidget) {
+
+          /** QUERY TOP ARTIST */
+          case Widget::SUB_TYPE__TOP_ARTIST:{
+            $model = new TopArtistModel();
+            break;
+          }
+        }
+        break;
+      }
+
+      /** ********** */
+      /**            */
+      /** ********** */
+      case 'else':{
+
+        break;
+      }
+    }
+
+    return $model;
+  }
+
+  public function getWidgetModel(): ?WidgetModel
+  {
+    return self::getWidgetModelFromType($this->typeWidget, $this->subTypeWidget);
   }
 
 }

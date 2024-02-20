@@ -8,10 +8,14 @@
   {# Bootstrap CDN#}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  {# Gridstack #}
+  {# Chart.js #}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{{ asset('scripts/chart.js') }}"></script>
+
+  {# Gridstack and widgets #}
   <script src="{{ asset('scripts/gridstack/gridstack.min.js') }}"></script>
-{#  <script src="{{ asset('scripts/gridstack/gridstack-h5.js') }}"></script>#}
   <script src="{{ asset('scripts/widget.js') }}"></script>
+  {#  <script src="{{ asset('scripts/gridstack/gridstack-h5.js') }}"></script>#}
 
 
   {% block stylesheets %}

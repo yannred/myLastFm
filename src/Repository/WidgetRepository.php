@@ -6,6 +6,7 @@ use App\Entity\Widget;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Widget>
@@ -17,13 +18,19 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WidgetRepository extends ServiceEntityRepository
 {
-  public function __construct(ManagerRegistry $registry)
+
+  protected Security $security;
+
+  public function __construct(ManagerRegistry $registry, Security $security)
   {
     parent::__construct($registry, Widget::class);
+    $this->security = $security;
   }
 
-  public function createWidgetQuery(array $parameters, $user): Query
+  public function createWidgetQuery(array $parameters): Query
   {
+    $user = $this->security->getUser();
+
     $queryBuilder = $this->getEntityManager()->getRepository($parameters['entity'])->createQueryBuilder($parameters['entityAlias']);
 
     if (isset($parameters['select'])) {

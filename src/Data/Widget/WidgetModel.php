@@ -2,62 +2,41 @@
 
 namespace App\Data\Widget;
 
-use App\Entity\WidgetGrid;
-
 abstract class WidgetModel
 {
-  protected ?int $id = null;
-  protected ?WidgetGrid $widgetGrid = null;
-  protected ?string $code = null;
-  protected ?string $wording = null;
-  protected ?string $comment = null;
-  protected ?int $typeWidget = null;
-  protected ?int $subTypeWidget = null;
-  protected ?string $query = null;
-  protected ?float $width = null;
-  protected ?float $height = null;
-  protected ?float $positionX = null;
-  protected ?float $positionY = null;
-  protected ?string $fontColor = null;
-  protected ?string $backgroundColor = null;
+  protected string $code;
+  protected string $wording;
+  protected string $comment;
+  protected int $typeWidget;
+  protected int $subTypeWidget;
+  protected string $query;
+  protected float $width;
+  protected float $height;
+  protected float $positionX;
+  protected float $positionY;
+  protected string $fontColor;
+  protected string $backgroundColor;
 
   protected array $queryParameters;
+  protected array $contentParameters;
 
   public function __construct()
   {
+    $this->code = '';
+    $this->wording = '';
+    $this->comment = '';
+    $this->typeWidget = 0;
+    $this->subTypeWidget = 0;
+    $this->query = '';
+    $this->width = 0.0;
+    $this->height = 0.0;
+    $this->positionX = 0.0;
+    $this->positionY = 0.0;
+    $this->fontColor = '';
+    $this->backgroundColor = '';
 
-  }
-
-  /**
-   * @return int|null
-   */
-  public function getId(): ?int
-  {
-    return $this->id;
-  }
-
-  /**
-   * @param int|null $id
-   */
-  public function setId(?int $id): void
-  {
-    $this->id = $id;
-  }
-
-  /**
-   * @return WidgetGrid|null
-   */
-  public function getWidgetGrid(): ?WidgetGrid
-  {
-    return $this->widgetGrid;
-  }
-
-  /**
-   * @param WidgetGrid|null $widgetGrid
-   */
-  public function setWidgetGrid(?WidgetGrid $widgetGrid): void
-  {
-    $this->widgetGrid = $widgetGrid;
+    $this->queryParameters = [];
+    $this->contentParameters = [];
   }
 
   /**
@@ -267,5 +246,23 @@ abstract class WidgetModel
   {
     $this->queryParameters = $queryParameters;
   }
+
+  /**
+   * @return array
+   */
+  public function getContentParameters(): array
+  {
+    return $this->contentParameters;
+  }
+
+  /**
+   * @param array $contentParameters
+   */
+  public function setContentParameters(array $contentParameters): void
+  {
+    $this->contentParameters = $contentParameters;
+  }
+
+
 
 }
