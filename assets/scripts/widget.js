@@ -3,7 +3,7 @@ window.grid = null;
 function loadGrid () {
 
   let url = '/myPage/grid';
-  // url = url + '?XDEBUG_SESSION_START=1';
+  url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
@@ -31,6 +31,9 @@ function loadGrid () {
       setGridstackEvents(grid);
       grid.load(widgetResponse);
       $('#button-add-widget').css("display", "inline");
+    })
+    .then(() => {
+      helloChart();
     })
     .catch((error) => {
       console.error('error loading widget grid, detail : ', error);

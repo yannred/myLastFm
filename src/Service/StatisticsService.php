@@ -25,7 +25,12 @@ class StatisticsService
     }
 
     $content = '<p>' . $widget->getDeleteButton() . '</p>';
-    $content .= '<div id="widget-chart-" class="widget-chart"> ' . $subContent . ' </div>';
+    $content .= '<div id="widget-chart-' . $widget->getId() . '" class="widget-chart"> ' . $subContent . ' </div>';
+
+    if ($widget->getId() == 113){
+      $subContent = $widget->getDeleteButton() . '<canvas id="myChart"></canvas>';
+      $content = '<div id="widget-chart-' . $widget->getId() . '" class="widget-chart"> ' . $subContent . ' </div>';
+    }
 
     return $content;
   }

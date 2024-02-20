@@ -242,10 +242,10 @@ class Widget
 
   }
 
-  public function getDeleteButton(): string
+  public function getDeleteButton($class = 'delete-widget'): string
   {
     $javascriptFunction = 'deleteWidget("' . $this->getId() . '")';
-    return '<button onclick=' . $javascriptFunction . '>X</button>';
+    return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">X</button>';
   }
 
   public static function getWidgetModelFromType(int $typeWidget, int $subTypeWidget): ?WidgetModel

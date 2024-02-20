@@ -24,6 +24,17 @@ function helloChart() {
             data: data.map(row => row.count)
           }
         ]
+      },
+      options: {
+        aspectRatio: 1,
+        scales: {
+          x: {
+            max: 50
+          },
+          y: {
+            max: 50
+          }
+        }
       }
     }
   );
