@@ -18,7 +18,11 @@
 
     <p><button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button></p>
 
-    <p><button onclick="loadGrid()">Load widgets</button></p>
+    <script>
+      window.addEventListener("load", () => {
+        loadGrid()
+      });
+    </script>
   </div>
 
 {% endblock %}
