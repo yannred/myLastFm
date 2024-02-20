@@ -242,5 +242,11 @@ class Widget
 
   }
 
+  public function getDeleteButton(): string
+  {
+    $javascriptFunction = 'deleteWidget("' . $this->getId() . '")';
+    return '<button onclick=' . $javascriptFunction . '>Delete me</button>';
+  }
+
 }
 

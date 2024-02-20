@@ -42,8 +42,7 @@ class WidgetRepository extends ServiceEntityRepository
     }
 
     $queryBuilder
-      ->where('scrobble.user = :user')
-      ->setParameter('user', $user->getId())
+      ->where('scrobble.user = ' . $user->getId())
     ;
 
     if (isset($parameters['where'])) {

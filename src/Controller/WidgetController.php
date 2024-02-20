@@ -50,9 +50,7 @@ class WidgetController extends AbstractController
     foreach ($widgetEntities as $widgetEntity) {
       $gridStackWidget = new gridstackItem($widgetEntity);
 
-      //delete button
-      $javascriptFunction = 'deleteWidget("' . $widgetEntity->getId() . '")';
-      $gridStackWidget->content = 'ID ' . $widgetEntity->getId() . ' BR <button onclick=' . $javascriptFunction . '>Delete me</button>';
+      $gridStackWidget->content = $this->generateContent($widgetEntity) . ' <br />' . $widgetEntity->getDeleteButton();
 
       $gridStackItems[] = $gridStackWidget;
     }
@@ -120,15 +118,7 @@ class WidgetController extends AbstractController
     $this->entityManager->flush();
 
     $gridstackItem = new gridstackItem($widget);
-
-    $results = $widgetRepository->createWidgetQuery($model->getQueryParameters(), $this->security->getUser())->getResult();
-
-    //first 3 results
-    $results = array_slice($results, 0, 3);
-    $gridstackItem->content = 'Top Artist : <br />';
-    foreach ($results as $result) {
-      $gridstackItem->content .= $result['name'] . " " . $result['count'] . 'x<br />';
-    }
+    $gridstackItem->content = $this->generateContent($widget) . ' <br />' . $widget->getDeleteButton();
 
     $response->setStatusCode(Response::HTTP_CREATED);
     $response->setContent(json_encode($gridstackItem));
@@ -198,6 +188,19 @@ class WidgetController extends AbstractController
     $this->entityManager->flush();
 
     $this->userWidgetGrid = $grid;
+  }
+
+
+  private function generateContent($widget): ?string
+  {
+
+    $results = $this->entityManager->createQuery($widget->getQuery())->getResult();
+    $results = array_slice($results, 0, 3);
+    $content = 'Top Artist : <br />';
+    foreach ($results as $result) {
+      $content .= $result['name'] . " " . $result['count'] . 'x<br />';
+    }
+    return $content;
   }
 
 }
