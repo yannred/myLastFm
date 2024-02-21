@@ -65,7 +65,7 @@ class WidgetController extends AbstractController
   }
 
 
-  #[Route('/myPage/widget/new', name: 'app_widget_new', methods: ['GET'])]
+  #[Route('/myPage/widget', name: 'app_widget_new', methods: ['POST'])]
   public function createWidget(): Response
   {
     $response = new Response();

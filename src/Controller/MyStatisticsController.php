@@ -17,7 +17,7 @@ class MyStatisticsController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/myPage/myStatistics', name: 'app_my_statistics')]
+  #[Route('/myPage/myStatistics', name: 'app_statistics')]
   public function index(): Response
   {
 

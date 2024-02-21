@@ -55,7 +55,7 @@ function setGridstackEvents () {
 
 function addWidget () {
 
-  let url = '/myPage/widget/new';
+  let url = '/myPage/widget';
   url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
@@ -63,9 +63,10 @@ function addWidget () {
   myHeaders.append("Content-Type", "application/json");
 
   const requestOptions = {
-    method: "GET",
+    method: "POST",
     headers: myHeaders,
-    redirect: "follow"
+    redirect: "follow",
+    body : JSON.stringify({})
   };
 
   fetch(url, requestOptions)
