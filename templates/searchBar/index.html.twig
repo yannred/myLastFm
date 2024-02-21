@@ -1,66 +1,58 @@
-<div>
+{#  <div class="d-flex">#}
+{#    {{ form_row(form.type) }}#}
+{#    {{ form_row(form.from) }}#}
+{#    {{ form_row(form.to) }}#}
+{#    {{ form_row(form.trackName) }}#}
+{#    {{ form_row(form.artistName) }}#}
+{#    {{ form_row(form.albumName) }}#}
+{#  </div>#}
+
+<div class="my-3">
   {{ form_start(form) }}
 
   <div>
       {{ form_errors(form) }}
   </div>
 
-  <div>
+  <div class="d-flex form-group">
+
+    {% if
+      not searchBar is defined
+      or searchBar == 'full'
+      or searchBar == ''
+    %}
+      {% set DateSearchVisibility = '' %}
+      {% set StringSearchVisibility = '' %}
+
+    {% elseif searchBar == 'date' %}
+      {% set DateSearchVisibility = '' %}
+      {% set StringSearchVisibility = 'inputFormInvisible' %}
+    {% endif %}
+
     {{ form_row(form.type) }}
 
+    {% include 'searchBar/lablel.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}
+    {% include 'searchBar/input.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}
 
-    {% if searchBar == 'date' or searchBar == 'full' %}
-      {% set visibilityInputClass = '' %}
-    {% else %}
-      {% set visibilityInputClass = 'inputFormInvisible' %}
-    {% endif %}
+    {% include 'searchBar/lablel.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}
+    {% include 'searchBar/input.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}
 
-    <label for="{{ form.from.vars.id }}" class="{{ form.from.vars.required ? 'required' }} mx-2">
-      {{ field_label(form.from) }}
-    </label>
-    <input type="{{ form.from.vars.type }}" id="{{ form.from.vars.id }}" name="{{ field_name(form.from) }}" {{ form.from.vars.required ? 'required="required"' }}
-           value="{{ form.from.vars.value }}" class="{{ form.from.vars.required ? 'required' }}">{{ form_help(form.from) }}{{ form_errors(form.from) }}
+    {% include 'searchBar/lablel.html.twig' with {'input': form.trackName, 'visibility' : StringSearchVisibility} %}
+    {% include 'searchBar/input.html.twig' with {'input': form.trackName, 'visibility' : StringSearchVisibility} %}
 
-    <label for="{{ form.to.vars.id }}" class="{{ form.to.vars.required ? 'required' }} mx-2">
-      {{ field_label(form.to) }}
-    </label>
-    <input type="{{ form.to.vars.type }}" id="{{ form.to.vars.id }}" name="{{ field_name(form.to) }}" {{ form.to.vars.required ? 'required="required"' }}
-           value="{{ form.to.vars.value }}" class="{{ form.to.vars.required ? 'required' }}">{{ form_help(form.to) }}{{ form_errors(form.to) }}
+    {% include 'searchBar/lablel.html.twig' with {'input': form.artistName, 'visibility' : StringSearchVisibility} %}
+    {% include 'searchBar/input.html.twig' with {'input': form.artistName, 'visibility' : StringSearchVisibility} %}
 
+    {% include 'searchBar/lablel.html.twig' with {'input': form.albumName, 'visibility' : StringSearchVisibility} %}
+    {% include 'searchBar/input.html.twig' with {'input': form.albumName, 'visibility' : StringSearchVisibility} %}
 
-
-    {% if searchBar == 'wording' or searchBar == 'full' %}
-      {% set visibilityInputClass = '' %}
-    {% else %}
-      {% set visibilityInputClass = 'inputFormInvisible' %}
-    {% endif %}
-
-    <label for="{{ form.trackName.vars.id }}" class="{{ form.trackName.vars.required ? 'required' }} {{ visibilityInputClass }} mx-2">
-      Track name
-    </label>
-    <input id="{{ form.trackName.vars.id }}" name="{{ field_name(form.trackName) }}" {{ form.trackName.vars.required ? 'required="required"' }}
-           value="{{ form.trackName.vars.value }}" class="{{ form.trackName.vars.required ? 'required' }} {{ visibilityInputClass }}">{{ form_help(form.trackName) }}{{ form_errors(form.trackName) }}
-
-    <label for="{{ form.artistName.vars.id }}" class="{{ form.artistName.vars.required ? 'required' }} {{ visibilityInputClass }} mx-2">
-      Artist name
-    </label>
-    <input id="{{ form.artistName.vars.id }}" name="{{ field_name(form.artistName) }}" {{ form.artistName.vars.required ? 'required="required"' }}
-           value="{{ form.artistName.vars.value }}" class="{{ form.artistName.vars.required ? 'required' }} {{ visibilityInputClass }}">{{ form_help(form.artistName) }}{{ form_errors(form.artistName) }}
-
-    <label for="{{ form.albumName.vars.id }}" class="{{ form.albumName.vars.required ? 'required' }} {{ visibilityInputClass }} mx-2">
-      Album name
-    </label>
-    <input id="{{ form.albumName.vars.id }}" name="{{ field_name(form.albumName) }}" {{ form.albumName.vars.required ? 'required="required"' }}
-           value="{{ form.albumName.vars.value }}" class="{{ form.albumName.vars.required ? 'required' }} {{ visibilityInputClass }}">{{ form_help(form.albumName) }}{{ form_errors(form.albumName) }}
-
-
+    {{ form_end(form, {'render_rest': false}) }}
 
     {{ form_widget(form._token) }}
 
-    <button type="submit" class="btn btn-primary">Find</button>
+    <div class="mx-3 d-flex align-items-center"><button type="submit" class="btn btn-sm btn-primary">Find</button></div>
 
   </div>
 
-  {{ form_end(form, {'render_rest': false}) }}
   {{ form_end(form) }}
 </div>

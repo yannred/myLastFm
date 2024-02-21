@@ -103,8 +103,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
         foreach ($scrobbles as $arrayScrobble) {
 
-          //TODO : Put the loop statement in a function
-
           //Max import limit capacity
           if ($nbImportedScrobble >= self::MAX_SCROBBLES_BY_IMPORT) {
             break 2;

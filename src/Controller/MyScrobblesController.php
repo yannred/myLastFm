@@ -37,11 +37,11 @@ class MyScrobblesController extends AbstractController
     $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
 
     $searchBarData = new SearchBarData();
-    $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
-    $queryForm->handleRequest($request);
+    $searchForm = $this->createForm(SearchBarType::class, $searchBarData);
+    $searchForm->handleRequest($request);
 
     //returned search form
-    if ($queryForm->isSubmitted() && $queryForm->isValid()) {
+    if ($searchForm->isSubmitted() && $searchForm->isValid()) {
 
       // TODO : Control the dates
       //  if only one date is set, the other is set to the curent date
@@ -56,7 +56,7 @@ class MyScrobblesController extends AbstractController
 
       $paramView = [
         'scrobbles' => $scrobblePagination,
-        'form' => $queryForm->createView(),
+        'form' => $searchForm->createView(),
         'pagination' => 1,
       ];
       $response->setStatusCode(Response::HTTP_SEE_OTHER);
@@ -71,7 +71,7 @@ class MyScrobblesController extends AbstractController
 
       $paramView = [
         'scrobbles' => $scrobblePagination,
-        'form' => $queryForm->createView(),
+        'form' => $searchForm->createView(),
         'pagination' => 1,
         'searchBar' => 'full',
       ];

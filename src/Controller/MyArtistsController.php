@@ -33,8 +33,8 @@ class MyArtistsController extends AbstractController
     $artistRepository = $this->entityManager->getRepository(Artist::class);
 
     $searchBarData = new SearchBarData();
-    $queryForm = $this->createForm(SearchBarType::class, $searchBarData);
-    $queryForm->handleRequest($request);
+    $searchForm = $this->createForm(SearchBarType::class, $searchBarData);
+    $searchForm->handleRequest($request);
 
     $query = $artistRepository->paginationFilteredQuery($searchBarData);
 
@@ -45,7 +45,7 @@ class MyArtistsController extends AbstractController
     );
 
     $response = new Response();
-    if ($queryForm->isSubmitted() && $queryForm->isValid()) {
+    if ($searchForm->isSubmitted() && $searchForm->isValid()) {
       $response->setStatusCode(Response::HTTP_SEE_OTHER);
     }
 
@@ -56,7 +56,7 @@ class MyArtistsController extends AbstractController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $queryForm->createView(),
+        'form' => $searchForm->createView(),
       ],
       $response);
   }
