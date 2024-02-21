@@ -64,6 +64,7 @@ class ChartController extends AbstractController
   }
 
 
+  //TODO : move in WidgetGrid Entity
   private function createGrid()
   {
     $grid = new WidgetGrid();

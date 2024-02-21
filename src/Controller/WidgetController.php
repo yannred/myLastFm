@@ -72,8 +72,9 @@ class WidgetController extends AbstractController
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
     $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
+    // TODO : implement user form for widget creation
     $typeWidget = Widget::TYPE__TOP_ARTIST;
-    $subTypeWidget = Widget::SUB_TYPE__BAR;
+    $subTypeWidget = Widget::SUB_TYPE__DONUT;
 
     $model = Widget::getWidgetModelFromType($typeWidget, $subTypeWidget);
 
@@ -92,7 +93,7 @@ class WidgetController extends AbstractController
     $widget->setWidgetGrid($this->userWidgetGrid);
 
     $widget->setWidth(2);
-    $widget->setHeight(1);
+    $widget->setHeight(2);
     $widget->setPositionX(0);
     $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
 
@@ -158,7 +159,7 @@ class WidgetController extends AbstractController
     return $response;
   }
 
-
+  //TODO : move in WidgetGrid Entity
   private function createGrid()
   {
     $grid = new WidgetGrid();

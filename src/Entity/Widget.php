@@ -19,6 +19,8 @@ class Widget
   ];
 
   const SUB_TYPE__BAR = 1;
+  const SUB_TYPE__PIE = 2;
+  const SUB_TYPE__DONUT = 3;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -253,29 +255,17 @@ class Widget
     $model = null;
     switch ($typeWidget) {
 
+      /** ********************* */
+      /**    TOP ARTIST TYPE    */
+      /** ********************* */
       case Widget::TYPE__TOP_ARTIST:{
 
-        /** ********** */
-        /** QUERY TYPE */
-        /** ********** */
-        switch ($subTypeWidget) {
-
-          /** QUERY TOP ARTIST */
-          case Widget::SUB_TYPE__BAR:{
-            $model = new TopArtistModel();
-            break;
-          }
-        }
+        $model = new TopArtistModel($subTypeWidget);
         break;
+
       }
 
-      /** ********** */
-      /**            */
-      /** ********** */
-      case 'else':{
 
-        break;
-      }
     }
 
     return $model;
@@ -295,9 +285,15 @@ class Widget
       case Widget::SUB_TYPE__BAR:
         $chartType = 'bar';
         break;
+
+      case Widget::SUB_TYPE__PIE:
+        $chartType = 'pie';
+        break;
+
+      case Widget::SUB_TYPE__DONUT:
+        $chartType = 'doughnut';
+        break;
     }
-
-
 
     return $chartType;
   }
