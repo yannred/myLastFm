@@ -1,0 +1,3 @@
+{% for notif in notifications %}
+  <div class="alert alert-{{ notif.type }} my-4">{{ notif.message }}</div>
+{% endfor %}

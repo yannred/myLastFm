@@ -32,9 +32,8 @@
 {% include 'base/nav_bar.html.twig' %}
 <div class="container">
 
-  {% if notification is defined %}
-    <div class="alert alert-info">{{ notification }}</div>
-    <hr /><br />
+  {% if notifications is defined %}
+    {% include 'base/notifications.html.twig' with {'notifications' : notifications} %}
   {% endif %}
 
   {% block body %}{% endblock %}
