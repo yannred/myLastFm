@@ -14,9 +14,17 @@
       <h1>Statistics</h1>
     </div>
 
-    <div class="grid-stack"></div>
+    <div class="grid-stack">
+      {# ********* GRID STACK HERE ********* #}
+    </div>
 
-    <p><button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button></p>
+    <p>
+      <button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button>
+      <span>      </span>
+      <a href="{{ path('app_widget_new_statistic') }}">
+        <button id="button-add-widget-page" style="display: none">Add widget Page</button>
+      </a>
+    </p>
 
 
     {# TODO : add spinner #}

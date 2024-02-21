@@ -2,18 +2,13 @@
 
 namespace App\Controller;
 
-use App\Data\Notification;
-use App\Entity\Widget;
-use App\Entity\WidgetGrid;
-use App\Form\WidgetType;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Util\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyStatisticsController extends AbstractController
+class MyStatisticsActionPage extends AbstractController
 {
 
   protected EntityManagerInterface $entityManager;
@@ -23,10 +18,10 @@ class MyStatisticsController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route('/myPage/myStatistics', name: 'app_my_statistics')]
+  #[Route('/myPage/myStatistics/new/wiget', name: 'app_my_statistics_action_new')]
   public function index(): Response
   {
-    return $this->render('my_statistics/index.html.twig');
+    $view = 'home_page/index.html.twig';
+    return $this->render($view);
   }
-
 }

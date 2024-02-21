@@ -31,6 +31,7 @@ function loadGrid () {
       setGridstackEvents(grid);
       grid.load(widgetResponse);
       $('#button-add-widget').css("display", "inline");
+      $('#button-add-widget-page').css("display", "inline");
     })
     .then(() => {
       loadCharts();

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Data\gridstackItem;
+use App\Data\Notification;
 use App\Entity\Widget;
 use App\Entity\WidgetGrid;
+use App\Form\WidgetType;
 use App\Service\StatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -66,37 +68,33 @@ class WidgetController extends AbstractController
 
 
   #[Route('/myPage/widget', name: 'app_widget_new', methods: ['POST'])]
-  public function createWidget(): Response
+  public function createWidgetProto(): Response
   {
+
     $response = new Response();
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
     $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
-    // TODO : implement user form for widget creation
     $typeWidget = Widget::TYPE__TOP_ARTIST;
-    $subTypeWidget = Widget::SUB_TYPE__DONUT;
+    $subTypeWidget = Widget::SUB_TYPE__BAR;
 
-    $model = Widget::getWidgetModelFromType($typeWidget, $subTypeWidget);
-
-    // TODO: Implement model not found exception
+    $model = Widget::getWidgetModelFromType($typeWidget);
 
     $widget = new Widget();
-    $widget->createFrom($model);
+    $widget->applyModel($model);
+    $widget->setPositionX(0);
+    $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
+
+    $widget->setSubTypeWidget($subTypeWidget);
+    $widget->setWording('New widget');
+
     $widget->setQuery(
       $widgetRepository
       ->createWidgetQuery($model->getQueryParameters())
       ->getDQL()
     );
 
-    $widget->setCode(' (' . date('Y-m-d H:i:s').') ');
-    $widget->setTypeWidget(Widget::TYPE__TOP_ARTIST);
     $widget->setWidgetGrid($this->userWidgetGrid);
-
-    $widget->setWidth(2);
-    $widget->setHeight(2);
-    $widget->setPositionX(0);
-    $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
-
 
     $this->entityManager->persist($widget);
     $this->entityManager->flush();
@@ -110,6 +108,87 @@ class WidgetController extends AbstractController
     return $response;
   }
 
+  #[Route('/myPage/myStatistics/new', name: 'app_widget_new_statistic')]
+  public function newStatistic(Request $request): Response
+  {
+    $response = new Response();
+    $view = 'my_statistics/new.html.twig';
+    $notifications = [];
+
+    $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
+    $widgetRepository = $this->entityManager->getRepository(Widget::class);
+
+
+    $form = $this->createForm(WidgetType::class);
+    $form->handleRequest($request);
+    $paramView = ['form' => $form];
+
+    if ($form->isSubmitted() && $form->isValid()) {
+
+      try {
+        $success = true;
+
+        /** @var Widget $widget */
+        $widget = $form->getData();
+
+        //controls
+        if ($widget->getTypeWidget() == 0) {
+          $notifications[] = new Notification('Statistic type is required', 'warning');
+          $success = false;
+        }
+
+        if ($widget->getSubTypeWidget() == 0) {
+          $notifications[] = new Notification('Chart type is required', 'warning');
+          $success = false;
+        }
+
+        if ($widget->getFontColor() == '') {
+          $notifications[] = new Notification('Font color is required', 'warning');
+          $success = false;
+        }
+        if ($widget->getBackgroundColor() == '') {
+          $notifications[] = new Notification('Background color is required', 'warning');
+          $success = false;
+        }
+
+        if ($success) {
+
+          //All Controls OK
+          $model = $widget->getWidgetModel();
+          $widget->applyModel($model);
+          $widget->setPositionX(0);
+          $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
+
+          $widget->setQuery(
+            $widgetRepository
+              ->createWidgetQuery($model->getQueryParameters())
+              ->getDQL()
+          );
+
+          $widget->setWidgetGrid($this->userWidgetGrid);
+
+          $this->entityManager->persist($widget);
+          $this->entityManager->flush();
+
+          $notifications[] = new Notification('Statistic created', 'success');
+          $response->setStatusCode(Response::HTTP_CREATED);
+          $view = 'my_statistics/index.html.twig';
+
+        } else {
+
+          //Error during controls
+          $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+      } catch (\Exception $e) {
+        $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $notifications[] = new Notification('Internal error : ' . $e->getMessage(), 'danger');
+      }
+    }
+
+    $paramView['notifications'] = $notifications;
+    return $this->render($view, $paramView, $response);
+  }
 
 
   #[Route('/myPage/widget/{id}', name: 'app_widget_update', methods: ['UPDATE'])]

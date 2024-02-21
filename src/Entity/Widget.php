@@ -13,14 +13,18 @@ class Widget
 {
 
   const TYPE__TOP_ARTIST = 1;
-
-  const TYPE = [
-    'Query' => self::TYPE__TOP_ARTIST,
+  const TYPES = [
+    'Top Artists' => self::TYPE__TOP_ARTIST,
   ];
 
   const SUB_TYPE__BAR = 1;
   const SUB_TYPE__PIE = 2;
   const SUB_TYPE__DONUT = 3;
+  const SUB_TYPES = [
+    'Bar' => self::SUB_TYPE__BAR,
+    'Pie' => self::SUB_TYPE__PIE,
+    'Donut' => self::SUB_TYPE__DONUT
+  ];
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -228,20 +232,12 @@ class Widget
     return $this;
   }
 
-  public function createFrom(mixed $widgetModel): void
+  public function applyModel(mixed $widgetModel): void
   {
-    $this->code = $widgetModel->getCode();
-    $this->wording = $widgetModel->getWording();
-    $this->comment = $widgetModel->getComment();
-    $this->typeWidget = $widgetModel->getTypeWidget();
-    $this->subTypeWidget = $widgetModel->getSubTypeWidget();
-    $this->width = $widgetModel->getWidth();
-    $this->height = $widgetModel->getHeight();
-    $this->positionX = $widgetModel->getPositionX();
-    $this->positionY = $widgetModel->getPositionY();
-    $this->fontColor = $widgetModel->getFontColor();
-    $this->backgroundColor = $widgetModel->getBackgroundColor();
-
+    $this->setCode($widgetModel->getCode());
+    $this->setWidth($widgetModel->getWidth());
+    $this->setHeight($widgetModel->getHeight());
+    $this->setTypeWidget($widgetModel->getTypeWidget());
   }
 
   public function getDeleteButton($class = 'delete-widget'): string
@@ -250,7 +246,7 @@ class Widget
     return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">X</button>';
   }
 
-  public static function getWidgetModelFromType(int $typeWidget, int $subTypeWidget): ?WidgetModel
+  public static function getWidgetModelFromType(int $typeWidget): ?WidgetModel
   {
     $model = null;
     switch ($typeWidget) {
@@ -260,7 +256,7 @@ class Widget
       /** ********************* */
       case Widget::TYPE__TOP_ARTIST:{
 
-        $model = new TopArtistModel($subTypeWidget);
+        $model = new TopArtistModel();
         break;
 
       }
