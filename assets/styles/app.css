@@ -26,3 +26,8 @@ button.delete-widget{
   width: 100%;
   height: 100%;
 }
+
+/* Hide the close button of widget when mouse is not over it */
+.grid-stack > .grid-stack-item.ui-resizable-autohide > .grid-stack-item-content > .delete-widget, .grid-stack > .grid-stack-item.ui-resizable-disabled > .grid-stack-item-content > .delete-widget {
+  display: none
+}

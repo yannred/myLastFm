@@ -53,7 +53,7 @@ class StatisticsService
           foreach ($allResults as $result) {
             $total += $result['count'];
           }
-          $total = ['name' => 'All artists', 'count' => $total];
+          $total = ['name' => 'All', 'count' => $total];
 
           $firstResults = array_slice($allResults, 0, 5);
 
@@ -100,7 +100,7 @@ class StatisticsService
         break;
     }
 
-
+    // dump($data);
     return $data;
   }
 

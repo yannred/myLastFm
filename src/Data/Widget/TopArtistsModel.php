@@ -4,7 +4,7 @@ namespace App\Data\Widget;
 
 use App\Entity\Widget;
 
-class TopArtistModel extends TopModel
+class TopArtistsModel extends TopModel
 {
 
   public function __construct()
@@ -13,7 +13,7 @@ class TopArtistModel extends TopModel
     parent::__construct();
 
     $this->setCode('TOPARTIST - ' . date('Y-m-d H:i:s'));
-    $this->setTypeWidget(Widget::TYPE__TOP_ARTIST);
+    $this->setTypeWidget(Widget::TYPE__TOP_ARTISTS);
     $this->setWidth(4);
     $this->setHeight(4);
 

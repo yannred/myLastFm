@@ -74,7 +74,7 @@ class WidgetController extends AbstractController
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
     $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
-    $typeWidget = Widget::TYPE__TOP_ARTIST;
+    $typeWidget = Widget::TYPE__TOP_ARTISTS;
     $subTypeWidget = Widget::SUB_TYPE__BAR;
 
     $model = Widget::getWidgetModelFromType($typeWidget);

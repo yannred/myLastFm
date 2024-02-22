@@ -34,12 +34,12 @@ class WidgetType extends AbstractType
       ])
       ->add('fontColor', ColorType::class, [
         'label' => 'Font Color',
-        'data' => '#ffffff',
+        'data' => Widget::WIDGET_DEFAULT_FONT_COLOR,
         'required' => true
       ])
       ->add('backgroundColor', ColorType::class, [
         'label' => 'Background color',
-        'data' => '#8080ff',
+        'data' => Widget::WIDGET_DEFAULT_BACKGROUND_COLOR,
         'required' => true
       ])
     ;

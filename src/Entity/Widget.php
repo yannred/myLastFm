@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
-use App\Data\Widget\TopArtistModel;
+use App\Data\Widget\TopAlbumsModel;
+use App\Data\Widget\TopArtistsModel;
+use App\Data\Widget\TopTracksModel;
 use App\Data\Widget\WidgetModel;
 use App\Repository\WidgetRepository;
 use Doctrine\DBAL\Types\Types;
@@ -12,9 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Widget
 {
 
-  const TYPE__TOP_ARTIST = 1;
+  const TYPE__TOP_ARTISTS = 1;
+  const TYPE__TOP_ALBUMS = 2;
+  const TYPE__TOP_TRACKS = 3;
   const TYPES = [
-    'Top Artists' => self::TYPE__TOP_ARTIST,
+    'Top Artists' => self::TYPE__TOP_ARTISTS,
+    'Top Albums' => self::TYPE__TOP_ALBUMS,
+    'Top Tracks' => self::TYPE__TOP_TRACKS
   ];
 
   const SUB_TYPE__BAR = 1;
@@ -25,6 +31,11 @@ class Widget
     'Pie' => self::SUB_TYPE__PIE,
     'Donut' => self::SUB_TYPE__DONUT
   ];
+
+//  const WIDGET_DEFAULT_FONT_COLOR = '#ffffff';
+  const WIDGET_DEFAULT_FONT_COLOR = 'black';
+//  const WIDGET_DEFAULT_BACKGROUND_COLOR = '#d7d7f';
+  const WIDGET_DEFAULT_BACKGROUND_COLOR = '#eaeaea';
 
   #[ORM\Id]
   #[ORM\GeneratedValue]
@@ -254,13 +265,26 @@ class Widget
       /** ********************* */
       /**    TOP ARTIST TYPE    */
       /** ********************* */
-      case Widget::TYPE__TOP_ARTIST:{
+      case Widget::TYPE__TOP_ARTISTS:
 
-        $model = new TopArtistModel();
+        $model = new TopArtistsModel();
         break;
 
-      }
+      /** ********************* */
+      /**    TOP ARTIST TYPE    */
+      /** ********************* */
+      case Widget::TYPE__TOP_ALBUMS:
 
+        $model = new TopAlbumsModel();
+        break;
+
+      /** ********************* */
+      /**    TOP TRACKS TYPE    */
+      /** ********************* */
+      case Widget::TYPE__TOP_TRACKS:
+
+        $model = new TopTracksModel();
+        break;
 
     }
 
