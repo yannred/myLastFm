@@ -24,8 +24,13 @@ class StatisticsService
       case Widget::SUB_TYPE__BAR :
       case Widget::SUB_TYPE__PIE :
       case Widget::SUB_TYPE__DONUT :
-        $subContent = $widget->getDeleteButton() . '<canvas id="canvas-' . $widget->getId() . '" class="widget-canva"></canvas>';
-        $content = '<div id="widget-chart-' . $widget->getId() . '" class="widget-chart"> ' . $subContent . ' </div>';
+        $subContent = '<canvas id="canvas-' . $widget->getId() . '" class="widget-canva"></canvas>';
+        $content = $widget->getDeleteButton() . '
+          <div id="widget-chart-' . $widget->getId() . '" class="widget-chart vstack m-0" style="background-color: ' . $widget->getBackgroundColor() . '; color: ' . $widget->getFontColor() . ';">
+            <div class="">' . $widget->getWording() . '</div>
+            <div class="col p-2" style="height: 95%;">' . $subContent . '</div>
+          </div>
+        ';
         break;
 
     }

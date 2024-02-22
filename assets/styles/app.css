@@ -17,8 +17,9 @@ body {
 button.delete-widget{
   background-color: black;
   color: white;
-  position: relative;
-  float: right;
+  position: absolute;
+  right: 7px;
+  top: 7px;
 }
 
 .widget-chart{

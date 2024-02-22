@@ -70,7 +70,6 @@ class WidgetController extends AbstractController
   #[Route('/myPage/widget', name: 'app_widget_new', methods: ['POST'])]
   public function createWidgetProto(): Response
   {
-
     $response = new Response();
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
     $widgetRepository = $this->entityManager->getRepository(Widget::class);
