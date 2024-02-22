@@ -156,3 +156,26 @@ function deleteWidget (gridstackItemId) {
     })
 
 }
+
+/**
+ * Callback function for the date type change of the new widget form
+ */
+function onChangeDateType(dateType){
+
+  const valueOfCustomDate = 1;
+
+  console.log('dateType', dateType);
+  console.log('dateType.value', dateType.value);
+  console.log('valueOfCustomDate', valueOfCustomDate);
+
+
+
+
+  if(dateType.value == valueOfCustomDate){
+    console.log('show');
+    $('.period-custom').show();
+  } else {
+    console.log('hide');
+    $('.period-custom').hide();
+  }
+}

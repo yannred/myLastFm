@@ -31,3 +31,7 @@ button.delete-widget{
 .grid-stack > .grid-stack-item.ui-resizable-autohide > .grid-stack-item-content > .delete-widget, .grid-stack > .grid-stack-item.ui-resizable-disabled > .grid-stack-item-content > .delete-widget {
   display: none
 }
+
+.period-custom{
+  /*display: none;*/
+}

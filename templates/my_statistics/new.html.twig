@@ -3,28 +3,38 @@
 {% block title %}New Statistic{% endblock %}
 
 {% block body %}
-    <div class="container">
+  <div class="container">
 
-        <div>
+    <div>
 
-            {{ form_start(form) }}
-            {{ form_row(form.typeWidget) }}
-            {{ form_row(form.subTypeWidget) }}
-            {{ form_row(form.wording) }}
-            {{ form_row(form.comment) }}
-            <div class="row d-flex justify-content-center">
-                <div class="col-auto"></div>
-                <div class="col-2">{{ form_row(form.fontColor) }}</div>
-                <div class="col-2">{{ form_row(form.backgroundColor) }}</div>
-                <div class="col-auto"></div>
-            </div>
+      {{ form_start(form) }}
+      {{ form_row(form.typeWidget) }}
+      {{ form_row(form.subTypeWidget) }}
 
-            <button type="submit" class="btn btn-primary">Create</button>
-            {{ form_end(form) }}
+      {{ form_row(form.dateType) }}
+
+      <div class="d-flex align-items-center my-3">
+        {% include 'base/form/label.html.twig' with {'input': form.dateFrom} %}
+        {% include 'base/form/input.html.twig' with {'input': form.dateFrom} %}
+
+        {% include 'base/form/label.html.twig' with {'input': form.dateTo} %}
+        {% include 'base/form/input.html.twig' with {'input': form.dateTo} %}
+      </div>
+
+      {{ form_row(form.wording) }}
+      {{ form_row(form.comment) }}
+      <div class="row d-flex justify-content-center">
+        <div class="col-auto"></div>
+        <div class="col-2">{{ form_row(form.fontColor) }}</div>
+        <div class="col-2">{{ form_row(form.backgroundColor) }}</div>
+        <div class="col-auto"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Create</button>
+      {{ form_end(form) }}
 
 
-
-        </div>
     </div>
+  </div>
 
 {% endblock %}

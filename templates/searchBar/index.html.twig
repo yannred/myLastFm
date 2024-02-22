@@ -1,12 +1,3 @@
-{#  <div class="d-flex">#}
-{#    {{ form_row(form.type) }}#}
-{#    {{ form_row(form.from) }}#}
-{#    {{ form_row(form.to) }}#}
-{#    {{ form_row(form.trackName) }}#}
-{#    {{ form_row(form.artistName) }}#}
-{#    {{ form_row(form.albumName) }}#}
-{#  </div>#}
-
 <div class="my-3">
   {{ form_start(form) }}
 
@@ -31,20 +22,20 @@
 
     {{ form_row(form.type) }}
 
-    {% include 'searchBar/lablel.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}
-    {% include 'searchBar/input.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}
+    {% include 'base/form/label.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}
+    {% include 'base/form/input.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}
 
-    {% include 'searchBar/lablel.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}
-    {% include 'searchBar/input.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}
+    {% include 'base/form/label.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}
+    {% include 'base/form/input.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}
 
-    {% include 'searchBar/lablel.html.twig' with {'input': form.artistName, 'visibility' : StringSearchVisibility} %}
-    {% include 'searchBar/input.html.twig' with {'input': form.artistName, 'visibility' : StringSearchVisibility} %}
+    {% include 'base/form/label.html.twig' with {'input': form.artistName, 'visibility' : StringSearchVisibility} %}
+    {% include 'base/form/input.html.twig' with {'input': form.artistName, 'visibility' : StringSearchVisibility} %}
 
-    {% include 'searchBar/lablel.html.twig' with {'input': form.trackName, 'visibility' : StringSearchVisibility} %}
-    {% include 'searchBar/input.html.twig' with {'input': form.trackName, 'visibility' : StringSearchVisibility} %}
+    {% include 'base/form/label.html.twig' with {'input': form.trackName, 'visibility' : StringSearchVisibility} %}
+    {% include 'base/form/input.html.twig' with {'input': form.trackName, 'visibility' : StringSearchVisibility} %}
 
-    {% include 'searchBar/lablel.html.twig' with {'input': form.albumName, 'visibility' : StringSearchVisibility} %}
-    {% include 'searchBar/input.html.twig' with {'input': form.albumName, 'visibility' : StringSearchVisibility} %}
+    {% include 'base/form/label.html.twig' with {'input': form.albumName, 'visibility' : StringSearchVisibility} %}
+    {% include 'base/form/input.html.twig' with {'input': form.albumName, 'visibility' : StringSearchVisibility} %}
 
     {{ form_end(form, {'render_rest': false}) }}
 

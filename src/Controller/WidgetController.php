@@ -8,6 +8,7 @@ use App\Entity\Widget;
 use App\Entity\WidgetGrid;
 use App\Form\WidgetType;
 use App\Service\StatisticsService;
+use App\Service\UtilsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,15 +24,23 @@ class WidgetController extends AbstractController
   protected LoggerInterface $logger;
   protected Security $security;
   protected StatisticsService $statisticsService;
+  protected UtilsService $utilsService;
 
   protected WidgetGrid $userWidgetGrid;
 
-  public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, Security $security, StatisticsService $statisticsService)
+  public function __construct(
+    EntityManagerInterface $entityManager,
+    LoggerInterface $logger,
+    Security $security,
+    StatisticsService $statisticsService,
+    UtilsService $utilsService
+  )
   {
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->security = $security;
     $this->statisticsService = $statisticsService;
+    $this->utilsService = $utilsService;
 
     //create a new grid if no grid is found
     $grid = $this->entityManager->getRepository(WidgetGrid::class)->findOneBy(['user' => $this->security->getUser(), 'defaultGrid' => true]);
@@ -131,24 +140,28 @@ class WidgetController extends AbstractController
         $widget = $form->getData();
 
         //controls
+        //Type and SubType are required
         if ($widget->getTypeWidget() == 0) {
           $notifications[] = new Notification('Statistic type is required', 'warning');
           $success = false;
         }
-
         if ($widget->getSubTypeWidget() == 0) {
           $notifications[] = new Notification('Chart type is required', 'warning');
           $success = false;
         }
 
-        if ($widget->getFontColor() == '') {
-          $notifications[] = new Notification('Font color is required', 'warning');
-          $success = false;
+        //Custom date range is required
+        if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM){
+          if ($widget->getDateFrom() === null || $widget->getDateTo() === null) {
+            $notifications[] = new Notification('Custom date range is required', 'warning');
+            $success = false;
+          }
+          if (! $widget->validateDateRange()) {
+            $notifications[] = new Notification('Invalid date range', 'warning');
+            $success = false;
+          }
         }
-        if ($widget->getBackgroundColor() == '') {
-          $notifications[] = new Notification('Background color is required', 'warning');
-          $success = false;
-        }
+
 
         if ($success) {
 
