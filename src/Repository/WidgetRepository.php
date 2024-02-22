@@ -56,15 +56,11 @@ class WidgetRepository extends ServiceEntityRepository
       foreach ($parameters['where'] as $key => $value) {
         if ($key == 'and') {
           $queryBuilder
-            ->andWhere($key . ' = ' . $value['value']);
+            ->andWhere($value['value']);
 
         } else {
           $queryBuilder
-            ->orWhere($key . ' = ' . $value['value']);
-        }
-        if (isset($value['parameter'])) {
-          $queryBuilder
-            ->setParameter($value['parameter'], $value['value']);
+            ->orWhere($value['value']);
         }
       }
     }

@@ -2,14 +2,8 @@
 
 namespace App\Controller;
 
-use App\Data\Notification;
-use App\Entity\Widget;
-use App\Entity\WidgetGrid;
-use App\Form\WidgetType;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Util\Type;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

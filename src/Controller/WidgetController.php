@@ -152,7 +152,7 @@ class WidgetController extends AbstractController
 
         //Custom date range is required
         if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM){
-          if ($widget->getDateFrom() === null || $widget->getDateTo() === null) {
+          if ($widget->getDateFrom() === null && $widget->getDateTo() === null) {
             $notifications[] = new Notification('Custom date range is required', 'warning');
             $success = false;
           }
@@ -171,9 +171,10 @@ class WidgetController extends AbstractController
           $widget->setPositionX(0);
           $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
 
+          $queryParameters = $model->getQueryParameters($widget);
           $widget->setQuery(
             $widgetRepository
-              ->createWidgetQuery($model->getQueryParameters())
+              ->createWidgetQuery($queryParameters)
               ->getDQL()
           );
 

@@ -116,6 +116,7 @@ class Widget
    * Validate date range :
    * add 1 day to the end date if it's the same as the start date
    * check if the start date is before the end date
+   * Complete the date range if one of the date is null (start date to 1970-01-01 and end date to today)
    * @return bool
    */
   public function validateDateRange(): bool
@@ -125,13 +126,22 @@ class Widget
       $this->setDateTo($this->getDateTo()->modify('+1 day'));
     }
 
+    if ($this->getDateFrom() == null && $this->getDateTo() != null) {
+      //set datefrom to january 1st 1970
+      $this->setDateFrom(new \DateTime('1970-01-01'));
+    }
+
+    if ($this->getDateFrom() != null && $this->getDateTo() == null) {
+      //set dateto to today
+      $this->setDateTo(new \DateTime());
+    }
+
     if ($this->getDateFrom() > $this->getDateTo()) {
       return false;
     }
 
     return true;
   }
-
 
 
 

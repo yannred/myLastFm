@@ -2,6 +2,8 @@
 
 namespace App\Data\Widget;
 
+use App\Entity\Widget;
+
 abstract class WidgetModel
 {
   protected string $code;
@@ -17,7 +19,6 @@ abstract class WidgetModel
   protected string $fontColor;
   protected string $backgroundColor;
 
-  protected array $queryParameters;
   protected array $contentParameters;
 
   public function __construct()
@@ -35,9 +36,20 @@ abstract class WidgetModel
     $this->fontColor = '';
     $this->backgroundColor = '';
 
-    $this->queryParameters = [];
     $this->contentParameters = [];
   }
+
+
+  /**
+   * Return the parameters for create the DQL query
+   * @param Widget $widget
+   * @return array
+   */
+  public function getQueryParameters(Widget $widget): array
+  {
+    return [];
+  }
+
 
   /**
    * @return string|null
@@ -229,22 +241,6 @@ abstract class WidgetModel
   public function setBackgroundColor(?string $backgroundColor): void
   {
     $this->backgroundColor = $backgroundColor;
-  }
-
-  /**
-   * @return array|null
-   */
-  public function getQueryParameters(): ?array
-  {
-    return $this->queryParameters;
-  }
-
-  /**
-   * @param array|null $queryParameters
-   */
-  public function setQueryParameters(?array $queryParameters): void
-  {
-    $this->queryParameters = $queryParameters;
   }
 
   /**
