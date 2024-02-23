@@ -85,11 +85,28 @@ class WidgetType extends AbstractType
         }
       })
       /** Set the default value for fontColor and backgroundColor */
+      /** Make visible the dateFrom and dateTo fields if the dateType is "custom" */
       ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
         /** @var Widget $widget */
         $widget = $event->getData();
         /** @var Form $form */
         $form = $event->getForm();
+
+        if ($widget != null && $widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
+          $form->remove('dateFrom');
+          $form->remove('dateTo');
+          $form
+            ->add('dateFrom', null, [
+              'label' => 'Date from',
+              'required' => false,
+              'attr'   =>  ['class'   => 'period-custom', 'style' => '']
+            ])
+            ->add('dateTo', null, [
+              'label' => 'Date to',
+              'required' => false,
+              'attr'   =>  ['class'   => 'period-custom', 'style' => '']
+            ]);
+        }
 
         if ($widget == null || $widget->getFontColor() == '' || $widget->getFontColor() == null) {
           $form->remove('fontColor');

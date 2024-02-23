@@ -40,7 +40,7 @@ class TopAlbumsModel extends TopModel
       ]
     ];
 
-    if ($widget->getDateTo() !== null) {
+    if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
       $parameters['where'] = [
         'and' => ['value' => 'scrobble.timestamp > ' . $widget->getDateFrom()->getTimestamp()
           . ' AND scrobble.timestamp < ' . $widget->getDateTo()->getTimestamp()]

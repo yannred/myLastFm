@@ -39,7 +39,7 @@ class TopArtistsModel extends TopModel
       ]
     ];
 
-    if ($widget->getDateTo() !== null) {
+    if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
       $parameters['where'] =
       [
         'and' => ['value' => 'scrobble.timestamp > ' . $widget->getDateFrom()->getTimestamp()
