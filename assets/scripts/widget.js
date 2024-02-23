@@ -118,6 +118,16 @@ function updateWidget (gridStackItem) {
 
 }
 
+/**
+ * Redirect to the modify widget page with the widget id
+ * @param gridstackItemId
+ */
+function modifyWidget (gridstackItemId) {
+  let url = '/myPage/myStatistics/new/' + gridstackItemId
+  // url = url + '?XDEBUG_SESSION_START=1';
+  document.location.href=url;
+}
+
 
 function deleteWidget (gridstackItemId) {
 

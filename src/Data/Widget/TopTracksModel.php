@@ -29,7 +29,7 @@ class TopTracksModel extends TopModel
     $parameters = [
       'entity' => 'App\Entity\Track',
       'entityAlias' => 'track',
-      'select' => 'CONCAT(track.name, "|", album.name, "|", artist.name) as name, count(scrobble.id) as count',
+      'select' => "CONCAT(track.name, '|', album.name, '|', artist.name) as name, count(scrobble.id) as count",
       'join' => [
         'track.album' => 'album',
         'album.artist' => 'artist',

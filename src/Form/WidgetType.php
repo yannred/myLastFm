@@ -39,8 +39,30 @@ class WidgetType extends AbstractType
         'required' => true,
         'attr' => ['onchange' => 'onChangeDateType(this)']
       ])
-      ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
+      ->add('dateFrom', null, [
+        'label' => 'Date from',
+        'required' => false,
+        'attr'   =>  ['class'   => 'period-custom', 'style' =>  'display: none;']
+      ])
+      ->add('dateTo', null, [
+        'label' => 'Date to',
+        'required' => false,
+        'attr'   =>  ['class'   => 'period-custom', 'style' =>  'display: none;']
+      ])
 
+
+      ->add('fontColor', ColorType::class, [
+        'label' => 'Font Color',
+        'required' => true
+      ])
+      ->add('backgroundColor', ColorType::class, [
+        'label' => 'Background color',
+        'required' => true
+      ])
+
+
+      /** Make visible the dateFrom and dateTo fields if the dateType is "custom" */
+      ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
         /** @var Widget $widget */
         $widget = $event->getData();
         /** @var Form $form */
@@ -62,29 +84,34 @@ class WidgetType extends AbstractType
             ]);
         }
       })
+      /** Set the default value for fontColor and backgroundColor */
+      ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
+        /** @var Widget $widget */
+        $widget = $event->getData();
+        /** @var Form $form */
+        $form = $event->getForm();
 
-      ->add('dateFrom', null, [
-        'label' => 'Date from',
-        'required' => false,
-        'attr'   =>  ['class'   => 'period-custom', 'style' =>  'display: none;']
-      ])
-      ->add('dateTo', null, [
-        'label' => 'Date to',
-        'required' => false,
-        'attr'   =>  ['class'   => 'period-custom', 'style' =>  'display: none;']
-      ])
-
-
-      ->add('fontColor', ColorType::class, [
-        'label' => 'Font Color',
-        'data' => Widget::WIDGET_DEFAULT_FONT_COLOR,
-        'required' => true
-      ])
-      ->add('backgroundColor', ColorType::class, [
-        'label' => 'Background color',
-        'data' => Widget::WIDGET_DEFAULT_BACKGROUND_COLOR,
-        'required' => true
-      ])
+        if ($widget == null || $widget->getFontColor() == '' || $widget->getFontColor() == null) {
+          $form->remove('fontColor');
+          $form->remove('fontColor');
+          $form
+            ->add('fontColor', ColorType::class, [
+              'label' => 'Font Color',
+              'data' => Widget::WIDGET_DEFAULT_FONT_COLOR,
+              'required' => true
+            ]);
+        }
+        if ($widget == null || $widget->getBackgroundColor() == '' || $widget->getBackgroundColor() == null) {
+          $form->remove('backgroundColor');
+          $form->remove('backgroundColor');
+          $form
+            ->add('backgroundColor', ColorType::class, [
+              'label' => 'Font Color',
+              'data' => Widget::WIDGET_DEFAULT_BACKGROUND_COLOR,
+              'required' => true
+            ]);
+        }
+      })
     ;
   }
 

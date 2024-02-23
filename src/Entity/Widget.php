@@ -306,11 +306,13 @@ class Widget
     return $this;
   }
 
-  public function applyModel(mixed $widgetModel): void
+  public function applyModel(mixed $widgetModel, bool $creating = true): void
   {
+    if ($creating) {
+      $this->setWidth($widgetModel->getWidth());
+      $this->setHeight($widgetModel->getHeight());
+    }
     $this->setCode($widgetModel->getCode());
-    $this->setWidth($widgetModel->getWidth());
-    $this->setHeight($widgetModel->getHeight());
     $this->setTypeWidget($widgetModel->getTypeWidget());
   }
 
@@ -318,6 +320,17 @@ class Widget
   {
     $javascriptFunction = 'deleteWidget("' . $this->getId() . '")';
     return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">X</button>';
+  }
+
+  /**
+   * Get the modify button for the widget
+   * @param $class
+   * @return string
+   */
+  public function getModifyButton($class = 'modify-widget'): string
+  {
+    $javascriptFunction = 'modifyWidget("' . $this->getId() . '")';
+    return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">M</button>';
   }
 
   public static function getWidgetModelFromType(int $typeWidget): ?WidgetModel

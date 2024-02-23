@@ -25,7 +25,7 @@ class StatisticsService
       case Widget::SUB_TYPE__PIE :
       case Widget::SUB_TYPE__DONUT :
         $subContent = '<canvas id="canvas-' . $widget->getId() . '" class="widget-canva"></canvas>';
-        $content = $widget->getDeleteButton() . '
+        $content = $widget->getDeleteButton() . $widget->getModifyButton() . '
           <div id="widget-chart-' . $widget->getId() . '" class="widget-chart vstack m-0" style="background-color: ' . $widget->getBackgroundColor() . '; color: ' . $widget->getFontColor() . ';">
             <div class="">' . $widget->getWording() . '</div>
             <div class="col p-2" style="height: 95%;">' . $subContent . '</div>

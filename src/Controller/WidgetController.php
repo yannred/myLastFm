@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -116,9 +117,14 @@ class WidgetController extends AbstractController
     return $response;
   }
 
-  #[Route('/myPage/myStatistics/new', name: 'app_widget_new_statistic')]
-  public function newStatistic(Request $request): Response
+  #[Route('/myPage/myStatistics/new/{id}', name: 'app_widget_new_statistic')]
+  public function newStatistic(Request $request, $id = null): Response
   {
+    $creating = true;
+    if ($id != null ){
+      $creating = false;
+    }
+
     $response = new Response();
     $view = 'my_statistics/new.html.twig';
     $notifications = [];
@@ -126,8 +132,12 @@ class WidgetController extends AbstractController
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
     $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
-
-    $form = $this->createForm(WidgetType::class);
+    if ($creating){
+      $form = $this->createForm(WidgetType::class);
+    } else {
+      $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $id, 'widgetGrid' => $this->userWidgetGrid]);
+      $form = $this->createForm(WidgetType::class, $widget);
+    }
     $form->handleRequest($request);
     $paramView = ['form' => $form];
 
@@ -167,9 +177,11 @@ class WidgetController extends AbstractController
 
           //All Controls OK
           $model = $widget->getWidgetModel();
-          $widget->applyModel($model);
-          $widget->setPositionX(0);
-          $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
+          $widget->applyModel($model, $creating);
+          if ($creating){
+            $widget->setPositionX(0);
+            $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
+          }
 
           $queryParameters = $model->getQueryParameters($widget);
           $widget->setQuery(
@@ -199,20 +211,28 @@ class WidgetController extends AbstractController
       }
     }
 
+    if ($form->isSubmitted() && $form->isValid() && $response->getStatusCode() == Response::HTTP_CREATED){
+      $response->setStatusCode(Response::HTTP_SEE_OTHER );
+      $response->headers->set('Location', $this->generateUrl('app_my_statistics'));
+    } else {
+      $response = null;
+    }
+
+
     $paramView['notifications'] = $notifications;
     return $this->render($view, $paramView, $response);
   }
 
 
   #[Route('/myPage/widget/{id}', name: 'app_widget_update', methods: ['UPDATE'])]
-  public function updateWidget(Request $request, ): Response
+  public function updateWidget(Request $request): Response
   {
     $response = new Response();
 
     $body = $request->getContent();
     $parameters = json_decode($body, true);
 
-    $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $parameters['id'], 'widgetGrid' => $this->userWidgetGrid]);
+    $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $request->get('id'), 'widgetGrid' => $this->userWidgetGrid]);
 
     if ($widget === null) {
       $response->setStatusCode(Response::HTTP_NOT_FOUND);
