@@ -26,6 +26,8 @@ class TopTracksModel extends TopModel
    */
   public function getQueryParameters(Widget $widget): array
   {
+    $parameters = Parent::getQueryParameters($widget);
+
     $parameters = [
       'entity' => 'App\Entity\Track',
       'entityAlias' => 'track',
@@ -38,7 +40,8 @@ class TopTracksModel extends TopModel
       'groupby' => 'track.name',
       'orderby' => [
         'count(scrobble.id)' => 'DESC'
-      ]
+      ],
+      ...$parameters
     ];
 
     if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {

@@ -26,6 +26,8 @@ class TopAlbumsModel extends TopModel
    */
   public function getQueryParameters(Widget $widget): array
   {
+    $parameters = Parent::getQueryParameters($widget);
+
     $parameters = [
       'entity' => 'App\Entity\Album',
       'entityAlias' => 'album',
@@ -37,7 +39,8 @@ class TopAlbumsModel extends TopModel
       'groupby' => 'album.name',
       'orderby' => [
         'count(scrobble.id)' => 'DESC'
-      ]
+      ],
+      ...$parameters
     ];
 
     if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
