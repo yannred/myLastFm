@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Data\Notification;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,9 +30,8 @@ class MyAccountController extends AbstractController
   #[Route('/myAccount/deleteAllScrobbles', name: 'app_my_account_delete_scrobbles')]
   public function deleteAllScrobbles(): Response
   {
-
-    $view = '';
-    $paramView = [];
+    $view = 'my_account/index.html.twig';
+    $notifications = [];
     $response = new Response();
 
     try {
@@ -50,21 +50,15 @@ class MyAccountController extends AbstractController
       $userRepository->deleteAllScrobbles($user);
 
       $response->setStatusCode(Response::HTTP_OK);
-      $view = 'my_account/index.html.twig';
-      $paramView = [
-        'notification' => 'All your scrobbles have been deleted'
-      ];
+      $notifications[] = new Notification('All your scrobbles have been deleted', 'success');
 
 
     } catch (\Exception $e) {
-
       $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-      $view = 'my_account/index.html.twig';
-      $paramView = [
-        'notification' => $e->getMessage()
-      ];
+      $notifications[] = new Notification('Internal error : ' . $e->getMessage(), 'danger');
     }
 
+    $paramView['notifications'] = $notifications;
     return $this->render($view, $paramView, $response);
   }
 }

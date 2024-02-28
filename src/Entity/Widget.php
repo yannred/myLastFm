@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Data\Widget\TopAlbumsModel;
+use App\Data\Widget\TopArtistsModel;
+use App\Data\Widget\TopTracksModel;
+use App\Data\Widget\WidgetModel;
 use App\Repository\WidgetRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,10 +14,45 @@ use Doctrine\ORM\Mapping as ORM;
 class Widget
 {
 
-  const TYPE_WIDGET_QUERY = 1;
+  const TYPE__TOP_ARTISTS = 1;
+  const TYPE__TOP_ALBUMS = 2;
+  const TYPE__TOP_TRACKS = 3;
+  const TYPES = [
+    'Top Artists' => self::TYPE__TOP_ARTISTS,
+    'Top Albums' => self::TYPE__TOP_ALBUMS,
+    'Top Tracks' => self::TYPE__TOP_TRACKS
+  ];
 
-  const TYPE_WIDGET = [
-    'Query' => self::TYPE_WIDGET_QUERY,
+  const SUB_TYPE__BAR = 1;
+  const SUB_TYPE__PIE = 2;
+  const SUB_TYPE__DONUT = 3;
+  const SUB_TYPES = [
+    'Bar' => self::SUB_TYPE__BAR,
+    'Pie' => self::SUB_TYPE__PIE,
+    'Donut' => self::SUB_TYPE__DONUT
+  ];
+
+//  const WIDGET_DEFAULT_FONT_COLOR = '#ffffff';
+  const WIDGET_DEFAULT_FONT_COLOR = 'black';
+//  const WIDGET_DEFAULT_BACKGROUND_COLOR = '#d7d7f';
+  const WIDGET_DEFAULT_BACKGROUND_COLOR = '#eaeaea';
+
+
+  const DATE_TYPE__ALL_TIME = 0;
+  const DATE_TYPE__CUSTOM = 1;
+  const DATE_TYPE__LAST_WEEK = 2;
+  const DATE_TYPE__LAST_MONTH = 3;
+  const DATE_TYPE__LAST_3_MONTHS = 4;
+  const DATE_TYPE__LAST_6_MONTHS = 5;
+  const DATE_TYPE__LAST_YEAR = 6;
+  const DATE_TYPES = [
+    'All Time' => self::DATE_TYPE__ALL_TIME,
+    'Custom period' => self::DATE_TYPE__CUSTOM,
+    'Last Week' => self::DATE_TYPE__LAST_WEEK,
+    'Last Month' => self::DATE_TYPE__LAST_MONTH,
+    'Last 3 Months' => self::DATE_TYPE__LAST_3_MONTHS,
+    'Last 6 Months' => self::DATE_TYPE__LAST_6_MONTHS,
+    'Last Year' => self::DATE_TYPE__LAST_YEAR
   ];
 
   #[ORM\Id]
@@ -62,6 +99,51 @@ class Widget
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $backgroundColor = null;
+
+  #[ORM\Column]
+  private ?int $dateType = null;
+
+  #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+  private ?\DateTimeInterface $dateFrom = null;
+
+  #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+  private ?\DateTimeInterface $dateTo = null;
+
+
+
+
+  /**
+   * Validate date range :
+   * add 1 day to the end date if it's the same as the start date
+   * check if the start date is before the end date
+   * Complete the date range if one of the date is null (start date to 1970-01-01 and end date to today)
+   * @return bool
+   */
+  public function validateDateRange(): bool
+  {
+    if ($this->getDateFrom() == $this->getDateTo()) {
+      //add 1 day
+      $this->setDateTo($this->getDateTo()->modify('+1 day'));
+    }
+
+    if ($this->getDateFrom() == null && $this->getDateTo() != null) {
+      //set datefrom to january 1st 1970
+      $this->setDateFrom(new \DateTime('1970-01-01'));
+    }
+
+    if ($this->getDateFrom() != null && $this->getDateTo() == null) {
+      //set dateto to today
+      $this->setDateTo(new \DateTime());
+    }
+
+    if ($this->getDateFrom() > $this->getDateTo()) {
+      return false;
+    }
+
+    return true;
+  }
+
+
 
   public function getId(): ?int
   {
@@ -223,4 +305,143 @@ class Widget
 
     return $this;
   }
+
+  public function applyModel(mixed $widgetModel, bool $creating = true): void
+  {
+    if ($creating) {
+      $this->setWidth($widgetModel->getWidth());
+      $this->setHeight($widgetModel->getHeight());
+    }
+    $this->setCode($widgetModel->getCode());
+    $this->setTypeWidget($widgetModel->getTypeWidget());
+  }
+
+  public function getDeleteButton($class = 'delete-widget'): string
+  {
+    $javascriptFunction = 'deleteWidget("' . $this->getId() . '")';
+    return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">X</button>';
+  }
+
+  public function getInfoButton($class = 'info-widget'): string
+  {
+    $infosContent = '<div class="widget-info-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cornemo provident quam, vitae? Nam provident quaerat vel.</div>';
+    return '<div class="info-block">     <button class="'.$class.'"><span>.i.</span></button>' . $infosContent . '</div>';
+  }
+
+  /**
+   * Get the modify button for the widget
+   * @param $class
+   * @return string
+   */
+  public function getModifyButton($class = 'modify-widget'): string
+  {
+    $javascriptFunction = 'modifyWidget("' . $this->getId() . '")';
+    return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">M</button>';
+  }
+
+  public static function getWidgetModelFromType(int $typeWidget): ?WidgetModel
+  {
+    $model = null;
+    switch ($typeWidget) {
+
+      /** ********************* */
+      /**    TOP ARTIST TYPE    */
+      /** ********************* */
+      case Widget::TYPE__TOP_ARTISTS:
+
+        $model = new TopArtistsModel();
+        break;
+
+      /** ********************* */
+      /**    TOP ARTIST TYPE    */
+      /** ********************* */
+      case Widget::TYPE__TOP_ALBUMS:
+
+        $model = new TopAlbumsModel();
+        break;
+
+      /** ********************* */
+      /**    TOP TRACKS TYPE    */
+      /** ********************* */
+      case Widget::TYPE__TOP_TRACKS:
+
+        $model = new TopTracksModel();
+        break;
+
+    }
+
+    return $model;
+  }
+
+  public function getWidgetModel(): ?WidgetModel
+  {
+    return self::getWidgetModelFromType($this->typeWidget, $this->subTypeWidget);
+  }
+
+
+  public static function getChartTypeFromSubType(int $subTypeWidget): string
+  {
+    $chartType = '';
+
+    switch ($subTypeWidget) {
+      case Widget::SUB_TYPE__BAR:
+        $chartType = 'bar';
+        break;
+
+      case Widget::SUB_TYPE__PIE:
+        $chartType = 'pie';
+        break;
+
+      case Widget::SUB_TYPE__DONUT:
+        $chartType = 'doughnut';
+        break;
+    }
+
+    return $chartType;
+  }
+
+  public function getChartType(): string
+  {
+    return self::getChartTypeFromSubType($this->subTypeWidget);
+  }
+
+  public function getDateType(): ?int
+  {
+      return $this->dateType;
+  }
+
+  public function setDateType(int $dateType): static
+  {
+      $this->dateType = $dateType;
+
+      return $this;
+  }
+
+  public function getDateFrom(): ?\DateTimeInterface
+  {
+      return $this->dateFrom;
+  }
+
+  public function setDateFrom(?\DateTimeInterface $dateFrom): static
+  {
+      $this->dateFrom = $dateFrom;
+
+      return $this;
+  }
+
+  public function getDateTo(): ?\DateTimeInterface
+  {
+      return $this->dateTo;
+  }
+
+  public function setDateTo(?\DateTimeInterface $dateTo): static
+  {
+      $this->dateTo = $dateTo;
+
+      return $this;
+  }
+
+
+
 }
+

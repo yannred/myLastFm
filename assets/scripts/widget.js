@@ -3,7 +3,7 @@ window.grid = null;
 function loadGrid () {
 
   let url = '/myPage/grid';
-  // url = url + '?XDEBUG_SESSION_START=1';
+  url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
@@ -31,6 +31,10 @@ function loadGrid () {
       setGridstackEvents(grid);
       grid.load(widgetResponse);
       $('#button-add-widget').css("display", "inline");
+      $('#button-add-widget-page').css("display", "inline");
+    })
+    .then(() => {
+      loadCharts();
     })
     .catch((error) => {
       console.error('error loading widget grid, detail : ', error);
@@ -52,23 +56,25 @@ function setGridstackEvents () {
 
 function addWidget () {
 
-  let url = '/myPage/widget/new';
-  // url = url + '?XDEBUG_SESSION_START=1';
+  let url = '/myPage/widget';
+  url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
   myHeaders.append("Content-Type", "application/json");
 
   const requestOptions = {
-    method: "GET",
+    method: "POST",
     headers: myHeaders,
-    redirect: "follow"
+    redirect: "follow",
+    body : JSON.stringify({})
   };
 
   fetch(url, requestOptions)
     .then(response => response.json())
     .then((widgetResponse) => {
-      grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>', widgetResponse);
+      console.log('widget created, detail : ', widgetResponse);
+      grid.addWidget(widgetResponse);
     })
     .catch((error) => {
       console.error('error creating new widget, detail : ', error);
@@ -112,6 +118,16 @@ function updateWidget (gridStackItem) {
 
 }
 
+/**
+ * Redirect to the modify widget page with the widget id
+ * @param gridstackItemId
+ */
+function modifyWidget (gridstackItemId) {
+  let url = '/myPage/myStatistics/new/' + gridstackItemId
+  // url = url + '?XDEBUG_SESSION_START=1';
+  document.location.href=url;
+}
+
 
 function deleteWidget (gridstackItemId) {
 
@@ -149,4 +165,27 @@ function deleteWidget (gridstackItemId) {
       console.error('error deleting widget, detail : ', error);
     })
 
+}
+
+/**
+ * Callback function for the date type change of the new widget form
+ */
+function onChangeDateType(dateType){
+
+  const valueOfCustomDate = 1;
+
+  console.log('dateType', dateType);
+  console.log('dateType.value', dateType.value);
+  console.log('valueOfCustomDate', valueOfCustomDate);
+
+
+
+
+  if(dateType.value == valueOfCustomDate){
+    console.log('show');
+    $('.period-custom').show();
+  } else {
+    console.log('hide');
+    $('.period-custom').hide();
+  }
 }

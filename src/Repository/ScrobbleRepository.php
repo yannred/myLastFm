@@ -52,13 +52,13 @@ class ScrobbleRepository extends ServiceEntityRepository
     if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
       $dateFilter = true;
     }
-    if (isset($dataSearchBar->trackName) && $dataSearchBar->trackName !== null && $dataSearchBar->trackName !== '') {
+    if ($dataSearchBar->trackName !== '') {
       $trackFilter = true;
     }
-    if (isset($dataSearchBar->artistName) && $dataSearchBar->artistName !== null && $dataSearchBar->artistName !== '') {
+    if ($dataSearchBar->artistName !== '') {
       $artistFilter = true;
     }
-    if (isset($dataSearchBar->albumName) && $dataSearchBar->albumName !== null && $dataSearchBar->albumName !== '') {
+    if ($dataSearchBar->albumName !== '') {
       $albumFilter = true;
     }
 

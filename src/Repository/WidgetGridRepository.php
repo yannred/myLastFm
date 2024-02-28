@@ -27,25 +27,36 @@ class WidgetGridRepository extends ServiceEntityRepository
   }
 
 
-  public function getNextPositionY(WidgetGrid $widgetGrid)
+  /**
+   * Returns the next free position in the y-axis
+   * @param WidgetGrid $widgetGrid
+   * @return int
+   */
+  public function getNextPositionY(WidgetGrid $widgetGrid): int
   {
+    $maxPositionY = 0;
+    $height = 0;
+
     $positionY = $this->createQueryBuilder('grid')
       ->distinct()
-      ->select('widget.positionY')
+      ->select('widget.positionY, widget.height')
       ->join('grid.widgets', 'widget')
       ->where('grid = :grid')
       ->setParameter('grid', $widgetGrid)
       ->getQuery()
-      ->getResult();
+      ->getResult()
+    ;
 
-    $maxPositionY = 0;
     foreach ($positionY as $pos) {
-      if ($pos['positionY'] > $maxPositionY) {
+      if ($pos['positionY'] >= $maxPositionY) {
+        if ($pos['positionY'] == $maxPositionY && $pos['height'] > $height){
+          $height = $pos['height'];
+        }
         $maxPositionY = $pos['positionY'];
       }
     }
 
-    return $maxPositionY + 1;
+    return $maxPositionY + $height;
   }
 
 

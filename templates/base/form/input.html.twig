@@ -1,0 +1,35 @@
+{% if not input.vars.attr.class is defined %}
+  {% set class = ""  %}
+{% else %}
+  {% set class = input.vars.attr.class  %}
+{%  endif %}
+
+{% if not input.vars.attr.style is defined %}
+  {% set style = ""  %}
+{% else %}
+  {% set style = input.vars.attr.style  %}
+{%  endif %}
+
+{% if not input.vars.attr.onchange is defined %}
+  {% set onchange = ""  %}
+{% else %}
+  {% set onchange = input.vars.attr.onchange  %}
+{%  endif %}
+
+{% if not visibility is defined %}
+  {% set visibility = ""  %}
+{%  endif %}
+
+
+<div class="d-flex align-items-center">
+  <input
+    type="{{ input.vars.type is defined ? input.vars.type : 'input'}}"
+    id="{{ input.vars.id }}" name="{{ field_name(input) }}"
+    class="form-control-sm {{ class }} {{ input.vars.required ? 'required' }} {{ visibility }}"
+    style="{{ style }}"
+    value="{{ input.vars.value }}"
+    onchange="{{ onchange }}"
+    {{ input.vars.required ? 'required="required"' }}
+  >
+  {{ form_help(input) }}{{ form_errors(input) }}
+</div>

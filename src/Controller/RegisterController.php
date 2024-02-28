@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Data\Notification;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,53 +28,51 @@ class RegisterController extends AbstractController
   {
     $user = new User();
     $response = new Response();
-    $view = '';
-    $paramView = [];
+    $view = 'register/index.html.twig';
+    $notifications = [];
 
     $form = $this->createForm(RegistrationType::class, $user);
     $form->handleRequest($request);
+    $paramView = ['form' => $form];
 
     //returned form
     if ($form->isSubmitted() && $form->isValid()) {
 
+      /** @var User $user */
       $user = $form->getData();
 
       //controls
       try {
+        $success = true;
 
         //uniqueness control
-        if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()])){
-          throw new \Exception('Email already exists');
+        if ($this->entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()])) {
+          $notifications[] = new Notification('Email already exists', 'warning');
+          $success = false;
         }
 
-        //All Controls OK
-        $password = $passwordHasher->hashPassword($user, $user->getPassword());
-        $user->setPassword($password);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        $response->setStatusCode(Response::HTTP_CREATED);
-        $view = 'register/success.html.twig';
+        if ($success) {
+
+          //All Controls OK
+          $password = $passwordHasher->hashPassword($user, $user->getPassword());
+          $user->setPassword($password);
+          $this->entityManager->persist($user);
+          $this->entityManager->flush();
+          $view = 'register/success.html.twig';
+          $response->setStatusCode(Response::HTTP_CREATED);
+        } else {
+
+          //Error during controls
+          $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
       } catch (\Exception $e) {
-
-        //Error during controls
-        $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $view = 'register/index.html.twig';
-        $paramView = [
-          'form' => $form,
-          'notification' => $e->getMessage()
-        ];
+        $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+        $notifications[] = new Notification('Internal error : ' . $e->getMessage(), 'danger');
       }
-
-
-    } else {
-      //Blank form
-      $view = 'register/index.html.twig';
-      $paramView = [
-        'form' => $form->createView()
-      ];
     }
 
+    $paramView['notifications'] = $notifications;
     return $this->render($view, $paramView, $response);
   }
 }
