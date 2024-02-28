@@ -18,38 +18,39 @@ abstract class TopModel extends WidgetModel
    */
   public function getQueryParameters(Widget $widget): array
   {
-    $parameters = [];
+    $parameters = Parent::getQueryParameters($widget);
 
     if ($widget->getDateType() == Widget::DATE_TYPE__LAST_WEEK) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.TIMESTAMP >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 WEEK)) '
-          . ' AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()']
-      ];
+      $parameters['where'] .= 'AND scrobble.timestamp >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 WEEK)) '
+          . 'AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()) '
+      ;
     }
     if ($widget->getDateType() == Widget::DATE_TYPE__LAST_MONTH) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.TIMESTAMP >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) '
-          . ' AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()']
-      ];
+      $parameters['where'] .= 'AND scrobble.timestamp >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 MONTH) '
+        . 'AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()) '
+      ;
     }
     if ($widget->getDateType() == Widget::DATE_TYPE__LAST_3_MONTHS) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.TIMESTAMP >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 3 MONTH)) '
-          . ' AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()']
-      ];
+      $parameters['where'] .= 'AND scrobble.timestamp >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 3 MONTH) '
+        . 'AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()) '
+      ;
     }
     if ($widget->getDateType() == Widget::DATE_TYPE__LAST_6_MONTHS) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.TIMESTAMP >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 6 MONTH)) '
-          . ' AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()']
-      ];
+      $parameters['where'] .= 'AND scrobble.timestamp >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 6 MONTH) '
+        . 'AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()) '
+      ;
     }
     if ($widget->getDateType() == Widget::DATE_TYPE__LAST_YEAR) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.TIMESTAMP >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)) '
-          . ' AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()']
-      ];
+      $parameters['where'] .= 'AND scrobble.timestamp >  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 YEAR) '
+        . 'AND scrobble.timestamp < UNIX_TIMESTAMP(CURDATE()) '
+      ;
     }
+    if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
+      $parameters['where'] .= 'AND scrobble.timestamp > ' . $widget->getDateFrom()->getTimestamp() . ' '
+        . 'AND scrobble.timestamp < ' . $widget->getDateTo()->getTimestamp() . ' '
+      ;
+    }
+
 
     return $parameters;
   }

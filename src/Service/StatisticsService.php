@@ -25,7 +25,7 @@ class StatisticsService
       case Widget::SUB_TYPE__PIE :
       case Widget::SUB_TYPE__DONUT :
         $subContent = '<canvas id="canvas-' . $widget->getId() . '" class="widget-canva"></canvas>';
-        $content = $widget->getDeleteButton() . $widget->getModifyButton() . '
+        $content = $widget->getDeleteButton() . $widget->getModifyButton() . $widget->getInfoButton() . '
           <div id="widget-chart-' . $widget->getId() . '" class="widget-chart vstack m-0" style="background-color: ' . $widget->getBackgroundColor() . '; color: ' . $widget->getFontColor() . ';">
             <div class="">' . $widget->getWording() . '</div>
             <div class="col p-2" style="height: 95%;">' . $subContent . '</div>
@@ -46,7 +46,9 @@ class StatisticsService
     switch ($widget->getSubTypeWidget()) {
 
       case Widget::SUB_TYPE__BAR :
-        $allResults = $this->em->createQuery($widget->getQuery())->getResult();
+
+        $query = $widget->getQuery();
+        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
 
         if (count($allResults) > 0) {
           $total = 0;
@@ -71,7 +73,8 @@ class StatisticsService
       case Widget::SUB_TYPE__PIE :
       case Widget::SUB_TYPE__DONUT :
 
-        $allResults = $this->em->createQuery($widget->getQuery())->getResult();
+        $query = $widget->getQuery();
+        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
 
         if (count($allResults) > 0) {
           $firstResults = array_slice($allResults, 0, 5);
@@ -102,6 +105,33 @@ class StatisticsService
 
     // dump($data);
     return $data;
+  }
+
+
+  /**
+   * Create the SQL query from the parameters
+   * TODO : create DQL datetime functions for use DQL instead of SQL
+   * @param array $parameters
+   * @return string
+   */
+  public function createSqlQuery(array $parameters): string
+  {
+    $query = $parameters['select'] . " " . $parameters['from'] . " ";
+
+    if (isset($parameters['join'])) {
+      $query .= $parameters['join'] . " ";
+    }
+
+    $query .= $parameters['where'] . " ";
+
+    if (isset($parameters['groupby'])) {
+      $query .= $parameters['groupby'] . " ";
+    }
+    if (isset($parameters['orderby'])) {
+      $query .= $parameters['orderby'] . " ";
+    }
+
+    return $query;
   }
 
 }

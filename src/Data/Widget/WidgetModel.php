@@ -47,7 +47,12 @@ abstract class WidgetModel
    */
   public function getQueryParameters(Widget $widget): array
   {
-    return [];
+    $parameters = [
+      'join' => 'JOIN user on (scrobble.user_id = user.id) ',
+      'where' => 'WHERE user.id = ' . $widget->getWidgetGrid()->getUser()->getId() . ' ',
+    ];
+
+    return $parameters;
   }
 
 

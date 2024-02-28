@@ -28,28 +28,17 @@ class TopTracksModel extends TopModel
   {
     $parameters = Parent::getQueryParameters($widget);
 
-    $parameters = [
-      'entity' => 'App\Entity\Track',
-      'entityAlias' => 'track',
-      'select' => "CONCAT(track.name, '|', album.name, '|', artist.name) as name, count(scrobble.id) as count",
-      'join' => [
-        'track.album' => 'album',
-        'album.artist' => 'artist',
-        'track.scrobbles' => 'scrobble',
-      ],
-      'groupby' => 'track.name',
-      'orderby' => [
-        'count(scrobble.id)' => 'DESC'
-      ],
-      ...$parameters
-    ];
+    $parameters['select'] = 'SELECT CONCAT(track.name, \'|\', album.name, \'|\', artist.name) as name, count(scrobble.id) as count ';
 
-    if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.timestamp > ' . $widget->getDateFrom()->getTimestamp()
-          . ' AND scrobble.timestamp < ' . $widget->getDateTo()->getTimestamp()]
-      ];
-    }
+    $parameters['from'] = 'FROM scrobble ';
+
+    $parameters['join'] .= 'JOIN track on (scrobble.track_id = track.id) ';
+    $parameters['join'] .= 'JOIN album on (track.album_id = album.id) ';
+    $parameters['join'] .= 'JOIN artist on (track.artist_id = artist.id) ';
+
+    $parameters['groupby'] = 'GROUP BY track.name ';
+
+    $parameters['orderby'] = 'ORDER BY count(scrobble.id) DESC ';
 
     return $parameters;
   }

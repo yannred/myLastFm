@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -176,6 +175,8 @@ class WidgetController extends AbstractController
         if ($success) {
 
           //All Controls OK
+          $widget->setWidgetGrid($this->userWidgetGrid);
+
           $model = $widget->getWidgetModel();
           $widget->applyModel($model, $creating);
           if ($creating){
@@ -184,13 +185,8 @@ class WidgetController extends AbstractController
           }
 
           $queryParameters = $model->getQueryParameters($widget);
-          $widget->setQuery(
-            $widgetRepository
-              ->createWidgetQuery($queryParameters)
-              ->getDQL()
-          );
-
-          $widget->setWidgetGrid($this->userWidgetGrid);
+          $query = $this->statisticsService->createSqlQuery($queryParameters);
+          $widget->setQuery($query);
 
           $this->entityManager->persist($widget);
           $this->entityManager->flush();

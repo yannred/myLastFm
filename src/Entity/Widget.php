@@ -322,6 +322,12 @@ class Widget
     return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">X</button>';
   }
 
+  public function getInfoButton($class = 'info-widget'): string
+  {
+    $infosContent = '<div class="widget-info-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cornemo provident quam, vitae? Nam provident quaerat vel.</div>';
+    return '<div class="info-block">     <button class="'.$class.'"><span>.i.</span></button>' . $infosContent . '</div>';
+  }
+
   /**
    * Get the modify button for the widget
    * @param $class

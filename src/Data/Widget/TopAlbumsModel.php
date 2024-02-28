@@ -28,27 +28,17 @@ class TopAlbumsModel extends TopModel
   {
     $parameters = Parent::getQueryParameters($widget);
 
-    $parameters = [
-      'entity' => 'App\Entity\Album',
-      'entityAlias' => 'album',
-      'select' => 'album.name, count(scrobble.id) as count',
-      'join' => [
-        'album.tracks' => 'track',
-        'track.scrobbles' => 'scrobble',
-      ],
-      'groupby' => 'album.name',
-      'orderby' => [
-        'count(scrobble.id)' => 'DESC'
-      ],
-      ...$parameters
-    ];
+    $parameters['select'] = 'SELECT album.name, count(scrobble.id) as count ';
 
-    if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
-      $parameters['where'] = [
-        'and' => ['value' => 'scrobble.timestamp > ' . $widget->getDateFrom()->getTimestamp()
-          . ' AND scrobble.timestamp < ' . $widget->getDateTo()->getTimestamp()]
-      ];
-    }
+    $parameters['from'] = 'FROM scrobble ';
+
+    $parameters['join'] .= 'JOIN track on (scrobble.track_id = track.id) ';
+    $parameters['join'] .= 'JOIN album on (track.album_id = album.id) ';
+//    $parameters['join'] .= 'JOIN artist on (track.artist_id = artist.id) ';
+
+    $parameters['groupby'] = 'GROUP BY album.name ';
+
+    $parameters['orderby'] = 'ORDER BY count(scrobble.id) DESC ';
 
     return $parameters;
   }
