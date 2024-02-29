@@ -9,9 +9,9 @@ use App\Entity\User;
 use App\Message\ScrobbleImportMessage;
 use App\Service\ApiRequestService;
 use App\Service\EntityService;
+use App\Service\UtilsService;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -21,19 +21,19 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class ScrobbleImportMsgHandler
 {
 
-  const MAX_SCROBBLES_BY_IMPORT = 5000;
+  const MAX_SCROBBLES_BY_IMPORT = 50000; // 50 thousands
 
   protected EntityManagerInterface $entityManager;
-  protected LoggerInterface $logger;
+  protected UtilsService $utilsService;
   protected EntityService $entityService;
   protected ApiRequestService $apiRequestService;
 
   protected ?User $user;
 
-  public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, EntityService $entityService, ApiRequestService $apiRequestService)
+  public function __construct(EntityManagerInterface $entityManager, UtilsService $utils, EntityService $entityService, ApiRequestService $apiRequestService)
   {
     $this->entityManager = $entityManager;
-    $this->logger = $logger;
+    $this->utilsService = $utils;
     $this->entityService = $entityService;
     $this->apiRequestService = $apiRequestService;
 
@@ -86,7 +86,7 @@ class ScrobbleImportMsgHandler
       }
 
       //first API Call for get total pages and total scrobbles
-      $this->logger->info('*** Scrobble Import Info : first API call for get total pages and total scrobbles');
+      $this->utilsService->logDevInfo('*** Scrobble Import Info : first API call for get total pages and total scrobbles');
       $apiResponse = $this->apiRequestService->getLastTracks($lastImportTimestamp);
       //TODO : handle error response from API
       $jsonResponse = json_decode($apiResponse, true);
@@ -114,7 +114,7 @@ class ScrobbleImportMsgHandler
       //API Calls for get scrobbles segmented by pages of API
       for ($page = $totalPages; $page >= 1; $page--) {
 
-        $this->logger->info('*** Scrobble Import Info : API call for get scrobbles page ' . $page);
+        $this->utilsService->logDevInfo('*** Scrobble Import Info : API call for get scrobbles page ' . $page);
 
         $apiResponse = $this->apiRequestService->getLastTracks($lastImportTimestamp, $timestampLimit, $page);
 
@@ -130,7 +130,7 @@ class ScrobbleImportMsgHandler
 
           foreach ($scrobbles as $arrayScrobble) {
 
-            $this->logger->info('*** Scrobble Import Info : scrobble ' . $importedScrobbleNb . ' : ' . $arrayScrobble['name'] . ' - ' . $arrayScrobble['artist']['#text']);
+            $this->utilsService->logDevInfo('*** Scrobble Import Info : scrobble ' . $importedScrobbleNb . ' : ' . $arrayScrobble['name'] . ' - ' . $arrayScrobble['artist']['#text']);
 
             //Max import limit capacity
             if ($importedScrobbleNb >= self::MAX_SCROBBLES_BY_IMPORT) {
@@ -164,24 +164,21 @@ class ScrobbleImportMsgHandler
 
     } catch (\Exception $e) {
 //      ini_set('memory_limit', '-1');
-//      $this->logger->info('*** Scrobble Import Info : ' . $e->getMessage() . ' *** File : '  . $e->getFile() . ':' . $e->getLine() . ' /*/ Trace : ' . print_r($e->getTrace(), true));
-      $this->logger->info("*** Scrobble Import Error : " . $e->getMessage() . ' *** File : '  . $e->getFile() . ':' . $e->getLine());
+//      $this->utilsService->logError('*** Scrobble Import Info : ' . $e->getMessage() . ' *** File : '  . $e->getFile() . ':' . $e->getLine() . ' /*/ Trace : ' . print_r($e->getTrace(), true));
+      $this->utilsService->logError("*** Scrobble Import Error : " . $e->getMessage() . ' *** File : '  . $e->getFile() . ':' . $e->getLine());
       if (isset($import)){
-        $this->logger->info("*** Scrobble Import Info : trying to save error info in import");
+        $this->utilsService->logDevInfo("*** Scrobble Import Info : trying to save error info in import");
         $import->setError(true);
         $import->setErrorMessage($e->getMessage());
         if (!$this->entityManager->isOpen()) {
           $this->entityManager = DriverManager::getConnection([], $this->entityManager->getConfiguration(), $this->entityManager->getEventManager());
-//          $this->entityManager = $this->entityManager->create(
-//            $this->entityManager->getConnection(),
-//            $this->entityManager->getConfiguration()
-//          );
+//          $this->entityManager = $this->entityManager->create($this->entityManager->getConnection(), $this->entityManager->getConfiguration());
         }
         $this->entityManager->persist($import);
         $this->entityManager->flush();
-        $this->logger->info("*** Scrobble Import Info : error info saved in import");
+        $this->utilsService->logDevInfo("*** Scrobble Import Info : error info saved in import");
       } else {
-        $this->logger->info("*** Scrobble Import Info :import is null, can't save error info in import");
+        $this->utilsService->logDevInfo("*** Scrobble Import Info :import is null, can't save error info in import");
       }
 
     }
@@ -197,7 +194,7 @@ class ScrobbleImportMsgHandler
   {
 
     //Artist
-    $this->logger->info('*** Scrobble Import Info : createScrobble : artist : ' . $lastFmScrobble['artist']['#text']);
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : artist : ' . $lastFmScrobble['artist']['#text']);
     $criteriaArtist = ['mbid' => $lastFmScrobble['artist']['mbid'], 'name' => $lastFmScrobble['artist']['#text']];
     $artist = $this->entityService->getExistingArtistOrCreateIt($criteriaArtist);
     if ($artist->getId() == 0) {
@@ -205,7 +202,7 @@ class ScrobbleImportMsgHandler
     }
 
     //Image
-    $this->logger->info('*** Scrobble Import Info : createScrobble : images');
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : images');
     $images = array();
     foreach ($lastFmScrobble['image'] as $jsonImage) {
       $size = Image::SIZE_UNDEFINED;
@@ -220,7 +217,7 @@ class ScrobbleImportMsgHandler
     }
 
     //Album
-    $this->logger->info('*** Scrobble Import Info : createScrobble : album : ' . $lastFmScrobble['album']['#text']);
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : album : ' . $lastFmScrobble['album']['#text']);
     $criteriaAlbum = ['mbid' => $lastFmScrobble['album']['mbid'], 'name' => $lastFmScrobble['album']['#text'], 'artist' => $artist];
     $album = $this->entityService->getExistingAlbumOrCreateIt($criteriaAlbum, $images);
     if ($album->getId() == 0) {
@@ -228,7 +225,7 @@ class ScrobbleImportMsgHandler
     }
 
     //Track
-    $this->logger->info('*** Scrobble Import Info : createScrobble : track : ' . $lastFmScrobble['name']);
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : track : ' . $lastFmScrobble['name']);
     $criteriaTrack = ['mbid' => $lastFmScrobble['mbid'], 'name' => $lastFmScrobble['name'], 'artist' => $artist, 'album' => $album, 'url' => $lastFmScrobble['url']];
     $track = $this->entityService->getExistingTrackOrCreateIt($criteriaTrack, $images);
     if ($track->getId() == 0) {
@@ -236,7 +233,7 @@ class ScrobbleImportMsgHandler
     }
 
     //Scrobble
-    $this->logger->info('*** Scrobble Import Info : createScrobble : scrobble');
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : scrobble');
     $criteriaScrobble = ['track' => $track, 'timestamp' => $lastFmScrobble['date']['uts']];
     $scrobble = $this->entityManager->getRepository(Scrobble::class)->findOneBy($criteriaScrobble);
     if ($scrobble === null) {

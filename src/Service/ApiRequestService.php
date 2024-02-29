@@ -26,7 +26,7 @@ class ApiRequestService
 {
 
   protected HttpClientInterface $request;
-  protected LoggerInterface $logger;
+  protected UtilsService $utilsService;
   protected ?User $user;
 
   public string $apiKey = "";
@@ -34,10 +34,10 @@ class ApiRequestService
   public string $apiSecret = "";
   public string $apiUser = "";
 
-  public function __construct(HttpClientInterface $request, LoggerInterface $logger, Security $security)
+  public function __construct(HttpClientInterface $request, UtilsService $utilsService, Security $security)
   {
     $this->request = $request;
-    $this->logger = $logger;
+    $this->utilsService = $utilsService;
     $this->user = null;
 
     $this->apiKey = $_ENV['LASTFM_API_KEY'];
@@ -107,7 +107,7 @@ class ApiRequestService
 
     $parameters['api_sig'] = $this->getSigningCall($parameters, $this->getUser()->getLasFmApiSecret());
 
-    $this->logger->info('*** Scrobble Import Info : API call parameters : ' . print_r($parameters, true));
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : getLastTracks API call parameters : ' . print_r($parameters, true));
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();
@@ -135,6 +135,8 @@ class ApiRequestService
     $parameters['api_key'] = $this->apiKey;
     $parameters['format'] = 'json';
     $parameters['method'] = API_METHOD_USER_GET_INFO;
+
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : getLastFmUserInfo API call parameters : ' . print_r($parameters, true));
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();
@@ -176,6 +178,8 @@ class ApiRequestService
 
 //    $parameters['lang'] = 'FR';
 //    $parameters['autocorrect'] = "1";
+
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : getArtistInfo API call parameters : ' . print_r($parameters, true));
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();

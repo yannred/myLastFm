@@ -27,7 +27,8 @@ class ImportController extends AbstractController
     $imports = $importRepository->findAll();
 
     return $this->render('import/index.html.twig', [
-      'imports' => $imports
+      'imports' => $imports,
+      'dev' => $_ENV['APP_ENV'] === 'dev'
     ]);
   }
 }

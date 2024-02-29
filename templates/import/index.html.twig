@@ -10,6 +10,8 @@
   <div>
     <h2>Last imports</h2>
 
+    <p style="font-style: italic">Each import is a task that get scrobbles from LastFm to the database. Each task can only import 50 000 scrobbles at a time.</p>
+
     {% if imports is empty %}
       <p>No imports yet</p>
     {% else %}
@@ -38,7 +40,11 @@
   <div>
     <h2>Get last scrobbles from Last Fm</h2>
     <p><a href={{ path('app_update_scrobble') }}>Start import</a></p>
+
+    {% if dev == 'dev' %}
     <p><a href={{ path('app_update_scrobble_now') }}>Start import [NO QUEUE - DEV]</a></p>
+    {% endif %}
+
   </div>
 
 {% endblock %}
