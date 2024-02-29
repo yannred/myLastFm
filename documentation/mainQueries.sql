@@ -8,6 +8,7 @@ HAVING count(CONCAT(track_id, timestamp)) > 1;
 
 -- Delete all scrobbles
 DELETE FROM import WHERE 1;
+DELETE FROM messenger_messages WHERE 1;
 DELETE FROM scrobble WHERE 1;
 DELETE FROM track WHERE 1;
 DELETE FROM album WHERE 1;

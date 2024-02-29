@@ -16,10 +16,12 @@
       <ul>
         {% for import in imports %}
 
+          {# If import is not started > import is in error > import is finalized > import is in progress #}
+
           {%  if import.started == false %}
             {%  set infoMessage = "Task not started" %}
           {%  elseif import.error == true %}
-            {%  set infoMessage = "Task aborted with error : " ~ import.errorMessage %}
+            {%  set infoMessage = "Task aborted with error : " ~ import.errorMessage ~ " (imported scrobble(s) :  " ~ import.finalizedScrobble ~ ")" %}
           {%  elseif import.finalized == true %}
             {%  set infoMessage = "Task finalized, " ~ import.finalizedScrobble ~ " scrobble(s) imported" %}
           {%  else %}
@@ -35,7 +37,8 @@
 
   <div>
     <h2>Get last scrobbles from Last Fm</h2>
-    <p><a href="/myAccount/updateScrobble">Start import</a></p>
+    <p><a href={{ path('app_update_scrobble') }}>Start import</a></p>
+    <p><a href={{ path('app_update_scrobble_now') }}>Start import [NO QUEUE - DEV]</a></p>
   </div>
 
 {% endblock %}

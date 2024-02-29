@@ -24,9 +24,18 @@ class MyPageController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
+  /**
+   * Display the user's page
+   * @param ApiRequestService $apiRequestService
+   * @param Request $request
+   * @param PaginatorInterface $paginator
+   * @return Response
+   * @throws \Exception
+   */
   #[Route('/myPage', name: 'app_my_page')]
   public function index(ApiRequestService $apiRequestService, Request $request, PaginatorInterface $paginator): Response
   {
+    $apiRequestService->setUser($this->getUser());
 
     //User infos
     $lastFmUserInfo = $apiRequestService->getLastFmUserInfo();

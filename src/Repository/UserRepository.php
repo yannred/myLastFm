@@ -41,10 +41,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     *
+     * Delete all scrobbles and imports of a user
      */
     public function deleteAllScrobbles(User $user): void
     {
+      //TODO : Add (or not) deletion of statistics
       $queries = [];
       $queries[] = 'DELETE App\Entity\Import i WHERE i.user = ' . $user->getId();
       $queries[] = 'DELETE App\Entity\Scrobble s WHERE s.user = ' . $user->getId();

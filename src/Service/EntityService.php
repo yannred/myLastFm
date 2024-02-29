@@ -6,19 +6,22 @@ use App\Entity\Album;
 use App\Entity\Artist;
 use App\Entity\Image;
 use App\Entity\Track;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EntityService
 {
 
-  private EntityManagerInterface $em;
-  private ApiRequestService $apiRequestService;
+  protected EntityManagerInterface $em;
+  protected ApiRequestService $apiRequestService;
+  protected ?User $user;
 
   //TODO : add indexes to the database for the researched fields
 
   public function __construct(EntityManagerInterface $em, ApiRequestService $apiRequestService)
   {
     $this->em = $em;
+    $this->user = null;
     $this->apiRequestService = $apiRequestService;
   }
 
@@ -42,28 +45,30 @@ class EntityService
       if ($jsonResponse === false) {
         throw new \Exception("Error in ScrobblerController::updateScrobble() : Can't decode api first response in json");
       }
-      $artist->setUrl($jsonResponse['artist']['url']);
-      $artist->setListeners($jsonResponse['artist']['stats']['listeners']);
-      $artist->setPlaycount($jsonResponse['artist']['stats']['playcount']);
-      $artist->setBioSummary($jsonResponse['artist']['bio']['summary']);
-      $artist->setBioContent($jsonResponse['artist']['bio']['content']);
+      //if artist is found only
+      if (! isset($jsonResponse['error'])) {
+        $artist->setUrl($jsonResponse['artist']['url']);
+        $artist->setListeners($jsonResponse['artist']['stats']['listeners']);
+        $artist->setPlaycount($jsonResponse['artist']['stats']['playcount']);
+        $artist->setBioSummary($jsonResponse['artist']['bio']['summary']);
+        $artist->setBioContent($jsonResponse['artist']['bio']['content']);
 
-      //images
-      $images = [];
-      foreach ($jsonResponse['artist']['image'] as $image) {
-        if (array_key_exists($image['size'], Image::SIZES)) {
-          $size = Image::SIZES[$image['size']];
-          $imageEntity = $this->getExistingImageOrCreateIt(['url' => $image['#text'], 'size' => $size]);
-          if ($imageEntity->getId() == 0) {
-            $this->em->persist($imageEntity);
+        //images
+        $images = [];
+        foreach ($jsonResponse['artist']['image'] as $image) {
+          if (array_key_exists($image['size'], Image::SIZES)) {
+            $size = Image::SIZES[$image['size']];
+            $imageEntity = $this->getExistingImageOrCreateIt(['url' => $image['#text'], 'size' => $size]);
+            if ($imageEntity->getId() == 0) {
+              $this->em->persist($imageEntity);
+            }
+            $images[] = $imageEntity;
           }
-          $images[] = $imageEntity;
+        }
+        foreach ($images as $image) {
+          $artist->addImage($image);
         }
       }
-      foreach ($images as $image) {
-        $artist->addImage($image);
-      }
-
 
     }
 
@@ -132,6 +137,29 @@ class EntityService
     }
 
     return $image;
+  }
+
+
+
+
+  /** ******************************************************* */
+  /** ********************* GETTER/SETTER ******************* */
+  /** ******************************************************* */
+
+  /**
+   * Set the user for the instance and the apiRequestService attribute
+   * @param User|null $user
+   * @return void
+   */
+  public function setUser(?User $user): void
+  {
+    $this->user = $user;
+    $this->apiRequestService->setUser($this->getUser());
+  }
+
+  public function getUser(): User
+  {
+    return $this->user;
   }
 
 }
