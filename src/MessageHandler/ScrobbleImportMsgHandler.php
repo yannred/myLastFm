@@ -21,7 +21,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class ScrobbleImportMsgHandler
 {
 
-  const MAX_SCROBBLES_BY_IMPORT = 2000;
+  const MAX_SCROBBLES_BY_IMPORT = 5000;
 
   protected EntityManagerInterface $entityManager;
   protected LoggerInterface $logger;
