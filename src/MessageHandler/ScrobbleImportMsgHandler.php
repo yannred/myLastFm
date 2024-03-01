@@ -13,6 +13,7 @@ use App\Service\UtilsService;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Message handler for importing scrobble task
@@ -24,15 +25,17 @@ class ScrobbleImportMsgHandler
   const MAX_SCROBBLES_BY_IMPORT = 5000; // 5 thousands
 
   protected EntityManagerInterface $entityManager;
+  protected MessageBusInterface $msgBus;
   protected UtilsService $utilsService;
   protected EntityService $entityService;
   protected ApiRequestService $apiRequestService;
 
   protected ?User $user;
 
-  public function __construct(EntityManagerInterface $entityManager, UtilsService $utils, EntityService $entityService, ApiRequestService $apiRequestService)
+  public function __construct(EntityManagerInterface $entityManager, MessageBusInterface $msgBus, UtilsService $utils, EntityService $entityService, ApiRequestService $apiRequestService)
   {
     $this->entityManager = $entityManager;
+    $this->msgBus = $msgBus;
     $this->utilsService = $utils;
     $this->entityService = $entityService;
     $this->apiRequestService = $apiRequestService;
@@ -159,9 +162,23 @@ class ScrobbleImportMsgHandler
         }
       }
 
+      if ($importedScrobbleNb == self::MAX_SCROBBLES_BY_IMPORT) {
+        $import->setTotalScrobble($importedScrobbleNb);
+      }
+
       $import->setFinalized(true);
       $this->entityManager->persist($import);
       $this->entityManager->flush();
+
+      //Dispatch new import if there are still scrobbles to import
+      if ($importedScrobbleNb == self::MAX_SCROBBLES_BY_IMPORT) {
+        $newImport = new Import();
+        $newImport->setDate(new \DateTime());
+        $newImport->setUser($user);
+        $this->entityManager->persist($newImport);
+        $this->entityManager->flush();
+        $this->msgBus->dispatch(new ScrobbleImportMessage($this->getUser()->getId(), $newImport->getId()));
+      }
 
 
     } catch (\Exception $e) {
