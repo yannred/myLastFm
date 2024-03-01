@@ -37,7 +37,7 @@ class ScrobbleRepository extends ServiceEntityRepository
     return $this->createQueryBuilder('s')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
-      ->orderBy('s.id', 'ASC')
+      ->orderBy('s.timestamp', 'DESC')
       ->getQuery();
   }
 
@@ -95,6 +95,8 @@ class ScrobbleRepository extends ServiceEntityRepository
         ->andWhere('album.name LIKE :albumName')
         ->setParameter('albumName', '%' . trim($dataSearchBar->albumName) . '%');
     }
+
+    $query->orderBy('s.timestamp', 'DESC');
 
     return $query->getQuery();
   }
