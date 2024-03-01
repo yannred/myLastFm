@@ -8,9 +8,22 @@
   </div>
 
   <div>
-    <h2 style="display: inline-block">Last imports</h2><a href="/myPage/myScrobbles"><span style="margin-left: 10px"><a href="{{ path('app_import') }}">refresh...</a></span>
 
-    <p style="font-style: italic">Each import is a task that get scrobbles from LastFm to the database. Each task can only import 50 000 scrobbles at a time.</p>
+    <h2 class="mt-4" style="display: inline-block">Import status</h2><a href="/myPage/myScrobbles"><span style="margin-left: 10px"><a href="{{ path('app_import') }}">refresh...</a></span>
+
+    <div>{{ importStatusMessage }}</div>
+    <div class="progress" style="width: 30%">
+      {% set progressImportStatusStyle = '' %}
+      {% if importStatusPercent != 0 %}
+        {% set progressImportStatusStyle = 'width:' ~ importStatusPercent ~ '%' %}
+      {% endif %}
+      <div class="progress-bar" style="{{ progressImportStatusStyle }}"  role="progressbar" aria-valuenow="{{ importStatusPercent }}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+
+    <h2 class="mt-4">Last imports</h2>
+
+    <p style="font-style: italic">Each import is a task that get scrobbles from LastFm to the database. Each task can only import 5 000 scrobbles at a time.</p>
 
     {% if imports is empty %}
       <p>No imports yet</p>
@@ -58,7 +71,7 @@
   </div>
 
   <div>
-    <h2>Get last scrobbles from Last Fm</h2>
+    <h2 class="mt-4">Get last scrobbles from Last Fm</h2>
     <p><a href={{ path('app_update_scrobble') }}>Start import</a></p>
 
     {% if dev == 'dev' %}

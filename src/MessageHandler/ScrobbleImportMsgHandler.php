@@ -53,7 +53,7 @@ class ScrobbleImportMsgHandler
 
     try {
 
-      sleep(5); // 30 seconds
+      sleep(15); // 15 seconds
 
       //Get user
       $userid = $message->userId;
@@ -73,22 +73,7 @@ class ScrobbleImportMsgHandler
 
       //Get last finished import for get the last scrobble timestamp
       $importRepository = $this->entityManager->getRepository(Import::class);
-      $lastImportCollection = $importRepository->findBy(
-        ['user' => $user, 'finalized' => true, 'error' => false],
-        ['date' => 'DESC'],
-        1
-      );
-
-      if (empty($lastImportCollection)) {
-        $lastImportTimestamp = null;
-      } else {
-        // Check if last import contains a scrobble and a datetime
-        if ($lastImportCollection[0]->getLastScrobble() === null) {
-          $lastImportTimestamp = null;
-        } else {
-          $lastImportTimestamp = $lastImportCollection[0]->getLastScrobble()->getTimestamp();
-        }
-      }
+      $lastImportTimestamp = $importRepository->getLastImportTimestamp($user);
 
       //first API Call for get total pages and total scrobbles
       $this->utilsService->logDevInfo('*** Scrobble Import Info : first API call for get total pages and total scrobbles');
