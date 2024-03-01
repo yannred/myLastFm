@@ -29,7 +29,7 @@ class ImportController extends AbstractController
 
     //Get import status
     $importStatusMessage = "Can't get import status";
-    $importStatusPercent = 0;
+    $importStatusProportion = 0;
     $importRepository = $this->entityManager->getRepository(Import::class);
     $lastImportTimestamp = $importRepository->getLastImportTimestamp($user);
 
@@ -45,7 +45,7 @@ class ImportController extends AbstractController
 
       $importStatusMessage = $scrobbleNotImported . " scrobbles not imported yet";
       $totalScrobble = $scrobbleNotImported + $finalizedScrobble;
-      $importStatusPercent = $finalizedScrobble * 100 / $totalScrobble;
+      $importStatusProportion = $finalizedScrobble * 100 / $totalScrobble;
     }
 
 
@@ -67,7 +67,7 @@ class ImportController extends AbstractController
       'imports' => $imports,
       'dev' => $_ENV['APP_ENV'] === 'dev',
       'importStatusMessage' => $importStatusMessage,
-      'importStatusPercent' => $importStatusPercent
+      'importStatusProportion' => $importStatusProportion
     ]);
   }
 }

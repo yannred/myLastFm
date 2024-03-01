@@ -12,14 +12,7 @@
     <h2 class="mt-4" style="display: inline-block">Import status</h2><a href="/myPage/myScrobbles"><span style="margin-left: 10px"><a href="{{ path('app_import') }}">refresh...</a></span>
 
     <div>{{ importStatusMessage }}</div>
-    <div class="progress" style="width: 30%">
-      {% set progressImportStatusStyle = '' %}
-      {% if importStatusPercent != 0 %}
-        {% set progressImportStatusStyle = 'width:' ~ importStatusPercent ~ '%' %}
-      {% endif %}
-      <div class="progress-bar" style="{{ progressImportStatusStyle }}"  role="progressbar" aria-valuenow="{{ importStatusPercent }}" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-
+    {% include 'base/progressBar.html.twig' with {'proportion': importStatusProportion} %}
 
     <h2 class="mt-4">Last imports</h2>
 
@@ -51,13 +44,7 @@
               <div class="col-8">{{ import.date|date('m/d/Y H:i:s') }} - {{ infoMessage }}</div>
               <div class="col-4 pt-2">
                 {% if inProgress is defined %}
-                  {% set progressStyle = '' %}
-                  {% if inProgress != 0 %}
-                    {% set progressStyle = 'width:' ~ inProgress ~ '%' %}
-                  {% endif %}
-                  <div class="progress" style="width: 30%">
-                    <div class="progress-bar" style="{{ progressStyle }}"  role="progressbar" aria-valuenow="{{ inProgress }}" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
+                  {% include 'base/progressBar.html.twig' with {'proportion': inProgress} %}
                 {% endif %}
               </div>
             </div>
