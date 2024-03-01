@@ -3,7 +3,7 @@ window.grid = null;
 function loadGrid () {
 
   let url = '/myPage/grid';
-  url = url + '?XDEBUG_SESSION_START=1';
+  // url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
@@ -57,7 +57,7 @@ function setGridstackEvents () {
 function addWidget () {
 
   let url = '/myPage/widget';
-  url = url + '?XDEBUG_SESSION_START=1';
+  // url = url + '?XDEBUG_SESSION_START=1';
 
   const myHeaders = new Headers();
   // myHeaders.append('Authorization', 'Bearer ' + 'token' + '');
