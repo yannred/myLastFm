@@ -26,6 +26,15 @@ class ImportController extends AbstractController
     $importRepository = $this->entityManager->getRepository(Import::class);
     $imports = $importRepository->findAll();
 
+    foreach ($imports as $import) {
+      if ($import->getTotalScrobble() > 0 && $import->getFinalizedScrobble() >= 0) {
+        $inProgressPercent = $import->getFinalizedScrobble() * 100 / $import->getTotalScrobble();
+        $import->setInProgress(round($inProgressPercent));
+      } else {
+        $import->setInProgress(0);
+      }
+    }
+
     return $this->render('import/index.html.twig', [
       'imports' => $imports,
       'dev' => $_ENV['APP_ENV'] === 'dev'

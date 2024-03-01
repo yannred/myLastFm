@@ -42,6 +42,8 @@ class Import
   #[ORM\Column(type: Types::BIGINT, nullable: true)]
   private ?string $finalizedScrobble = null;
 
+  private ?float $inProgress = null;
+
 
   public function getId(): ?int
   {
@@ -152,6 +154,18 @@ class Import
   public function setFinalizedScrobble(?string $finalizedScrobble): static
   {
       $this->finalizedScrobble = $finalizedScrobble;
+
+      return $this;
+  }
+
+  public function getInProgress(): ?float
+  {
+      return $this->inProgress;
+  }
+
+  public function setInProgress(?float $inProgress): static
+  {
+      $this->inProgress = $inProgress;
 
       return $this;
   }

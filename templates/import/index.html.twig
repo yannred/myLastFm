@@ -8,7 +8,7 @@
   </div>
 
   <div>
-    <h2>Last imports</h2>
+    <h2 style="display: inline-block">Last imports</h2><a href="/myPage/myScrobbles"><span style="margin-left: 10px"><a href="{{ path('app_import') }}">refresh...</a></span>
 
     <p style="font-style: italic">Each import is a task that get scrobbles from LastFm to the database. Each task can only import 50 000 scrobbles at a time.</p>
 
@@ -20,17 +20,37 @@
 
           {# If import is not started > import is in error > import is finalized > import is in progress #}
 
-          {%  if import.started == false %}
-            {%  set infoMessage = "Task not started" %}
-          {%  elseif import.error == true %}
-            {%  set infoMessage = "Task aborted with error : " ~ import.errorMessage ~ " (imported scrobble(s) :  " ~ import.finalizedScrobble ~ ")" %}
+          {% if import.started == false %}
+            {% set infoMessage = "Task not started" %}
+          {% elseif import.error == true %}
+            {% set inProgress = 0 %}
+            {% set infoMessage = "Task aborted with error : " ~ import.errorMessage ~ " (imported scrobble(s) :  " ~ import.finalizedScrobble ~ ")" %}
           {%  elseif import.finalized == true %}
-            {%  set infoMessage = "Task finalized, " ~ import.finalizedScrobble ~ " scrobble(s) imported" %}
-          {%  else %}
-            {%  set infoMessage = "Task in progress, " ~ import.finalizedScrobble ~ " scrobble(s) imported out of " ~ import.totalScrobble %}
-          {%  endif %}
+            {% set inProgress = 100 %}
+            {% set infoMessage = "Task finalized, " ~ import.finalizedScrobble ~ " scrobble(s) imported" %}
+          {% else %}
+            {% set inProgress = import.inProgress %}
+            {% set infoMessage = "Task in progress, " ~ import.finalizedScrobble ~ " scrobble(s) imported out of " ~ import.totalScrobble %}
+          {% endif %}
 
-          <li>{{ import.date|date('m/d/Y H:i:s') }} - {{ infoMessage }} </li>
+          <li>
+            <div class="d-flex my-2">
+              <div class="col-8">{{ import.date|date('m/d/Y H:i:s') }} - {{ infoMessage }}</div>
+              <div class="col-4 pt-2">
+                {% if inProgress is defined %}
+                  {% set progressStyle = '' %}
+                  {% if inProgress != 0 %}
+                    {% set progressStyle = 'width:' ~ inProgress ~ '%' %}
+                  {% endif %}
+                  <div class="progress" style="width: 30%">
+                    <div class="progress-bar" style="{{ progressStyle }}"  role="progressbar" aria-valuenow="{{ inProgress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+
+
         {% endfor %}
       </ul>
     {% endif %}

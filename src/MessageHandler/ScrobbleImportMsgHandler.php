@@ -21,7 +21,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class ScrobbleImportMsgHandler
 {
 
-  const MAX_SCROBBLES_BY_IMPORT = 50000; // 50 thousands
+  const MAX_SCROBBLES_BY_IMPORT = 5000; // 5 thousands
 
   protected EntityManagerInterface $entityManager;
   protected UtilsService $utilsService;
@@ -49,6 +49,8 @@ class ScrobbleImportMsgHandler
     $importedScrobbleNb = 0;
 
     try {
+
+      sleep(5); // 30 seconds
 
       //Get user
       $userid = $message->userId;
