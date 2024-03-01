@@ -16,7 +16,7 @@ function loadChart(chart) {
   console.log('Loading chart id : ' + chartId);
 
   let url = '/myPage/chart/' + chartId;
-  url = url + '?XDEBUG_SESSION_START=1';
+  // url = url + '?XDEBUG_SESSION_START=1';
   console.log('url : ' + url);
 
   const myHeaders = new Headers();

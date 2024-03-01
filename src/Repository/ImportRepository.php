@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Import;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Import>
@@ -16,33 +17,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ImportRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Import::class);
+  public function __construct(ManagerRegistry $registry)
+  {
+    parent::__construct($registry, Import::class);
+  }
+
+
+  /**
+   * Get last import finished without error and return his last scrobble imported timestamp
+   * @param $user
+   * @return int|null
+   */
+  public function getLastImportTimestamp(UserInterface $user): ?int
+  {
+    $lastImportTimestamp = null;
+
+    //Get last finished import for get the last scrobble timestamp
+    $lastImportCollection = $this->findBy(
+      ['user' => $user, 'finalized' => true, 'error' => false],
+      ['date' => 'DESC'],
+      1
+    );
+
+    if (! empty($lastImportCollection)) {
+      // Check if last import contains a scrobble and a datetime
+      if ($lastImportCollection[0]->getLastScrobble() !== null) {
+        $lastImportTimestamp = $lastImportCollection[0]->getLastScrobble()->getTimestamp();
+      }
     }
 
-//    /**
-//     * @return Import[] Returns an array of Import objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('i.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    return $lastImportTimestamp;
+  }
 
-//    public function findOneBySomeField($value): ?Import
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

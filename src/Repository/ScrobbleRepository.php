@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Scrobble>
@@ -96,6 +97,23 @@ class ScrobbleRepository extends ServiceEntityRepository
     }
 
     return $query->getQuery();
+  }
+
+  /**
+   * Get total scrobble imported for a user
+   * @param UserInterface $user
+   * @return mixed
+   */
+  public function getTotalScrobbleForUser(UserInterface $user)
+  {
+    $result = $this->createQueryBuilder('s')
+      ->select('count(s.id) as count')
+      ->where('s.user = :user')
+      ->setParameter('user', $user->getId())
+      ->getQuery()
+      ->getResult();
+
+    return $result[0]['count'];
   }
 
 }

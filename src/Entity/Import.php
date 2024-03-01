@@ -24,8 +24,25 @@ class Import
   #[ORM\JoinColumn(nullable: false)]
   private ?User $user = null;
 
-  #[ORM\Column]
-  private ?bool $successful = null;
+  #[ORM\Column(options: ["default" => false])]
+  private bool $started = false;
+
+  #[ORM\Column(options: ["default" => false])]
+  private bool $finalized = false;
+
+  #[ORM\Column(options: ["default" => false])]
+  private bool $error = false;
+
+  #[ORM\Column(type: Types::TEXT, nullable: true)]
+  private ?string $errorMessage = null;
+
+  #[ORM\Column(type: Types::BIGINT, nullable: true)]
+  private ?string $totalScrobble = null;
+
+  #[ORM\Column(type: Types::BIGINT, nullable: true)]
+  private ?string $finalizedScrobble = null;
+
+  private ?float $inProgress = null;
 
 
   public function getId(): ?int
@@ -69,14 +86,86 @@ class Import
     return $this;
   }
 
-  public function isSuccessful(): ?bool
+  public function isStarted(): bool
   {
-      return $this->successful;
+    return $this->started;
   }
 
-  public function setSuccessful(bool $successful): static
+  public function setStarted(bool $started): static
   {
-      $this->successful = $successful;
+    $this->started = $started;
+
+    return $this;
+  }
+
+  public function isFinalized(): bool
+  {
+      return $this->finalized;
+  }
+
+  public function setFinalized(bool $finalized): static
+  {
+      $this->finalized = $finalized;
+
+      return $this;
+  }
+
+  public function isError(): bool
+  {
+    return $this->error;
+  }
+
+  public function setError(bool $error): static
+  {
+    $this->error = $error;
+
+    return $this;
+  }
+
+  public function getErrorMessage(): ?string
+  {
+    return $this->errorMessage;
+  }
+
+  public function setErrorMessage(?string $errorMessage): static
+  {
+    $this->errorMessage = $errorMessage;
+
+    return $this;
+  }
+
+  public function getTotalScrobble(): ?string
+  {
+      return $this->totalScrobble;
+  }
+
+  public function setTotalScrobble(?string $totalScrobble): static
+  {
+      $this->totalScrobble = $totalScrobble;
+
+      return $this;
+  }
+
+  public function getFinalizedScrobble(): ?string
+  {
+      return $this->finalizedScrobble;
+  }
+
+  public function setFinalizedScrobble(?string $finalizedScrobble): static
+  {
+      $this->finalizedScrobble = $finalizedScrobble;
+
+      return $this;
+  }
+
+  public function getInProgress(): ?float
+  {
+      return $this->inProgress;
+  }
+
+  public function setInProgress(?float $inProgress): static
+  {
+      $this->inProgress = $inProgress;
 
       return $this;
   }

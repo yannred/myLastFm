@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Artist;
+use App\Entity\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -15,27 +17,50 @@ const API_METHOD_USER_GET_ARTIST_INFO = 'artist.getinfo';
 const LIMIT_RESPONSE_RECENT_TRACKS = 200;
 
 
+/**
+ * Call the LastFm API
+ * The user must be set before calling the API
+ * @package App\Service
+ */
 class ApiRequestService
 {
 
   protected HttpClientInterface $request;
-  protected Security $security;
+  protected UtilsService $utilsService;
+  protected ?User $user;
 
-  public function __construct(HttpClientInterface $request, Security $security)
+  public string $apiKey = "";
+  public string $apiSessionKey = "";
+  public string $apiSecret = "";
+  public string $apiUser = "";
+
+  public function __construct(HttpClientInterface $request, UtilsService $utilsService, Security $security)
   {
     $this->request = $request;
-    $this->security = $security;
+    $this->utilsService = $utilsService;
+    $this->user = null;
+
+    $this->apiKey = $_ENV['LASTFM_API_KEY'];
+    $this->apiSessionKey = $_ENV['LASTFM_API_SESSION_KEY'];
+    $this->apiSecret = $_ENV['LASTFM_API_SECRET'];
+    $this->apiUser = $_ENV['LASTFM_USERNAME'];
   }
 
 
-  private function getSigningCall(array $p_Parameters, string $apiScret) : string
+  /**
+   * Return the md5 hash of the parameters
+   * @param array $parameters
+   * @param string $apiScret
+   * @return string
+   */
+  private function getSigningCall(array $parameters, string $apiScret) : string
   {
     //Sort the parameters alphabetically
-    ksort($p_Parameters);
+    ksort($parameters);
 
     //Concatenate all parameters into one string
     $parametersString = '';
-    foreach ($p_Parameters as $key => $value) {
+    foreach ($parameters as $key => $value) {
       if ($key != 'format' && $key != 'callback' && $key != 'api_sig') {
         $parametersString .= $key . $value;
       }
@@ -50,6 +75,13 @@ class ApiRequestService
     return $api_sig;
   }
 
+  /**
+   * Get the last tracks of the user
+   * @param int|null $from
+   * @param int|null $to
+   * @param int|null $page
+   * @return string
+   */
   public function getLastTracks(int $from = null, int $to = null, int $page = null): string
   {
     $responseContent = null;
@@ -57,10 +89,9 @@ class ApiRequestService
     $parameters = array();
     $Methode = "GET";
     $Url = API_URL;
-    $user = $this->security->getUser();
-    $parameters['api_key'] = $user->getLastFmApiKey();
-    $parameters['sk'] = $user->getLastFmApiSessionKey();
-    $parameters['user'] = $user->getLastFmUserName();
+    $parameters['api_key'] = $this->apiKey;
+    $parameters['sk'] = $this->apiSessionKey;
+    $parameters['user'] = $this->getUser()->getLastFmUserName();
     $parameters['format'] = 'json';
     if ($from) {
       $parameters['from'] = $from;
@@ -74,7 +105,9 @@ class ApiRequestService
     $parameters['method'] = API_METHOD_USER_GET_RECENT_TRACKS;
     $parameters['limit'] = LIMIT_RESPONSE_RECENT_TRACKS;
 
-    $parameters['api_sig'] = $this->getSigningCall($parameters, $user->getLasFmApiSecret());
+    $parameters['api_sig'] = $this->getSigningCall($parameters, $this->getUser()->getLasFmApiSecret());
+
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : getLastTracks API call parameters : ' . print_r($parameters, true));
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();
@@ -87,6 +120,10 @@ class ApiRequestService
   }
 
 
+  /**
+   * Get the user info
+   * @return string
+   */
   public function getLastFmUserInfo(): string
   {
     $responseContent = null;
@@ -94,11 +131,12 @@ class ApiRequestService
     $parameters = array();
     $Methode = "GET";
     $Url = API_URL;
-    $user = $this->security->getUser();
-    $parameters['user'] = $user->getLastFmUserName();
-    $parameters['api_key'] = $user->getLastFmApiKey();
+    $parameters['user'] = $this->getUser()->getLastFmUserName();
+    $parameters['api_key'] = $this->apiKey;
     $parameters['format'] = 'json';
     $parameters['method'] = API_METHOD_USER_GET_INFO;
+
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : getLastFmUserInfo API call parameters : ' . print_r($parameters, true));
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();
@@ -111,6 +149,11 @@ class ApiRequestService
   }
 
 
+  /**
+   * Get the artist info
+   * @param Artist $artist
+   * @return string
+   */
   public function getArtistInfo(Artist $artist): string
   {
     $responseContent = null;
@@ -129,13 +172,14 @@ class ApiRequestService
       $parameters['artist'] = $artist->getName();
     }
 
-    $user = $this->security->getUser();
-    $parameters['username'] = $user->getLastFmUserName();
-    $parameters['api_key'] = $user->getLastFmApiKey();
+    $parameters['username'] = $this->getUser()->getLastFmUserName();
+    $parameters['api_key'] = $this->apiKey;
     $parameters['format'] = 'json';
 
 //    $parameters['lang'] = 'FR';
 //    $parameters['autocorrect'] = "1";
+
+    $this->utilsService->logDevInfo('*** Scrobble Import Info : getArtistInfo API call parameters : ' . print_r($parameters, true));
 
     $response = $this->request->request($Methode, $Url, ['query' => $parameters]);
     $statusCode = $response->getStatusCode();
@@ -145,6 +189,23 @@ class ApiRequestService
     }
 
     return $responseContent;
+  }
+
+
+
+
+  /** ******************************************************* */
+  /** ********************* GETTER/SETTER ******************* */
+  /** ******************************************************* */
+
+  public function setUser(?User $user): void
+  {
+    $this->user = $user;
+  }
+
+  public function getUser(): User
+  {
+    return $this->user;
   }
 
 }
