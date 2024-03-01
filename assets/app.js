@@ -9,3 +9,8 @@ import './styles/app.css';
 
 // GridStack & widgets
 import './styles/gridstack.css';
+
+// Jquery
+import jquery from 'jquery';
+const $ = jquery;
+window.$ = window.jQuery = $;
