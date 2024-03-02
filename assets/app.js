@@ -10,9 +10,6 @@ import './styles/app.css';
 // GridStack & widgets
 import './styles/gridstack.css';
 
-// Tailwind custom
-import './styles/tailwind.css';
-
 // Jquery
 import jquery from 'jquery';
 const $ = jquery;
