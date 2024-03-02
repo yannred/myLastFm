@@ -10,7 +10,14 @@ import './styles/app.css';
 // GridStack & widgets
 import './styles/gridstack.css';
 
+// Tailwind custom
+import './styles/tailwind.css';
+
 // Jquery
 import jquery from 'jquery';
 const $ = jquery;
 window.$ = window.jQuery = $;
+
+// Flowbite
+import 'flowbite/dist/flowbite.min.css';
+import 'flowbite';

@@ -8,7 +8,6 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    // require('./assets/vendor/@popperjs/core/core.index.js'),
     // require('./assets/vendor/flowbite/flowbite.index.js'),
   ],
 }

@@ -93,7 +93,8 @@ class MyPageController extends AbstractController
       'albums' => $albums,
       'pagination' => 0,
       'userPlaycount' => 1,
-      'tracks' => $tracks
+      'tracks' => $tracks,
+      'activeNavbarItem' => $request->get('_route'),
     ]);
   }
 }

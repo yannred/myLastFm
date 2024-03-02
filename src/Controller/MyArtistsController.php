@@ -57,6 +57,7 @@ class MyArtistsController extends AbstractController
         'userPlaycount' => "1",
         'searchBar' => 'date',
         'form' => $searchForm->createView(),
+        'activeNavbarItem' => $request->get('_route'),
       ],
       $response);
   }

@@ -56,7 +56,8 @@ class MyTracksController extends AbstractController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $searchForm->createView()
+        'form' => $searchForm->createView(),
+        'activeNavbarItem' => $request->get('_route'),
       ],
       $response
     );

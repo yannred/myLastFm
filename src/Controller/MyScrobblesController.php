@@ -55,6 +55,7 @@ class MyScrobblesController extends AbstractController
       'form' => $searchForm->createView(),
       'pagination' => 1,
       'searchBar' => 'full',
+      'activeNavbarItem' => $request->get('_route'),
     ];
 
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {

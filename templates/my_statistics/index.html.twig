@@ -10,8 +10,8 @@
 {% block body %}
 
   <div>
-    <div>
-      <h1>Statistics</h1>
+    <div class="text-center">
+      <h1 class="text-5xl ">Statistics</h1>
     </div>
 
     <div class="grid-stack">
@@ -19,10 +19,10 @@
     </div>
 
     <p>
-      <button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button>
+      <button id="button-add-widget" onclick="addWidget(grid)" class="button-black-std" style="display: none">Add widget</button>
       <span>      </span>
       <a href="{{ path('app_widget_new_statistic') }}">
-        <button id="button-add-widget-page" style="display: none">Add widget Page</button>
+        <button id="button-add-widget-page" class="button-black-std" style="display: none">Add widget Page</button>
       </a>
     </p>
 
