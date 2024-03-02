@@ -6,19 +6,17 @@ use App\Entity\Import;
 use App\Entity\Scrobble;
 use App\Service\ApiRequestService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ImportController extends AbstractController
+class ImportController extends CustomAbsrtactController
 {
 
-  protected EntityManagerInterface $entityManager;
   protected ApiRequestService $apiRequestService;
 
-  public function __construct(EntityManagerInterface $entityManager, ApiRequestService $apiRequestService)
+  public function __construct(EntityManagerInterface $entityManager,ApiRequestService $apiRequestService)
   {
-    $this->entityManager = $entityManager;
+    parent::__construct($entityManager);
     $this->apiRequestService = $apiRequestService;
   }
 

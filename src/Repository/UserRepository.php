@@ -55,4 +55,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
   }
 
+  public function fullLoad(int $userId): User
+  {
+    $result = $this->createQueryBuilder('u')
+      ->select('u', 'image')
+      ->Join('u.image', 'image')
+      ->where('u.id = :id')
+      ->setParameter('id', $userId)
+      ->getQuery()
+      ->getResult();
+
+    $user = $result[0];
+
+    return $user;
+  }
+
 }

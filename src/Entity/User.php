@@ -58,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WidgetGrid::class)]
     private Collection $widgetGrids;
 
+    #[ORM\ManyToOne]
+    private ?Image $image = null;
+
     public function __construct()
     {
         $this->scrobbles = new ArrayCollection();
@@ -281,6 +284,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $widgetGrid->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }
