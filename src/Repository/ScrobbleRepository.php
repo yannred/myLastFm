@@ -64,7 +64,10 @@ class ScrobbleRepository extends ServiceEntityRepository
     }
 
     $query = $this->createQueryBuilder('s')
+      ->select('s, t, u , lt')
       ->join('s.track', 't')
+      ->join('s.user', 'u')
+      ->leftJoin('u.lovedTrack', 'lt', 'WITH', 'lt.id = t.id')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->orderBy('s.timestamp', 'ASC');

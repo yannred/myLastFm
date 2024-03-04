@@ -125,3 +125,18 @@ button.info-widget{
 .period-custom{
   /*display: none;*/
 }
+
+.button-love{
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 24px;
+  display: inline-block;
+}
+
+.not-loved-track{
+  background-image: url('../imgs/not-loved.png');
+}
+
+.loved-track{
+  background-image: url('../imgs/loved.png');
+}

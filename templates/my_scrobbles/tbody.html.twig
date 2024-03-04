@@ -2,22 +2,35 @@
 
 {% for scrobble in tbody %}
 
+  {% set lovedImage = 'imgs/not-loved.png' %}
+  {% set lovedClass = 'not-loved-track' %}
+  {% for lovedTrack in scrobble.user.lovedTrack %}
+    {% if lovedTrack.id == scrobble.track.id %}
+      {% set lovedImage = 'imgs/loved.png' %}
+      {% set lovedClass = 'loved-track' %}
+    {% endif %}
+  {% endfor %}
+
   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
     <td class="px-6 py-4">
-      {% for image in scrobble.track.image %}
-        {% if image.size == 1 %}
-          <a href="{{ scrobble.track.name|youtubeSearchLink(scrobble.track.artist.name) }}" target="_blank" rel="noopener noreferrer">
-            <img src="{{ asset('imgs/youtube.png') }}" style="width: 34px" alt="Search on Youtube" class="inline-block mr-3">
-          </a>
-          <img src='{{ image.url }}' alt='{{ scrobble.track.name }}' class="inline-block mr-3">
-          <img src='{{ asset('imgs/not-liked.png') }}' style="width: 34px" alt='i like' class="inline-block mr-3">
-
-        {% endif %}
-      {% endfor %}
+      <a href="{{ scrobble.track.name|youtubeSearchLink(scrobble.track.artist.name) }}" target="_blank" rel="noopener noreferrer">
+        <img src="{{ asset('imgs/youtube.png') }}" style="width: 34px" alt="Search on Youtube" class="inline-block mr-3">
+      </a>
+      <a href="#" onclick="loveTrack(this)" class="button-love {{ lovedClass }}" id="{{ 'loved-track-id-' ~ scrobble.track.id }}">
+        <span>&nbsp;</span>
+      </a>
     </td>
 
-    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ scrobble.track.name }}</th>
+    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+      {% for image in scrobble.track.image %}
+        {% if image.size == 1 %}
+          <img src='{{ image.url }}' alt='{{ scrobble.track.name }}' class="inline-block mr-3">
+        {% endif %}
+      {% endfor %}
+
+      {{ scrobble.track.name }}
+    </th>
 
     <td class="px-6 py-4">{{ scrobble.track.artist.name }}</td>
 
