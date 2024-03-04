@@ -7,22 +7,13 @@ use App\Entity\Artist;
 use App\Entity\Scrobble;
 use App\Entity\Track;
 use App\Service\ApiRequestService;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyPageController extends AbstractController
+class MyPageController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
-
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
 
   /**
    * Display the user's page
@@ -93,7 +84,8 @@ class MyPageController extends AbstractController
       'albums' => $albums,
       'pagination' => 0,
       'userPlaycount' => 1,
-      'tracks' => $tracks
+      'tracks' => $tracks,
+      'activeNavbarItem' => $request->get('_route'),
     ]);
   }
 }

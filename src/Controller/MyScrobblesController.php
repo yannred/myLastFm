@@ -5,24 +5,14 @@ namespace App\Controller;
 use App\Data\SearchBarData;
 use App\Entity\Scrobble;
 use App\Form\SearchBarType;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyScrobblesController extends AbstractController
+class MyScrobblesController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
-
   const LIMIT_PER_PAGE = 20;
-
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
 
   #[Route('/myPage/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
@@ -55,6 +45,7 @@ class MyScrobblesController extends AbstractController
       'form' => $searchForm->createView(),
       'pagination' => 1,
       'searchBar' => 'full',
+      'activeNavbarItem' => $request->get('_route'),
     ];
 
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {

@@ -11,16 +11,14 @@ use App\Service\StatisticsService;
 use App\Service\UtilsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class WidgetController extends AbstractController
+class WidgetController extends CustomAbsrtactController
 {
 
-  protected EntityManagerInterface $entityManager;
   protected LoggerInterface $logger;
   protected Security $security;
   protected StatisticsService $statisticsService;
@@ -36,6 +34,8 @@ class WidgetController extends AbstractController
     UtilsService $utilsService
   )
   {
+    parent::__construct($entityManager);
+
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->security = $security;

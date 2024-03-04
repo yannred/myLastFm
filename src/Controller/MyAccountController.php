@@ -4,21 +4,11 @@ namespace App\Controller;
 
 use App\Data\Notification;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyAccountController extends AbstractController
+class MyAccountController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
-
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
-
 
   #[Route('/myAccount', name: 'app_my_account')]
   public function index(): Response
