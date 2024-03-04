@@ -53,13 +53,13 @@ class ScrobbleRepository extends ServiceEntityRepository
     if ($dataSearchBar->from !== null || $dataSearchBar->to !== null) {
       $dateFilter = true;
     }
-    if ($dataSearchBar->trackName !== '') {
+    if ($dataSearchBar->track !== '') {
       $trackFilter = true;
     }
-    if ($dataSearchBar->artistName !== '') {
+    if ($dataSearchBar->artist !== '') {
       $artistFilter = true;
     }
-    if ($dataSearchBar->albumName !== '') {
+    if ($dataSearchBar->album !== '') {
       $albumFilter = true;
     }
 
@@ -79,21 +79,21 @@ class ScrobbleRepository extends ServiceEntityRepository
     if ($trackFilter) {
       $query
         ->andWhere('t.name LIKE :trackName')
-        ->setParameter('trackName', '%' . trim($dataSearchBar->trackName) . '%');
+        ->setParameter('trackName', '%' . trim($dataSearchBar->track) . '%');
     }
 
     if ($artistFilter) {
       $query
         ->join('t.artist', 'artist')
         ->andWhere('artist.name LIKE :artistName')
-        ->setParameter('artistName', '%' . trim($dataSearchBar->artistName) . '%');
+        ->setParameter('artistName', '%' . trim($dataSearchBar->artist) . '%');
     }
 
     if ($albumFilter) {
       $query
         ->join('t.album', 'album')
         ->andWhere('album.name LIKE :albumName')
-        ->setParameter('albumName', '%' . trim($dataSearchBar->albumName) . '%');
+        ->setParameter('albumName', '%' . trim($dataSearchBar->album) . '%');
     }
 
     $query->orderBy('s.timestamp', 'DESC');
