@@ -20,9 +20,9 @@ class SearchBarType extends AbstractType
       ->add('from', DateType::class, ['required' => false])
       ->add('to', DateType::class, ['required' => false])
 
-      ->add('trackName', TextType::class, ['required' => false])
-      ->add('artistName', TextType::class, ['required' => false])
-      ->add('albumName', TextType::class, ['required' => false])
+      ->add('track', TextType::class, ['required' => false])
+      ->add('artist', TextType::class, ['required' => false])
+      ->add('album', TextType::class, ['required' => false])
     ;
   }
 
