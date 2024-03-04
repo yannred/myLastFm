@@ -7,7 +7,12 @@
     <td class="px-6 py-4">
       {% for image in scrobble.track.image %}
         {% if image.size == 1 %}
-          <img src='{{ image.url }}' alt='{{ scrobble.track.name }}'>
+          <a href="{{ scrobble.track.name|youtubeSearchLink(scrobble.track.artist.name) }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ asset('imgs/youtube.png') }}" style="width: 34px" alt="Search on Youtube" class="inline-block mr-3">
+          </a>
+          <img src='{{ image.url }}' alt='{{ scrobble.track.name }}' class="inline-block mr-3">
+          <img src='{{ asset('imgs/not-liked.png') }}' style="width: 34px" alt='i like' class="inline-block mr-3">
+
         {% endif %}
       {% endfor %}
     </td>

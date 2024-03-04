@@ -11,6 +11,7 @@ class CustomAbsrtactController extends AbstractController
 {
 
   protected EntityManagerInterface $entityManager;
+  protected User $user;
 
   public function __construct(EntityManagerInterface $entityManager)
   {
@@ -22,6 +23,8 @@ class CustomAbsrtactController extends AbstractController
     if ($this->getUser() !== null) {
       $user = $this->entityManager->getRepository(User::class)->fullLoad($this->getUser()->getId());
       $parameters['user'] = $user;
+    } else {
+      $parameters['user'] = null;
     }
 
     return parent::render($view, $parameters, $response);

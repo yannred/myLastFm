@@ -10,7 +10,6 @@ use App\Service\ApiRequestService;
 use App\Service\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -21,15 +20,13 @@ use App\MessageHandler\ScrobbleImportMsgHandler;
  * Manage the scrobbles import
  */
 #[AllowDynamicProperties]
-class ScrobblerController extends AbstractController
+class ScrobblerController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
   protected Security $security;
 
-  public function __construct(EntityManagerInterface $entityManager, Security $security)
+  public function __construct(EntityManagerInterface $entityManager,Security $security)
   {
-    $this->entityManager = $entityManager;
+    parent::__construct($entityManager);
     $this->security = $security;
   }
 
