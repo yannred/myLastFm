@@ -17,6 +17,7 @@ class MyScrobblesController extends CustomAbsrtactController
   #[Route('/myPage/myScrobbles', name: 'app_my_scrobbles')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
+
     //TODO : use a GET request
 
     $response = new Response();
@@ -45,8 +46,6 @@ class MyScrobblesController extends CustomAbsrtactController
       'pagination' => 1,
       'searchBar' => 'full',
       'activeNavbarItem' => $request->get('_route'),
-      'tbodyUrl' => 'my_scrobbles/tbody.html.twig',
-      'thead' => ['' , 'Title', 'Artist', 'Album', 'Date']
     ];
 
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {
