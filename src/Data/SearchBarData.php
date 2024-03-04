@@ -9,17 +9,17 @@ class SearchBarData
   public ?\DateTimeInterface $from;
   public ?\DateTimeInterface $to;
 
-  public ?string $track;
-  public ?string $artist;
-  public ?string $album;
+  public ?string $trackName;
+  public ?string $artistName;
+  public ?string $albumName;
 
   public function __construct()
   {
     $this->type = '';
     $this->from = null;
     $this->to = null;
-    $this->track = '';
-    $this->artist = '';
-    $this->album = '';
+    $this->trackName = '';
+    $this->artistName = '';
+    $this->albumName = '';
   }
 }

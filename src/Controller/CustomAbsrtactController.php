@@ -19,10 +19,9 @@ class CustomAbsrtactController extends AbstractController
 
   protected function render(string $view, array $parameters = [], Response $response = null): Response
   {
-    if ($this->getUser() !== null) {
-      $user = $this->entityManager->getRepository(User::class)->fullLoad($this->getUser()->getId());
-      $parameters['user'] = $user;
-    }
+    $user = $this->entityManager->getRepository(User::class)->fullLoad($this->getUser()->getId());
+
+    $parameters['user'] = $user;
 
     return parent::render($view, $parameters, $response);
   }

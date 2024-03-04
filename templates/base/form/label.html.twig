@@ -14,10 +14,12 @@
   {% set visibility = ""  %}
 {%  endif %}
 
-<label
-  for="{{ input.vars.id }}"
-  style="{{ style }}"
-  class="{{ class }} {{ visibility }} block mb-2 text-sm font-medium text-gray-900"
->
-  {{ field_label(input) }}
-</label>
+<div class="d-flex align-items-center">
+  <label
+    for="{{ input.vars.id }}"
+    class="form-label-sm mx-2 {{ class }} {{ input.vars.required ? 'required' }} {{ visibility }}"
+    style="{{ style }}"
+  >
+    {{ field_label(input) }}
+  </label>
+</div>
