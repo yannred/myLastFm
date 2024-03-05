@@ -61,11 +61,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne]
     private ?Image $image = null;
 
+    #[ORM\ManyToMany(targetEntity: Track::class)]
+    private Collection $lovedTrack;
+
     public function __construct()
     {
         $this->scrobbles = new ArrayCollection();
         $this->imports = new ArrayCollection();
         $this->widgetGrids = new ArrayCollection();
+        $this->lovedTrack = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -296,6 +300,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?Image $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Track>
+     */
+    public function getLovedTrack(): Collection
+    {
+        return $this->lovedTrack;
+    }
+
+    public function addLovedTrack(Track $lovedTrack): static
+    {
+        if (!$this->lovedTrack->contains($lovedTrack)) {
+            $this->lovedTrack->add($lovedTrack);
+        }
+
+        return $this;
+    }
+
+    public function removeLovedTrack(Track $lovedTrack): static
+    {
+        $this->lovedTrack->removeElement($lovedTrack);
 
         return $this;
     }
