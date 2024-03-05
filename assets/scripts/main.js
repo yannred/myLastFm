@@ -36,3 +36,15 @@ function loveTrack(node) {
     })
 
 }
+
+
+
+function resetSearchBar(){
+  $('#search_bar_artist').val('');
+  $('#search_bar_album').val('');
+  $('#search_bar_track').val('');
+  $('#search_bar_from').val('');
+  $('#search_bar_to').val('');
+
+  $('#search-bar-submit').click();
+}
