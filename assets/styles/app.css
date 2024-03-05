@@ -79,7 +79,13 @@
 .icon-svg{
   filter: invert(100%) sepia(0%) saturate(7494%) hue-rotate(132deg) brightness(100%) contrast(103%);
 }
-/******* END Icon color *******/
+
+/******* Input red border *******/
+.red-border{
+  border: 3px #810000 solid !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
 
 /*******************************/
 /******* END BASE *******/

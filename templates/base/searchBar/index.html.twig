@@ -59,7 +59,12 @@
 
         {{ form_widget(form._token) }}
 
-        <div class="flex items-center"><button type="submit" class="button-black-std" id="search-bar-submit">Find</button></div>
+        <div class="flex items-center">
+          <button type="submit" class="button-reset-std" id="search-bar-submit">
+            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'search'}%}
+          </button>
+        </div>
+
         <div class="flex items-center">
           <button type="button" class="button-reset-std ml-2" onclick="resetSearchBar()">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'reset'}%}
