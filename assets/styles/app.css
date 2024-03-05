@@ -2,27 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Begin of Tailwind CSS */
+/*******************************/
+/****** TAILWIND CSS  ******/
+/*******************************/
+
+.button-reset-std{
+  @apply text-white bg-gray-800 font-medium rounded-lg text-sm me-2 no-margin;
+  border: 3px #810000 solid !important;
+  padding: 4px;
+}
+
+.button-reset-std img{
+  max-width: inherit !important;
+}
 
 .button-black-std{
   @apply text-white bg-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 no-margin;
-  border: 5px #810000 solid !important;
+  border: 3px #810000 solid !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
 }
-.button-black-std:hover{
+.button-black-std:hover, .button-reset-std:hover{
   @apply bg-gray-700;
 }
-.button-black-std:focus{
+.button-black-std:focus, .button-reset-std:focus{
   @apply outline-none ring-4 ring-gray-300;
 }
-.dark .button-black-std{
+.dark .button-black-std, .dark .button-reset-std{
   @apply bg-gray-800 border-gray-700;
 }
-.dark .button-black-std:hover{
+.dark .button-black-std:hover, .dark .button-reset-std:hover{
   @apply bg-gray-700;
 }
-.dark .button-black-std:focus{
+.dark .button-black-std:focus, .dark .button-reset-std:focus{
   @apply ring-gray-700;
 }
 
@@ -43,23 +55,85 @@
 .no-margin{
   margin: 0;
 }
+/*******************************/
+/****** END TAILWIND CSS  ******/
+/*******************************/
 
 
 
 
 
-/* END of Tailwind */
 
 
+/*******************************/
+/******* BASE *******/
+/*******************************/
 
-.page, .first, .next, .previous, .last, .current {
-  margin: 0 3px 0 3px;
-}
-
+/******* Font *******/
 .bold {
   font-weight: bold;
 }
+/******* END Font *******/
 
+/******* Icon color *******/
+.icon-svg{
+  filter: invert(100%) sepia(0%) saturate(7494%) hue-rotate(132deg) brightness(100%) contrast(103%);
+}
+/******* END Icon color *******/
+
+/*******************************/
+/******* END BASE *******/
+/*******************************/
+
+
+
+
+
+
+
+
+/*******************************/
+/******* FOR MANY PAGES *******/
+/*******************************/
+
+/******* Pagination *******/
+.page, .first, .next, .previous, .last, .current {
+  margin: 0 3px 0 3px;
+}
+/******* END Pagination *******/
+
+/******* I love track *******/
+.button-love{
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 24px;
+  display: inline-block;
+}
+
+.not-loved-track{
+  background-image: url('../imgs/not-loved.png');
+}
+
+.loved-track{
+  background-image: url('../imgs/loved.png');
+}
+/******* END I love track *******/
+
+/*******************************/
+/******* >END FOR MANY PAGES *******/
+/*******************************/
+
+
+
+
+
+
+
+/*******************************/
+/******* My STATISTICS PAGE *******/
+/*******************************/
+
+/******* Grid, widget, statistics *******/
 .widget-chart{
   width: 100%;
   height: 100%;
@@ -125,18 +199,8 @@ button.info-widget{
 .period-custom{
   /*display: none;*/
 }
+/******* END Grid, widget, statistics *******/
 
-.button-love{
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 24px;
-  display: inline-block;
-}
-
-.not-loved-track{
-  background-image: url('../imgs/not-loved.png');
-}
-
-.loved-track{
-  background-image: url('../imgs/loved.png');
-}
+/*******************************/
+/******* END My STATISTICS PAGE *******/
+/*******************************/

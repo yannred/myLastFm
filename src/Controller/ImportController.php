@@ -49,7 +49,7 @@ class ImportController extends CustomAbsrtactController
 
     //Get all imports
     $importRepository = $this->entityManager->getRepository(Import::class);
-    $imports = $importRepository->findAll();
+    $imports = $importRepository->findBy(['user' => $user], ['date' => 'DESC']);
     $imports = array_reverse($imports);
 
     foreach ($imports as $import) {

@@ -1,0 +1,11 @@
+{% if not alt is defined %}
+  {% set alt = '' %}
+{% endif %}
+
+{% if width is defined %}
+  {% set style = 'width: ' ~ width ~ 'px;'%}
+{% elseif not style is defined %}
+  {% set style = '' %}
+{% endif %}
+
+<img src="{{ asset('imgs/icon-' ~ icon ~ '.svg') }}" class="icon-svg inline-block" alt="{{ alt }}" style="{{ style }}">
