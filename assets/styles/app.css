@@ -216,6 +216,10 @@ button.info-widget{
 .period-custom{
   /*display: none;*/
 }
+
+.widget-spinner-hide{
+  display: none !important;
+}
 /******* END Grid, widget, statistics *******/
 
 /*******************************/

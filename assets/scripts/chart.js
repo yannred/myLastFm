@@ -1,7 +1,7 @@
 function loadCharts() {
   console.log('Loading charts ...');
 
-  const charts = $('.widget-canva');
+  const charts = $('.widget-canvas');
   console.log('charts', charts);
 
   for (let chart of charts) {
@@ -39,8 +39,15 @@ function loadChart(chart) {
       const dataFormated = chartData.data.map(row => row.data)
       console.log('dataFormated', dataFormated);
 
+      const newChart = document.getElementById('canvas-' + chartData.id)
+      const parentNewChart = newChart.parentElement
+      parentNewChart.style.height = "95%"
+      const spinner = parentNewChart.previousElementSibling
+      console.log('spinner', spinner);
+      spinner.classList.add('widget-spinner-hide')
+
       new Chart(
-        document.getElementById('canvas-' + chartData.id),
+        newChart,
         {
           type: chartData.type,
           data: {
