@@ -53,9 +53,10 @@ class ArtistRepository extends ServiceEntityRepository
     $user = $this->security->getUser();
 
     $query = $this->createQueryBuilder('a')
-      ->select('a, count(s.id) as count')
+      ->select('a, count(s.id) as count, count(distinct t.id) as totalTrack, count(distinct al.id) as totalAlbum')
       ->join('a.tracks', 't')
       ->join('t.scrobbles', 's')
+      ->join('t.album', 'al')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->groupBy('a.name')

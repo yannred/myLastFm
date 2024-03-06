@@ -1,11 +1,19 @@
-{% if not alt is defined %}
-  {% set alt = '' %}
-{% endif %}
-
 {% if width is defined %}
   {% set style = 'width: ' ~ width ~ 'px;'%}
 {% elseif not style is defined %}
   {% set style = '' %}
 {% endif %}
 
-<img src="{{ asset('imgs/icon-' ~ icon ~ '.svg') }}" class="icon-svg inline-block" alt="{{ alt }}" style="{{ style }}">
+{% if not alt is defined %}
+  {% if icon == 'album' %}
+    {% set alt = 'Number of different albums you have listened to' %}
+  {% elseif icon == 'track' %}
+    {% set alt = 'Number of different tracks you have listened to' %}
+  {% elseif icon == 'scrobble' %}
+    {% set alt = 'Number of scrobbles' %}
+  {% else %}
+    {% set alt = '' %}
+  {% endif %}
+{% endif %}
+
+<img src="{{ asset('imgs/icon-' ~ icon ~ '.svg') }}" class="icon-svg inline-block" title="{{ alt }}" style="{{ style }}">

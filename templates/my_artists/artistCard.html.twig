@@ -1,4 +1,4 @@
-<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+<div class="max-w-md bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
   <div class="flex p-3">
 
@@ -20,11 +20,11 @@
           </li>
           <li class="p-1">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'album'}%}
-            1 album listened
+            {{ totalAlbum }} album listened
           </li>
           <li class="p-1">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'}%}
-            6 tracks listened
+            {{ totalTrack }} tracks listened
           </li>
         </ul>
       </div>

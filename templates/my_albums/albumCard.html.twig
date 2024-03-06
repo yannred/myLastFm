@@ -27,12 +27,12 @@
       <div class="p-2 flex-none">
         <ul class="">
           <li class="p-1">
-            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'}%}
+            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'} %}
             {{ userPlaycount }} scrobbles
           </li>
           <li class="p-1">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'}%}
-            6 tracks listened
+            {{ totalTrack }} tracks listened
           </li>
         </ul>
       </div>
