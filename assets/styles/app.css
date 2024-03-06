@@ -6,6 +6,17 @@
 /****** TAILWIND CSS  ******/
 /*******************************/
 
+.card-popup{
+  @apply absolute z-10 inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200
+    rounded-lg shadow-sm w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400;
+  display: none;
+}
+
+.card-popup-parent:hover .card-popup{
+  display: block !important;
+}
+
+
 .button-reset-std{
   @apply text-white bg-gray-800 font-medium rounded-lg text-sm me-2 no-margin;
   border: 3px #810000 solid !important;
