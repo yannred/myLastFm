@@ -16,15 +16,15 @@
         <ul class="">
           <li class="p-1">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'}%}
-            {{ userPlaycount }} scrobbles
+            {{ userPlaycount|number_format( 0, ',', ' ') }} scrobbles
           </li>
           <li class="p-1">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'album'}%}
-            {{ totalAlbum }} album listened
+            {{ totalAlbum|number_format( 0, ',', ' ') }} album listened
           </li>
           <li class="p-1">
             {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'}%}
-            {{ totalTrack }} tracks listened
+            {{ totalTrack|number_format( 0, ',', ' ') }} tracks listened
           </li>
         </ul>
       </div>
