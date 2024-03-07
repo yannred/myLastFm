@@ -37,10 +37,6 @@ class MyScrobblesController extends CustomAbsrtactController
     $searchForm = $this->createForm(SearchBarType::class, $searchBarData);
     $searchForm->handleRequest($request);
 
-    // TODO : Control the dates (on all pages with date search)
-    //  error on timestamp convert if not respecting the format
-    //  if only one date is set, the other is set to the curent date
-    //  if the same date is set, the "to" date is set to the timestamp of the end of the day
     $query = $scrobbleRepository->paginationFilteredQuery($searchBarData);
     $scrobblePagination = $paginator->paginate(
       $query,

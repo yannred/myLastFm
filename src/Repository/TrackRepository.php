@@ -51,8 +51,13 @@ class TrackRepository extends ServiceEntityRepository
     $user = $this->security->getUser();
 
     $query = $this->createQueryBuilder('t')
-      ->select('t, count(t.id) as count')
+      ->select('t, a, album, i, s, u, lt, t.id as track_id, t.name as track_name, a.name as artist_name, album.name as album_name, count(t.id) as count, lt.id as loved_track')
       ->join('t.scrobbles', 's')
+      ->join('t.album', 'album')
+      ->join('t.artist', 'a')
+      ->join('s.user', 'u')
+      ->leftJoin('t.image', 'i')
+      ->leftJoin('u.lovedTrack', 'lt', 'WITH', 'lt.id = t.id')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->groupBy('t.id')

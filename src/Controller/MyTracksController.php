@@ -23,7 +23,6 @@ class MyTracksController extends CustomAbsrtactController
   #[Route('/myPage/myTracks', name: 'app_my_tracks')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
-
     //TODO : use a GET request
 
     $trackRepository = $this->entityManager->getRepository(Track::class);
@@ -54,6 +53,8 @@ class MyTracksController extends CustomAbsrtactController
         'searchBar' => 'date',
         'form' => $searchForm,
         'activeNavbarItem' => $request->get('_route'),
+        'tbodyUrl' => 'my_tracks/tbody.html.twig',
+        'thead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
       ],
       $response
     );
