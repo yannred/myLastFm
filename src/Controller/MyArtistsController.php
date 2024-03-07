@@ -14,10 +14,15 @@ class MyArtistsController extends CustomAbsrtactController
 {
   const LIMIT_PER_PAGE = 20;
 
+  /**
+   * Render the page with the list of artists
+   * @param Request $request
+   * @param PaginatorInterface $paginator
+   * @return Response
+   */
   #[Route('/myPage/myArtists', name: 'app_my_artists')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
-
     //TODO : use a GET request
 
     $artistRepository = $this->entityManager->getRepository(Artist::class);
@@ -46,7 +51,7 @@ class MyArtistsController extends CustomAbsrtactController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $searchForm->createView(),
+        'form' => $searchForm,
         'activeNavbarItem' => $request->get('_route'),
       ],
       $response);

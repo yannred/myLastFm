@@ -50,7 +50,7 @@ class MyScrobblesController extends CustomAbsrtactController
 
     $paramView = [
       'scrobbles' => $scrobblePagination,
-      'form' => $searchForm->createView(),
+      'form' => $searchForm,
       'pagination' => 1,
       'searchBar' => 'full',
       'activeNavbarItem' => $request->get('_route'),

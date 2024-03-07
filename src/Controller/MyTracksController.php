@@ -14,6 +14,12 @@ class MyTracksController extends CustomAbsrtactController
 {
   const LIMIT_PER_PAGE = 20;
 
+  /**
+   * Render the page with the list of tracks
+   * @param Request $request
+   * @param PaginatorInterface $paginator
+   * @return Response
+   */
   #[Route('/myPage/myTracks', name: 'app_my_tracks')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
@@ -46,7 +52,7 @@ class MyTracksController extends CustomAbsrtactController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $searchForm->createView(),
+        'form' => $searchForm,
         'activeNavbarItem' => $request->get('_route'),
       ],
       $response

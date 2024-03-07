@@ -14,6 +14,13 @@ class MyAlbumsController extends CustomAbsrtactController
 {
   const LIMIT_PER_PAGE = 20;
 
+
+  /**
+   * Render the page with the list of albums
+   * @param Request $request
+   * @param PaginatorInterface $paginator
+   * @return Response
+   */
   #[Route('/myPage/myAlbums', name: 'app_my_albums')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
@@ -46,7 +53,7 @@ class MyAlbumsController extends CustomAbsrtactController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $searchForm->createView(),
+        'form' => $searchForm,
         'activeNavbarItem' => $request->get('_route'),
       ],
       $response
