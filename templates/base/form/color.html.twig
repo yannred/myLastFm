@@ -20,19 +20,14 @@
   {% set visibility = ""  %}
 {%  endif %}
 
-{% if not size is defined %}
-  {% set size = "" %}
-{%  endif %}
 
 <input
-  type="{{ type is defined ? type : 'input'}}"
+  type="color"
   id="{{ input.vars.id }}"
   name="{{ field_name(input) }}"
   style="{{ style }}"
-  size="{{ size }}"
-  class="{{ class }} {{ visibility }} red-border bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+  class="{{ class }} {{ visibility }} p-1 h-10 w-14 block bg-gray border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-grey-900 dark:border-gray-700"
   value="{{ input.vars.value is defined ? input.vars.value : '' }}"
   {{ input.vars.required ? 'required="required"' }}
-/>
+>
 {{ form_help(input) }}{{ form_errors(input) }}
-

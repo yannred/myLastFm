@@ -76,69 +76,30 @@ class WidgetController extends CustomAbsrtactController
   }
 
 
-  #[Route('/myPage/widget', name: 'app_widget_new', methods: ['POST'])]
-  public function createWidgetProto(): Response
-  {
-    $response = new Response();
-//    $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
-//    $widgetRepository = $this->entityManager->getRepository(Widget::class);
-//
-//    $typeWidget = Widget::TYPE__TOP_ARTISTS;
-//    $subTypeWidget = Widget::SUB_TYPE__BAR;
-//
-//    $model = Widget::getWidgetModelFromType($typeWidget);
-//
-//    $widget = new Widget();
-//    $widget->applyModel($model);
-//    $widget->setPositionX(0);
-//    $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
-//
-//    $widget->setSubTypeWidget($subTypeWidget);
-//    $widget->setWording('New widget');
-//
-//    $widget->setQuery(
-//      $widgetRepository
-//      ->createWidgetQuery($model->getQueryParameters())
-//      ->getDQL()
-//    );
-//
-//    $widget->setWidgetGrid($this->userWidgetGrid);
-//
-//    $this->entityManager->persist($widget);
-//    $this->entityManager->flush();
-//
-//    $gridstackItem = new gridstackItem($widget);
-//    $gridstackItem->content = $this->statisticsService->generateContent($widget, $model->getContentParameters());
-//
-//    $response->setStatusCode(Response::HTTP_CREATED);
-//    $response->setContent(json_encode($gridstackItem));
-
-    return $response;
-  }
-
   #[Route('/myPage/myStatistics/new/{id}', name: 'app_widget_new_statistic')]
   public function newStatistic(Request $request, $id = null): Response
   {
+    $response = new Response();
+    $view = 'my_statistics/new.html.twig';
+    $notifications = [];
+    $paramView = [];
+
     $creating = true;
     if ($id != null ){
       $creating = false;
     }
 
-    $response = new Response();
-    $view = 'my_statistics/new.html.twig';
-    $notifications = [];
-
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
-    $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
     if ($creating){
-      $form = $this->createForm(WidgetType::class);
+      $widget = new Widget();
     } else {
       $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $id, 'widgetGrid' => $this->userWidgetGrid]);
-      $form = $this->createForm(WidgetType::class, $widget);
+      $paramView['modify'] = true;
     }
+    $form = $this->createForm(WidgetType::class, $widget);
     $form->handleRequest($request);
-    $paramView = ['form' => $form];
+    $paramView['form'] = $form;
 
     if ($form->isSubmitted() && $form->isValid()) {
 

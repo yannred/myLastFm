@@ -30,7 +30,6 @@ function loadGrid () {
       window.grid = GridStack.init(gridOption);
       setGridstackEvents(grid);
       grid.load(widgetResponse);
-      $('#button-add-widget').css("display", "inline");
       $('#button-add-widget-page').css("display", "inline");
     })
     .then(() => {

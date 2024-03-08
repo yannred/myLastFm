@@ -40,9 +40,9 @@ class StatisticsService
         $subContent = '<canvas id="canvas-' . $widget->getId() . '" class="widget-canvas"></canvas>';
         $content = $widget->getDeleteButton() . $widget->getModifyButton() . $widget->getInfoButton() . '
           <div id="widget-chart-' . $widget->getId() . '" class="widget-chart flex flex-col vstack m-0" style="background-color: ' . $widget->getBackgroundColor() . '; color: ' . $widget->getFontColor() . ';">
-            <div class="flex-non">' . $widget->getWording() . '</div>' .
+            <div class="flex-non text-xl font-bold">' . $widget->getWording() . '</div>' .
             $spinner .
-            '<div class="col p-2" style="height: 0;">' . $subContent . '</div>
+            '<div class="col p-2 flex justify-center" style="height: 0;">' . $subContent . '</div>
           </div>
         ';
         break;
