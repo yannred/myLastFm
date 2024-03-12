@@ -379,7 +379,12 @@ class Widget
   }
 
 
-  public static function getChartTypeFromSubType(int $subTypeWidget): string
+  /**
+   * Get the Chart.js type from the widget Entity subtype
+   * @param int $subTypeWidget
+   * @return string
+   */
+  public static function getChartTypeFromWidgetSubType(int $subTypeWidget): string
   {
     $chartType = '';
 
@@ -400,9 +405,13 @@ class Widget
     return $chartType;
   }
 
+  /**
+   * Get the type for chart.js library
+   * @return string
+   */
   public function getChartType(): string
   {
-    return self::getChartTypeFromSubType($this->subTypeWidget);
+    return self::getChartTypeFromWidgetSubType($this->subTypeWidget);
   }
 
   public function getDateType(): ?int

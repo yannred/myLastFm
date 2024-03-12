@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Data\chartItem;
 use App\Entity\Widget;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -10,7 +11,7 @@ class StatisticsService
 
   private EntityManagerInterface $em;
 
-  public function __construct(EntityManagerInterface $em, ApiRequestService $apiRequestService)
+  public function __construct(EntityManagerInterface $em)
   {
     $this->em = $em;
   }
@@ -50,6 +51,81 @@ class StatisticsService
     }
 
     return $content;
+  }
+
+
+  public function getDataAttributeForChart(Widget $widget): array
+  {
+    //the returned value
+    $dataAttribute = [
+      'labels' => [], //labels of the chart
+      'datasets' => [], //This attribute is an array of datasets, set after the switch with $dataSets variable
+    ];
+
+    $backgroundColor = [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(201, 203, 207, 0.2)'
+    ];
+
+    $borderColor = [
+      'rgb(255, 99, 132)',
+      'rgb(255, 159, 64)',
+      'rgb(255, 205, 86)',
+      'rgb(75, 192, 192)',
+      'rgb(54, 162, 235)',
+      'rgb(153, 102, 255)',
+      'rgb(201, 203, 207)'
+    ];
+
+    $dataSets = [
+      'label' => $widget->getWording(), // Title of the chart
+      'data' => [], // Data of the chart
+      'backgroundColor' => $backgroundColor,
+      'borderColor' => $borderColor,
+      'borderWidth' => 5
+    ];
+
+    switch ($widget->getSubTypeWidget()) {
+
+      case Widget::SUB_TYPE__BAR :
+
+        $query = $widget->getQuery();
+        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+
+        if (count($allResults) > 0) {
+          $total = 0;
+          foreach ($allResults as $result) {
+            $total += $result['count'];
+          }
+          $total = ['name' => 'All', 'count' => $total];
+
+          $firstResults = array_slice($allResults, 0, 5);
+          $results = array_merge([$total], $firstResults);
+
+          $labels = [];
+          $datas = [];
+          foreach ($results as $result) {
+            $labels[] = $result['name'];
+            $datas[] = $result['count'];
+          }
+          $dataAttribute['labels'] = $labels;
+          $dataSets['data'] = $datas;
+        }
+        break;
+
+      case Widget::SUB_TYPE__PIE :
+      case Widget::SUB_TYPE__DONUT :
+        break;
+    }
+
+    $dataAttribute['datasets'][] = $dataSets;
+
+    return $dataAttribute;
   }
 
 
@@ -119,6 +195,101 @@ class StatisticsService
 
     // dump($data);
     return $data;
+  }
+
+
+  /**
+   * Get the options for the chart
+   * The options are represented by an array which will be converted to JSON
+   * @param Widget $widget
+   * @return array
+   */
+  public function getOptionsForChart(Widget $widget): array
+  {
+    $options = [];
+
+    switch ($widget->getSubTypeWidget()) {
+
+      case Widget::SUB_TYPE__BAR :
+
+        $options = [
+          'aspectRatio' => 1,
+          'scales' => [
+            'x' => [
+              //Tick is the label of the axis, not of the legend
+              //https://www.chartjs.org/docs/latest/axes/_common_ticks.html
+              'ticks' => [
+                'font' => [
+                  'size' => 14
+                ]
+              ]
+            ],
+            'y' => [
+              //max value of the axis
+              'max' => 200
+            ]
+          ],
+          'plugins' => [
+            //Legend is the element outside the chart
+            'legend' => [
+              'display' => false
+            ]
+          ]
+        ];
+
+        break;
+
+      case Widget::SUB_TYPE__PIE :
+      case Widget::SUB_TYPE__DONUT :
+
+      $options = [
+        'aspectRatio' => 1,
+        'scales' => [
+          'x' => [],
+          'y' => []
+        ],
+        'plugins' => [
+          //Legend is the element outside the chart
+          'legend' => [
+            'display' => true
+          ]
+        ]
+      ];
+
+        break;
+    }
+
+    // dump($options);
+    return $options;
+  }
+
+
+  /**
+   * Get the callback options for the chart
+   * The callbacks are represented by constants in the chartItem class
+   * @param Widget $widget
+   * @return array
+   */
+  public function getCallbackOptionsForChart(Widget $widget): array
+  {
+
+    $callbackOptions = [];
+
+    switch ($widget->getSubTypeWidget()) {
+
+      case Widget::SUB_TYPE__BAR :
+
+        $callbackOptions[] = chartItem::CALLBACK_OPTION__TRUNCATE_TICKS_X;
+        break;
+
+      case Widget::SUB_TYPE__PIE :
+      case Widget::SUB_TYPE__DONUT :
+
+        break;
+    }
+
+    // dump($callbackOptions);
+    return $callbackOptions;
   }
 
 
