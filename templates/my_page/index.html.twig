@@ -3,9 +3,7 @@
 {% block title %}My Page{% endblock %}
 
 {% block body %}
-  <div>
-    <h1>My Page</h1>
-  </div>
+  {% include 'base/html/page-title.html.twig' with {'title': 'My page'} %}
 
   <div>
     <h2>Last Fm User</h2>
@@ -14,12 +12,12 @@
 
   <div>
     <h2 style="display: inline-block">Last scrobbles</h2><span style="margin-left: 50px"><a href="/myPage/myScrobbles">See more</a></span>
-    {% include 'my_scrobbles/my_scrobbles.html.twig' %}
+    {% include 'my_scrobbles/my_scrobbles.html.twig' with {'thead' : myScrobblesThead, 'tbody': scrobbles, 'tbodyUrl' : myScrobblesTbodyUrl} %}
   </div>
 
   <div>
     <h2 style="display: inline-block">Top tracks</h2><span style="margin-left: 50px"><a href="/myPage/myTracks">See more</a></span>
-    {% include 'my_tracks/tracks.html.twig' %}
+    {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': scrobbles, 'tbodyUrl' : myTracksTbodyUrl} %}
   </div>
 
   <div>

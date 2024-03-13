@@ -53,8 +53,9 @@ class MyPageController extends CustomAbsrtactController
 
     //Last scrobbles
     $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
+    $query = $scrobbleRepository->paginationQuery();
     $scrobblePagination = $paginator->paginate(
-      $scrobbleRepository->paginationQuery(),
+      $query,
       $request->query->getInt('page', 1),
       MyScrobblesController::LIMIT_PER_PAGE
     );
@@ -86,6 +87,10 @@ class MyPageController extends CustomAbsrtactController
       'userPlaycount' => 1,
       'tracks' => $tracks,
       'activeNavbarItem' => $request->get('_route'),
+      'myScrobblesTbodyUrl' => 'my_scrobbles/tbody.html.twig',
+      'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date'],
+      'myTracksTbodyUrl' => 'my_tracks/tbody.html.twig',
+      'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
     ]);
   }
 }

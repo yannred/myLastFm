@@ -33,7 +33,7 @@ class AlbumRepository extends ServiceEntityRepository
     $user = $this->security->getUser();
 
     $query = $this->createQueryBuilder('album')
-      ->select('album, count(scrobble.id) as count')
+      ->select('album, count(scrobble.id) as count, count(distinct track.id) as totalTrack')
       ->join('album.tracks', 'track')
       ->join('track.scrobbles', 'scrobble')
       ->where('scrobble.user = :user')
