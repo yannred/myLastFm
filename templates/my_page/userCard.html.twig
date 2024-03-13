@@ -1,17 +1,32 @@
-<div class="card mb-3" style="max-width: 540px;">
-  <div class="row g-0">
-    <div class="col-md-4 d-flex">
-      <img src="{{ lastFmUser.image }}" class="img-fluid rounded-start align-self-center m-2  " alt="{{ lastFmUser.userRealName }}" style="border-radius: 100px 100px !important;">
+{% set lastFmLink = "https://www.last.fm/fr/user/" ~ lastFmUser.userName %}
+
+<a href="{{ lastFmLink }}" target="_blank" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Last.fm user infos</h5>
+  <div class="font-normal text-gray-700 dark:text-gray-400 flex items-center mt-4">
+
+    <div class="col inline-block  mx-4"><img class="w-20 h-20 rounded-full" src="{{ lastFmUser.image }}" alt="{{ lastFmUser.userRealName }}"></div>
+
+    <div class="col inline-block mx-4">
+      <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
+        <li class="flex items-center">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'} %}
+          <span class="mx-4">Scrobbles : {{ lastFmUser.scrobbleCount }}</span>
+        </li>
+        <li class="flex items-center">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'} %}
+          <span class="mx-4">Tracks : {{ lastFmUser.trackCount }}</span>
+        </li>
+        <li class="flex items-center">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'album'} %}
+          <span class="mx-4">Albums : {{ lastFmUser.albumCount }}</span>
+        </li>
+        <li class="flex items-center">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'artist'} %}
+          <span class="mx-4">Artists : {{ lastFmUser.artistCount }}</span>
+        </li>
+      </ul>
     </div>
-    <div class="col-md-8 d-flex">
-      <div class="card-body align-self-center" style="padding-left: 50px;">
-        <h5 class="card-title">{{ lastFmUser.userRealName }}</h5>
-{#        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
-          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Scrobbles : {{ lastFmUser.scrobbleCount }}</small></span>
-          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Your tracks : {{ lastFmUser.trackCount }}</small></span>
-          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Your albums : {{ lastFmUser.albumCount }}</small></span>
-          <span class="card-text" style="display: block !important;"><small class="text-body-secondary">Your artists : {{ lastFmUser.artistCount }}</small></span>
-      </div>
-    </div>
+
   </div>
-</div>
+</a>
