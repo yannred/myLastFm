@@ -24,8 +24,17 @@
   {% set size = "" %}
 {%  endif %}
 
+{% if not type is defined %}
+  {% if input.vars.type is defined %}
+    {% set type = input.vars.type %}
+  {% else %}
+    {% set type = "input" %}
+  {%  endif %}
+{%  endif %}
+
+
 <input
-  type="{{ type is defined ? type : 'input'}}"
+  type="{{ type }}"
   id="{{ input.vars.id }}"
   name="{{ field_name(input) }}"
   style="{{ style }}"

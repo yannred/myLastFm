@@ -53,8 +53,8 @@ class MyTracksController extends CustomAbsrtactController
         'searchBar' => 'date',
         'form' => $searchForm,
         'activeNavbarItem' => $request->get('_route'),
-        'tbodyUrl' => 'my_tracks/tbody.html.twig',
-        'thead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
+        'myTracksTbodyUrl' => 'my_tracks/tbody.html.twig',
+        'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
       ],
       $response
     );

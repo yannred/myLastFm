@@ -4,7 +4,7 @@
     {{ knp_pagination_render(tracks) }}
   {% endif %}
 
-  {% include 'base/html/table/table.html.twig' with {'thead' : thead, 'tbody': tracks, 'tbodyUrl' : tbodyUrl} %}
+  {% include 'base/html/table/table.html.twig' with {'thead' : myTracksThead, 'tbody': tracks, 'tbodyUrl' : myTracksTbodyUrl} %}
 
   {% if pagination is defined and pagination == 1 %}
     {{ knp_pagination_render(tracks) }}

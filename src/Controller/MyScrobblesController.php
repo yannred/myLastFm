@@ -50,8 +50,8 @@ class MyScrobblesController extends CustomAbsrtactController
       'pagination' => 1,
       'searchBar' => 'full',
       'activeNavbarItem' => $request->get('_route'),
-      'tbodyUrl' => 'my_scrobbles/tbody.html.twig',
-      'thead' => ['' , 'Title', 'Artist', 'Album', 'Date']
+      'myScrobblesTbodyUrl' => 'my_scrobbles/tbody.html.twig',
+      'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date']
     ];
 
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {
