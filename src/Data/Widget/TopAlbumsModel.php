@@ -13,7 +13,7 @@ class TopAlbumsModel extends TopModel
     parent::__construct();
 
     $this->setCode('TOPALBUM - ' . date('Y-m-d H:i:s'));
-    $this->setTypeWidget(Widget::TYPE__TOP_ARTISTS);
+    $this->setTypeWidget(Widget::TYPE__TOP_ALBUMS);
     $this->setWidth(2);
     $this->setHeight(2);
   }

@@ -222,11 +222,17 @@ class StatisticsService
                 'font' => [
                   'size' => 14
                 ]
+              ],
+              'grid' => [
+                'display' => false
               ]
             ],
             'y' => [
               //max value of the axis
-              'max' => 200
+              'max' => 200,
+              'grid' => [
+                'display' => false
+              ]
             ]
           ],
           'plugins' => [

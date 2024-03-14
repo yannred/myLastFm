@@ -77,7 +77,7 @@ class WidgetController extends CustomAbsrtactController
 
 
   #[Route('/myPage/myStatistics/new/{id}', name: 'app_widget_new_statistic')]
-  public function newStatistic(Request $request, $id = null): Response
+  public function statisticForm(Request $request, $id = null): Response
   {
     $response = new Response();
     $view = 'my_statistics/new.html.twig';
