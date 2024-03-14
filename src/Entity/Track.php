@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Track
 {
 
-  const LIMIT_TOP_TRACKS = 4;
+  const LIMIT_TOP_TRACKS = 5;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]

@@ -76,8 +76,6 @@ class MyPageController extends CustomAbsrtactController
     $albums = array_slice($albums, 0, Album::LIMIT_TOP_ALBUMS);
 
 
-
-
     return $this->render('my_page/index.html.twig', [
       'lastFmUser' => $lastFmUser,
       'scrobbles' => $scrobblePagination,

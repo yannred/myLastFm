@@ -136,6 +136,14 @@
 }
 /******* END I love track *******/
 
+/******* I love track *******/
+.underline-when-hover:hover{
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: currentcolor;
+  text-decoration-thickness: auto;
+}
+
 /*******************************/
 /******* >END FOR MANY PAGES *******/
 /*******************************/

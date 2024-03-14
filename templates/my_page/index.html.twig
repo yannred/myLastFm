@@ -11,23 +11,23 @@
   </div>
 
   <div>
-    <h2 style="display: inline-block">Last scrobbles</h2><span style="margin-left: 50px"><a href="/myPage/myScrobbles">See more</a></span>
+    <p><span class="mx-4"><a href="{{ path('app_my_scrobbles') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Last scrobbles', 'withLink': true } %}</a></span></p>
     {% include 'my_scrobbles/my_scrobbles.html.twig' with {'thead' : myScrobblesThead, 'tbody': scrobbles, 'tbodyUrl' : myScrobblesTbodyUrl} %}
   </div>
 
   <div>
-    <h2 style="display: inline-block">Top tracks</h2><span style="margin-left: 50px"><a href="/myPage/myTracks">See more</a></span>
+    <p><span class="mx-4"><a href="{{ path('app_my_tracks') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top tracks', 'withLink': true } %}</a></span></p>
     {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': scrobbles, 'tbodyUrl' : myTracksTbodyUrl} %}
   </div>
 
   <div>
-    <h2 style="display: inline-block">Top artists</h2><span style="margin-left: 50px"><a href="/myPage/myArtists">See more</a></span>
-    {% include 'my_artists/artists.html.twig' %}
+    <p><span class="mx-4"><a href="{{ path('app_my_artists') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top artists', 'withLink': true } %}</a></span></p>
+    <div class="flex justify-center">{% include 'my_artists/artists.html.twig' %}</div>
   </div>
 
   <div>
-    <h2 style="display: inline-block">Top albums</h2><span style="margin-left: 50px"><a href="/myPage/myAlbums">See more</a></span>
-    {% include 'my_albums/albums.html.twig' %}
+    <p><span class="mx-4"><a href="{{ path('app_my_albums') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top albums', 'withLink': true } %}</a></span></p>
+    <div class="flex justify-center">{% include 'my_albums/albums.html.twig' %}</div>
   </div>
 
 

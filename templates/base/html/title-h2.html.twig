@@ -1,0 +1,7 @@
+{%  if not withLink is defined %}
+  {% set class = "" %}
+{% else %}
+  {% set class = "underline-when-hover" %}
+{% endif %}
+
+<h2 class="{{ class }} text-2xl font-bold inline-block my-2">{{ title }}</h2>

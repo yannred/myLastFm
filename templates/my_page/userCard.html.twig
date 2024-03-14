@@ -1,6 +1,6 @@
 {% set lastFmLink = "https://www.last.fm/fr/user/" ~ lastFmUser.userName %}
 
-<a href="{{ lastFmLink }}" target="_blank" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+<a href="{{ lastFmLink }}" target="_blank" class="block max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
 
   <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Last.fm user infos</h5>
   <div class="font-normal text-gray-700 dark:text-gray-400 flex items-center mt-4">
@@ -11,19 +11,19 @@
       <ul class="max-w-md space-y-1 text-gray-500 list-inside dark:text-gray-400">
         <li class="flex items-center">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'} %}
-          <span class="mx-4">Scrobbles : {{ lastFmUser.scrobbleCount }}</span>
+          <span class="mx-4">Scrobbles : {{ lastFmUser.scrobbleCount|number_format( 0, ',', ' ') }}</span>
         </li>
         <li class="flex items-center">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'} %}
-          <span class="mx-4">Tracks : {{ lastFmUser.trackCount }}</span>
+          <span class="mx-4">Tracks : {{ lastFmUser.trackCount|number_format( 0, ',', ' ') }}</span>
         </li>
         <li class="flex items-center">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'album'} %}
-          <span class="mx-4">Albums : {{ lastFmUser.albumCount }}</span>
+          <span class="mx-4">Albums : {{ lastFmUser.albumCount|number_format( 0, ',', ' ') }}</span>
         </li>
         <li class="flex items-center">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'artist'} %}
-          <span class="mx-4">Artists : {{ lastFmUser.artistCount }}</span>
+          <span class="mx-4">Artists : {{ lastFmUser.artistCount|number_format( 0, ',', ' ') }}</span>
         </li>
       </ul>
     </div>

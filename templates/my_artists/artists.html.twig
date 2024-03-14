@@ -7,7 +7,6 @@
 {% endif %}
 
 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-
   {% for artist in artists %}
 
     {% set artistCount =  "" %}
@@ -32,7 +31,6 @@
       'totalAlbum' : artist.totalAlbum,
     } %}
   {% endfor %}
-
 </div>
 
 {% if pagination is defined and pagination == 1 %}
