@@ -39,6 +39,9 @@ class MyTracksController extends CustomAbsrtactController
       self::LIMIT_PER_PAGE
     );
 
+    $trackTotal = $tracksPagination->getTotalItemCount();
+    $tableHeaderCaption[] = ['wording' => 'Total scrobbles :', 'data' => $trackTotal];
+
     $response = new Response();
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {
       $response->setStatusCode(Response::HTTP_SEE_OTHER);
@@ -54,7 +57,8 @@ class MyTracksController extends CustomAbsrtactController
         'form' => $searchForm,
         'activeNavbarItem' => $request->get('_route'),
         'myTracksTbodyUrl' => 'my_tracks/tbody.html.twig',
-        'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
+        'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble'],
+        'tableHeaderCaption' => $tableHeaderCaption
       ],
       $response
     );

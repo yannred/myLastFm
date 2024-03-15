@@ -1,13 +1,16 @@
-<div class="">
+<div>
 
   {% if pagination is defined and pagination == 1 %}
-    {{ knp_pagination_render(scrobbles) }}
+    {% set pagination = true %}
+  {% else %}
+    {% set pagination = false %}
   {% endif %}
 
-  {% include 'base/html/table/table.html.twig' with {'thead' : myScrobblesThead, 'tbody': scrobbles, 'tbodyUrl' : myScrobblesTbodyUrl} %}
-
-  {% if pagination is defined and pagination == 1 %}
-    {{ knp_pagination_render(scrobbles) }}
-  {% endif %}
+  {% include 'base/html/table/table.html.twig' with {
+    'thead' : myScrobblesThead,
+    'tbody': scrobbles,
+    'tbodyUrl' : myScrobblesTbodyUrl,
+    'pagination' : pagination
+  } %}
 
 </div>

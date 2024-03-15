@@ -1,0 +1,7 @@
+<nav class="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation">
+  {% if pagination is defined and pagination != false %}
+    <div class="flex-auto items-center justify-center">
+      {{ knp_pagination_render(pagination) }}
+    </div>
+  {% endif %}
+</nav>

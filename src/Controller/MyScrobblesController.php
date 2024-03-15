@@ -44,6 +44,9 @@ class MyScrobblesController extends CustomAbsrtactController
       self::LIMIT_PER_PAGE
     );
 
+    $scrobbleTotal = $scrobblePagination->getTotalItemCount();
+    $tableHeaderCaption[] = ['wording' => 'Total scrobbles :', 'data' => $scrobbleTotal];
+
     $paramView = [
       'scrobbles' => $scrobblePagination,
       'form' => $searchForm,
@@ -51,7 +54,8 @@ class MyScrobblesController extends CustomAbsrtactController
       'searchBar' => 'full',
       'activeNavbarItem' => $request->get('_route'),
       'myScrobblesTbodyUrl' => 'my_scrobbles/tbody.html.twig',
-      'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date']
+      'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date'],
+      'tableHeaderCaption' => $tableHeaderCaption
     ];
 
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {
