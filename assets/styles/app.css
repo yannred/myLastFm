@@ -1,10 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /*******************************/
 /****** TAILWIND CSS  ******/
 /*******************************/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .card-popup{
   @apply absolute z-10 inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200
@@ -18,8 +18,8 @@
 
 
 .button-reset-std{
-  @apply text-white bg-gray-800 font-medium rounded-lg text-sm me-2 no-margin;
-  border: 3px #810000 solid !important;
+  @apply text-white bg-gray-800 font-medium rounded-lg text-sm me-2 no-margin border-gray-300;
+  border: 1px solid !important;
   padding: 4px;
 }
 
@@ -29,7 +29,7 @@
 
 .button-black-std{
   @apply text-white bg-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 no-margin;
-  border: 3px #810000 solid !important;
+  border: 1px rgb(75 85 99) solid !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
 }
@@ -92,8 +92,9 @@
 }
 
 /******* Input red border *******/
-.red-border{
-  border: 3px #810000 solid !important;
+.custom-border{
+  /*border: 1px rgb(55 65 81) solid !important;*/
+  border: 1px rgb(75 85 99) solid !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
 }
