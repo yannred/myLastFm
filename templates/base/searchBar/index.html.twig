@@ -21,57 +21,52 @@
       {{ form_errors(form) }}
   </div>
 
-    {{ form_row(form.type) }}
+  {{ form_row(form.type) }}
 
-      <div class="flex">
+  <div class="flex">
 
-        <div class="flex items-center inline-block mr-3 col">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.artist, 'visibility' : StringSearchVisibility} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.artist, 'visibility' : StringSearchVisibility, 'size' : 70} %}</div>
-        </div>
+    <div class="flex items-center inline-block mr-3 col">
+      <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.artist, 'visibility' : StringSearchVisibility} %}</div>
+      <div class="col">{% include 'base/form/input.html.twig' with {'input': form.artist, 'visibility' : StringSearchVisibility, 'size' : 70} %}</div>
+    </div>
 
-        <div class="flex items-center inline-block mr-3 col">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.track, 'visibility' : StringSearchVisibility} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.track, 'visibility' : StringSearchVisibility, 'size' : 70} %}</div>
-        </div>
+    <div class="flex items-center inline-block mr-3 col">
+      <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.track, 'visibility' : StringSearchVisibility} %}</div>
+      <div class="col">{% include 'base/form/input.html.twig' with {'input': form.track, 'visibility' : StringSearchVisibility, 'size' : 70} %}</div>
+    </div>
 
-        <div class="flex items-center inline-block mr-8 col">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.album, 'visibility' : StringSearchVisibility} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.album, 'visibility' : StringSearchVisibility, 'size' : 70} %}</div>
-        </div>
+    <div class="flex items-center inline-block mr-8 col">
+      <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.album, 'visibility' : StringSearchVisibility} %}</div>
+      <div class="col">{% include 'base/form/input.html.twig' with {'input': form.album, 'visibility' : StringSearchVisibility, 'size' : 70} %}</div>
+    </div>
 
-        <div style="width: 100%"></div>
+    <div style="width: 100%"></div>
 
+    <div class="flex items-center inline-block mr-3 col">
+      <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}</div>
+      <div class="col">{% include 'base/form/input.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}</div>
+    </div>
 
+    <div class="flex items-center inline-block mr-8 col">
+      <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}</div>
+      <div class="col">{% include 'base/form/input.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}</div>
+    </div>
 
+    {{ form_end(form, {'render_rest': false}) }}
 
-        <div class="flex items-center inline-block mr-3 col">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.from, 'visibility' : DateSearchVisibility} %}</div>
-        </div>
+    {{ form_widget(form._token) }}
 
-        <div class="flex items-center inline-block mr-8 col">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.to, 'visibility' : DateSearchVisibility} %}</div>
-        </div>
+    <div class="flex items-center">
+      <button type="submit" class="button-reset-std" id="search-bar-submit">
+        {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'search'}%}
+      </button>
+    </div>
 
-        {{ form_end(form, {'render_rest': false}) }}
-
-        {{ form_widget(form._token) }}
-
-        <div class="flex items-center">
-          <button type="submit" class="button-reset-std" id="search-bar-submit">
-            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'search'}%}
-          </button>
-        </div>
-
-        <div class="flex items-center">
-          <button type="button" class="button-reset-std ml-2" onclick="resetSearchBar()">
-            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'reset'}%}
-          </button>
-        </div>
-
-      </div>
+    <div class="flex items-center">
+      <button type="button" class="button-reset-std ml-2" onclick="resetSearchBar()">
+        {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'reset'}%}
+      </button>
+    </div>
 
   </div>
 
