@@ -11,48 +11,54 @@
     rounded-lg shadow-sm w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400;
   display: none;
 }
-
 .card-popup-parent:hover .card-popup{
   display: block !important;
 }
 
-
-.button-reset-std{
-  @apply text-white bg-gray-800 font-medium rounded-lg text-sm me-2 no-margin border-gray-300;
-  border: 1px solid !important;
-  padding: 4px;
+.sub-content{
+  @apply relative p-4 w-full max-w-lg h-full md:h-auto bg-gray-900 rounded-lg mx-10 border border-red-900;
 }
 
-.button-reset-std img{
-  max-width: inherit !important;
-}
-
-.button-black-std{
-  @apply text-white bg-gray-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 no-margin;
-  border: 1px rgb(75 85 99) solid !important;
+/* regular button */
+.button-colored-std{
+  @apply text-white bg-gray-800 font-medium rounded-lg text-sm font-medium px-5 py-2.5 me-2 mb-2 no-margin;
+  /*@apply w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;*/
+  border: 1px rgb(75 85 99) solid ;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
 }
-.button-black-std:hover, .button-reset-std:hover{
-  @apply bg-gray-700;
+.dark .button-colored-std:hover{
+  @apply bg-gray-700 ring-red-500 border-red-500;
 }
-.button-black-std:focus, .button-reset-std:focus{
-  @apply outline-none ring-4 ring-gray-300;
+
+/* hitlight button */
+.button-main-std{
+  @apply text-white !bg-red-800 font-medium rounded-lg text-sm font-medium px-5 py-2.5 me-2 mb-2 no-margin;
+  /*@apply w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;*/
+  border: 1px rgb(75 85 99) solid ;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
-.dark .button-black-std, .dark .button-reset-std{
-  @apply bg-gray-800 border-gray-700;
+.dark .button-main-std:hover{
+  @apply !bg-red-700 ring-red-500 border-red-500;
 }
-.dark .button-black-std:hover, .dark .button-reset-std:hover{
-  @apply bg-gray-700;
+
+/* reset icon button */
+.button-reset-std{
+  @apply text-white bg-gray-800 font-medium rounded-lg text-sm px-1 py-1.5 no-margin border-gray-300 ml-1 flex items-center;
+  border: 1px rgb(75 85 99) solid;
 }
-.dark .button-black-std:focus, .dark .button-reset-std:focus{
-  @apply ring-gray-700;
+.button-reset-std img{
+  max-width: inherit !important;
 }
+.button-reset-std:hover{
+  @apply bg-gray-700 ring-red-500 border-red-500;
+}
+
 
 .dropdown:hover .dropdown-menu {
   display: block;
 }
-
 .dropdown-menu li:hover{
   @apply cursor-pointer;
   @apply font-bold;
@@ -62,6 +68,8 @@
 .dropdown-menu li:hover a{
   @apply text-gray-200;
 }
+
+
 
 .no-margin{
   margin: 0;

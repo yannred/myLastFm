@@ -10,6 +10,7 @@
 {% block body %}
 
   {% include 'base/html/page-title.html.twig' with {'title': 'Your personal statistics'} %}
+  <hr class="mt-3 mb-3" />
 
   <div>
 
@@ -19,7 +20,7 @@
 
     <p>
       <a href="{{ path('app_widget_new_statistic') }}">
-        <button type="button" id="button-add-widget-page" class="button-black-std" style="display: none">Add widget</button>
+        <button type="button" id="button-add-widget-page" class="button-colored-std" style="display: none">Add new statistic</button>
       </a>
     </p>
 

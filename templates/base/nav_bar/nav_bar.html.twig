@@ -46,8 +46,10 @@
             </div>
           </div>
         {% else %}
-          <a href="{{ path('app_login') }}"><button class="button-black-std mr-8">Log in</button></a>
-          <a href="{{ path('app_register') }}"><button class="button-black-std">Sign in</button></a>
+
+          <!-- ************ NOT LOGGED ************ -->
+          <a href="{{ path('app_login') }}"><button class="button-colored-std mr-8">Log in</button></a>
+          <a href="{{ path('app_register') }}"><button class="button-colored-std">Sign in</button></a>
         {% endif %}
       </div>
 

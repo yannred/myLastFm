@@ -1,7 +1,9 @@
 {% if not modify is defined %}
-  {% set submit = 'Create' %}
+  {% set submitText = 'Create' %}
+  {% set subTitle = 'Create new Statistic' %}
 {% else %}
-  {% set submit = 'Update' %}
+  {% set submitText = 'Update' %}
+  {% set subTitle = 'Update Statistic' %}
 {% endif %}
 
 {% extends 'base.html.twig' %}
@@ -10,74 +12,94 @@
 
 {% block body %}
 
-  {% include 'base/html/page-title.html.twig' with {'title': 'Create a new Statistic'} %}
+  {% include 'base/html/page-title.html.twig' with {'title': 'Your personal statistics'} %}
 
   <hr class="mt-3 mb-3" />
 
-  <div>
 
-    <form method="{{ form.vars.method }}" action="{{ form.vars.action }}" class="max-w-sm mx-auto">
 
-    <div>
-      {{ form_errors(form) }}
-    </div>
+  <div class="py-8 px-4 mx-auto w-1/2 lg:py-16  lg:gap-16">
 
-    <div class="my-3">
+    <div class="w-full w-full p-6 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+        {{ subTitle }}
+      </h2>
+      <br class="my-2" />
+      <form method="{{ form.vars.method }}" action="{{ form.vars.action }}" class="max-w-sm mx-auto">
 
-      <div class="my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.wording} %}</div>
-        <div class="col">{% include 'base/form/input.html.twig' with {'input': form.wording} %}</div>
-      </div>
-
-      <div class="my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.comment} %}</div>
-        <div class="col">{% include 'base/form/input.html.twig' with {'input': form.comment} %}</div>
-      </div>
-
-      <div class="my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.typeWidget} %}</div>
-        <div class="">{% include 'base/form/select.html.twig' with {'input': form.typeWidget} %}</div>
-      </div>
-
-      <div class="my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.subTypeWidget} %}</div>
-        <div class="">{% include 'base/form/select.html.twig' with {'input': form.subTypeWidget} %}</div>
-      </div>
-
-      <div class="my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.dateType} %}</div>
-        <div class="">{% include 'base/form/select.html.twig' with {'input': form.dateType} %}</div>
-      </div>
-
-      <div class="flex items-center mr-3 col my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.dateFrom} %}</div>
-        <div class="col">{% include 'base/form/input.html.twig' with {'input': form.dateFrom, 'type' : 'date'} %}</div>
-      </div>
-
-      <div class="flex items-center mr-3 col my-3">
-        <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.dateTo} %}</div>
-        <div class="col">{% include 'base/form/input.html.twig' with {'input': form.dateTo, 'type' : 'date'} %}</div>
-      </div>
-
-      <div class="flex justify-center">
-        <div class="mx-auto">
-          <div class="col mt-1 mr-2 flex justify-cente">{% include 'base/form/label.html.twig' with {'input': form.fontColor} %}</div>
-          <div class="flex justify-cente">{% include 'base/form/color.html.twig' with {'input': form.fontColor, 'type' : 'color'} %}</div>
+        <div>
+          {{ form_errors(form) }}
         </div>
 
-        <div class="mx-auto">
-          <div class="col mt-1 mr-2 flex justify-center">{% include 'base/form/label.html.twig' with {'input': form.backgroundColor} %}</div>
-          <div class=" flex justify-center">{% include 'base/form/color.html.twig' with {'input': form.backgroundColor, 'type' : 'color'} %}</div>
+        <div class="my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.wording} %}</div>
+          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.wording} %}</div>
         </div>
+
+        <div class="my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.comment} %}</div>
+          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.comment} %}</div>
+        </div>
+
+        <div class="my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.typeWidget} %}</div>
+          <div class="">{% include 'base/form/select.html.twig' with {'input': form.typeWidget} %}</div>
+        </div>
+
+        <div class="my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.subTypeWidget} %}</div>
+          <div class="">{% include 'base/form/select.html.twig' with {'input': form.subTypeWidget} %}</div>
+        </div>
+
+        <div class="my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.dateType} %}</div>
+          <div class="">{% include 'base/form/select.html.twig' with {'input': form.dateType} %}</div>
+        </div>
+
+        <div class="flex items-center mr-3 col my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.dateFrom} %}</div>
+          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.dateFrom, 'type' : 'date'} %}</div>
+        </div>
+
+        <div class="flex items-center mr-3 col my-3">
+          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.dateTo} %}</div>
+          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.dateTo, 'type' : 'date'} %}</div>
+        </div>
+
+        <div class="flex justify-center">
+          <div class="mx-auto">
+            <div class="col mt-1 mr-2 flex justify-cente">{% include 'base/form/label.html.twig' with {'input': form.fontColor} %}</div>
+            <div class="flex justify-cente">{% include 'base/form/color.html.twig' with {'input': form.fontColor, 'type' : 'color'} %}</div>
+          </div>
+
+          <div class="mx-auto">
+            <div class="col mt-1 mr-2 flex justify-center">{% include 'base/form/label.html.twig' with {'input': form.backgroundColor} %}</div>
+            <div class=" flex justify-center">{% include 'base/form/color.html.twig' with {'input': form.backgroundColor, 'type' : 'color'} %}</div>
+          </div>
+        </div>
+
+        <br class="my-1" />
+
+      <div class="flex items-center justify-center mr-3 col my-3">
+        {% include 'base/html/button/reset.html.twig' %}
+        <button type="submit" class="button-main-std ml-2">{{ submitText }}</button>
+        {% include 'base/html/button/cancel.html.twig' with {'onclick' : 'history.back();'} %}
       </div>
 
-      <br class="my-4" />
-
-      <button type="submit" class="button-black-std my-8">{{ submit }}</button>
       {{ form_end(form) }}
 
-
+      </form>
     </div>
+
   </div>
+
+
+
+
+
+
+
+
+
 
 {% endblock %}

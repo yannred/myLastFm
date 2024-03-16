@@ -51,6 +51,10 @@ class WidgetController extends CustomAbsrtactController
     }
   }
 
+  /**
+   * Return a JSON response with the gridstack items
+   * @return Response
+   */
   #[Route('/myPage/grid', name: 'app_widget_load_grid', methods: ['GET'])]
   public function loadGrid(): Response
   {
@@ -76,6 +80,12 @@ class WidgetController extends CustomAbsrtactController
   }
 
 
+  /**
+   * Page for creating or updating a statistic
+   * @param Request $request
+   * @param $id
+   * @return Response
+   */
   #[Route('/myPage/myStatistics/new/{id}', name: 'app_widget_new_statistic')]
   public function statisticForm(Request $request, $id = null): Response
   {
@@ -181,6 +191,11 @@ class WidgetController extends CustomAbsrtactController
   }
 
 
+  /**
+   * Update chart datas (position, size)
+   * @param Request $request
+   * @return Response
+   */
   #[Route('/myPage/widget/{id}', name: 'app_widget_update', methods: ['UPDATE'])]
   public function updateWidget(Request $request): Response
   {
@@ -210,6 +225,11 @@ class WidgetController extends CustomAbsrtactController
   }
 
 
+  /**
+   * Delete a widget
+   * @param Request $request
+   * @return Response
+   */
   #[Route('/myPage/widget/{id}', name: 'app_widget_delete', methods: ['DELETE'])]
   public function deleteWidget(Request $request, ): Response
   {
