@@ -38,9 +38,9 @@
   name="{{ field_name(input) }}"
   style="{{ style }}"
   size="{{ size }}"
-  class="{{ class }} {{ visibility }} bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+  class="{{ class }} {{ visibility }} bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-1.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
   value="{{ input.vars.value is defined ? input.vars.value : '' }}"
   {{ input.vars.required ? 'required="required"' }}
 />
-{{ form_help(input) }}{{ form_errors(input) }}
+<span class="text-red-800">{{ form_help(input) }}{{ form_errors(input) }}</span>
 

@@ -4,6 +4,16 @@
   {% set style = '' %}
 {% endif %}
 
+{% if width is defined %}
+  {% set style = 'width: ' ~ width ~ 'px;!important'%}
+{% elseif not style is defined %}
+  {% set style = '' %}
+{% endif %}
+
+{% if not class is defined %}
+  {% set class = ''%}
+{% endif %}
+
 {% if not alt is defined %}
   {% if icon == 'album' %}
     {% set alt = 'Number of different albums you have listened to' %}
@@ -16,4 +26,4 @@
   {% endif %}
 {% endif %}
 
-<img src="{{ asset('imgs/icon-' ~ icon ~ '.svg') }}" class="icon-svg inline-block" title="{{ alt }}" style="{{ style }}">
+<img src="{{ asset('imgs/icon-' ~ icon ~ '.svg') }}" class="{{ class }} icon-svg inline-block" title="{{ alt }}" style="{{ style }}">

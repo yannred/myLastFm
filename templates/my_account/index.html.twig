@@ -3,21 +3,54 @@
 {% block title %} - My account{% endblock %}
 
 {% block body %}
-  <div>
-    <h1>My Account</h1>
-  </div>
 
-  <div>
-    <h2>Last FM</h2>
-    <ul>
+  {% include 'base/html/page-title.html.twig' with {'title': 'Manage your account'} %}
+  <hr class="mt-6 mb-10" />
 
-      <li>
-        <a href="/myAccount/import">Import data from Last Fm</a>
+  <div class="md:flex !h-96">
+    <ul class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
+      <li class="!mb-4">
+        <span id="tab-li-user-Profile" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'profile') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'profil', 'class' : 'me-2 ms-2 w-4 h-4'} %}
+          Profile&nbsp;
+        </span>
       </li>
-      <li>
-        <a href="/myAccount/deleteAllScrobbles">Delete all my imported scrobbles</a>
+      <li class="!mb-4">
+        <span id="tab-li-user-Settings" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'settings') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'settings', 'class' : 'text-gray-500 me-2 ms-2 w-4 h-4'} %}
+          Settings
+        </span>
       </li>
-
+      <li class="!mb-4">
+        <span id="tab-li-user-Lastfm" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'lastfm') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'lastfm', 'class' : 'me-2 w-6 h-6'}%}
+          Last.fm&nbsp;
+        </span>
+      </li>
+{#      <li class="!mb-4">#}
+{#        <a class="inline-flex items-center px-4 py-3 text-gray-400 rounded-lg cursor-not-allowed bg-gray-50 w-full dark:bg-gray-800 dark:text-gray-500">#}
+{#          <svg class="w-4 h-4 me-2 ms-2 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">#}
+{#            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>#}
+{#          </svg>#}
+{#          Disabled</a>#}
+{#      </li>#}
     </ul>
+    <div id="tab-content-user-Profile" class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Profile</h3>
+      <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos illo incidunt iure nemo quo tenetur. Autem eaque error magni quidem suscipit. Atque blanditiis eaque est molestiae nostrum possimus quod repudiandae.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A at, consectetur delectus distinctio dolor dolorum eius esse harum magnam necessitatibus neque nesciunt porro reiciendis rem reprehenderit saepe, sapiente suscipit voluptate.</p>
+    </div>
+    <div id="tab-content-user-Settings" style="display: none"  class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Settings</h3>
+      <p class="mb-2"></p>
+      <p><a href="/myAccount/deleteAllScrobbles">Delete all my imported scrobbles</a></p>
+    </div>
+    <div id="tab-content-user-Lastfm" style="display: none"  class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Last.fm</h3>
+      <p class="mb-2"></p>
+      <p><a href="/myAccount/import">Import data from Last Fm</a></p>
+    </div>
   </div>
+
+
 {% endblock %}

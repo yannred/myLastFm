@@ -5,7 +5,7 @@
 {% if url is defined %}
 <a href="{{ url }}">
 {% endif %}
-  <button type="button" class="button-reset-std ml-2" onclick="{{ onclick }}" >
+  <button type="button" class="button-icon-std ml-2" onclick="{{ onclick }}" >
     {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'close', 'style' : 'height:21px;', 'alt' : 'Cancel'}%}
   </button>
 {% if url is defined %}

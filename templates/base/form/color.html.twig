@@ -30,4 +30,4 @@
   value="{{ input.vars.value is defined ? input.vars.value : '' }}"
   {{ input.vars.required ? 'required="required"' }}
 >
-{{ form_help(input) }}{{ form_errors(input) }}
+<span class="text-red-800">{{ form_help(input) }}{{ form_errors(input) }}</span>

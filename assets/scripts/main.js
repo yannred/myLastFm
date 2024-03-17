@@ -38,13 +38,21 @@ function loveTrack(node) {
 }
 
 
+/**
+ * Toggle panel content
+ * can be used to show/hide a panel
+ * @param tabSelected
+ */
+function changeTab(tabSelected) {
+  const tabName = tabSelected.id.split('-')[3];
+  const tabType = tabSelected.id.split('-')[2];
+  tabType.replace('-' + tabName, '');
 
-function resetSearchBar(){
-  $('#search_bar_artist').val('');
-  $('#search_bar_album').val('');
-  $('#search_bar_track').val('');
-  $('#search_bar_from').val('');
-  $('#search_bar_to').val('');
+  $('.tab-li-' + tabType).addClass('menu-panel-select').removeClass('menu-panel-selected');
+  $('#tab-li-' + tabType + '-' + tabName).removeClass('menu-panel-select').addClass('menu-panel-selected');
 
-  $('#search-bar-submit').click();
+  $('.tab-content-' + tabType).hide();
+  $('#tab-content-' + tabType + '-' + tabName).show();
 }
+
+

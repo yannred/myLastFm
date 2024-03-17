@@ -10,13 +10,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class MyAccountController extends CustomAbsrtactController
 {
 
-  #[Route('/myAccount', name: 'app_my_account')]
-  public function index(): Response
+  /**
+   * Display the user Page with Profile selected
+   * @return Response
+   */
+  #[Route('/myAccount/profile', name: 'app_profile')]
+  public function profilePage(): Response
   {
-    return $this->render('my_account/index.html.twig');
+    $paramView['selected'] = 'profile';
+    return $this->render('my_account/index.html.twig', $paramView);
+  }
+
+  /**
+   * Display the user Page with Settings selected
+   * @return Response
+   */
+  #[Route('/myAccount/settings', name: 'app_settings')]
+  public function settingsPage(): Response
+  {
+    $paramView['selected'] = 'settings';
+    return $this->render('my_account/index.html.twig', $paramView);
   }
 
 
+  /**
+   * Delete all scrobbles and imports of the user
+   * @return Response
+   */
   #[Route('/myAccount/deleteAllScrobbles', name: 'app_my_account_delete_scrobbles')]
   public function deleteAllScrobbles(): Response
   {
