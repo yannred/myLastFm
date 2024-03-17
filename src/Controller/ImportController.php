@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Import;
 use App\Entity\Scrobble;
+use App\Form\RegistrationType;
 use App\Service\ApiRequestService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,12 @@ class ImportController extends CustomAbsrtactController
   #[Route('/myAccount/import', name: 'app_import')]
   public function index(): Response
   {
+    $paramView = ['selected' => 'import', 'dev' => $_ENV['APP_ENV'] === 'dev'];
     $user = $this->getUser();
+
+    //Lastfm user info form
+    $form = $this->createForm(RegistrationType::class, $this->getUser());
+    $paramView['form'] = $form->createView();
 
     //Get import status
     $importStatusMessage = "Can't get import status";
@@ -61,11 +67,10 @@ class ImportController extends CustomAbsrtactController
       }
     }
 
-    return $this->render('import/index.html.twig', [
-      'imports' => $imports,
-      'dev' => $_ENV['APP_ENV'] === 'dev',
-      'importStatusMessage' => $importStatusMessage,
-      'importStatusProportion' => $importStatusProportion
-    ]);
+    $paramView['imports'] = $imports;
+    $paramView['importStatusMessage'] = $importStatusMessage;
+    $paramView['importStatusProportion'] = $importStatusProportion;
+
+    return $this->render('import/index.html.twig', $paramView);
   }
 }

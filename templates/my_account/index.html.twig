@@ -7,24 +7,30 @@
   {% include 'base/html/page-title.html.twig' with {'title': 'Manage your account'} %}
   <hr class="mt-6 mb-10" />
 
-  <div class="md:flex !h-96">
+  <div class="md:flex !min-h-96">
     <ul class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
       <li class="!mb-4">
-        <span id="tab-li-user-Profile" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'profile') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+        <span id="tab-li-user-profile" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'profile') ? 'menu-panel-selected' : 'menu-panel-select' }}">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'profil', 'class' : 'me-2 ms-2 w-4 h-4'} %}
           Profile&nbsp;
         </span>
       </li>
       <li class="!mb-4">
-        <span id="tab-li-user-Settings" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'settings') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+        <span id="tab-li-user-settings" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'settings') ? 'menu-panel-selected' : 'menu-panel-select' }}">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'settings', 'class' : 'text-gray-500 me-2 ms-2 w-4 h-4'} %}
           Settings
         </span>
       </li>
       <li class="!mb-4">
-        <span id="tab-li-user-Lastfm" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'lastfm') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+        <span id="tab-li-user-lastfm" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'lastfm') ? 'menu-panel-selected' : 'menu-panel-select' }}">
           {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'lastfm', 'class' : 'me-2 w-6 h-6'}%}
           Last.fm&nbsp;
+        </span>
+      </li>
+      <li class="!mb-4">
+        <span id="tab-li-user-import" onclick="changeTab(this)" class="tab-li-user {{ (selected == 'import') ? 'menu-panel-selected' : 'menu-panel-select' }}">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'import', 'class' : 'me-2 w-6 h-6'}%}
+          Import&nbsp;
         </span>
       </li>
 {#      <li class="!mb-4">#}
@@ -35,21 +41,33 @@
 {#          Disabled</a>#}
 {#      </li>#}
     </ul>
-    <div id="tab-content-user-Profile" class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+
+
+
+    <div id="tab-content-user-profile" style="{{ (selected == 'profile') ? '' : 'display: none;' }}" class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
       <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Profile</h3>
       <p class="mb-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos illo incidunt iure nemo quo tenetur. Autem eaque error magni quidem suscipit. Atque blanditiis eaque est molestiae nostrum possimus quod repudiandae.</p>
       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A at, consectetur delectus distinctio dolor dolorum eius esse harum magnam necessitatibus neque nesciunt porro reiciendis rem reprehenderit saepe, sapiente suscipit voluptate.</p>
     </div>
-    <div id="tab-content-user-Settings" style="display: none"  class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+
+    <div id="tab-content-user-settings" style="{{ (selected == 'settings') ? '' : 'display: none;' }}" class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
       <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Settings</h3>
       <p class="mb-2"></p>
       <p><a href="/myAccount/deleteAllScrobbles">Delete all my imported scrobbles</a></p>
     </div>
-    <div id="tab-content-user-Lastfm" style="display: none"  class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
-      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Last.fm</h3>
-      <p class="mb-2"></p>
-      <p><a href="/myAccount/import">Import data from Last Fm</a></p>
+
+    <div id="tab-content-user-lastfm" style="{{ (selected == 'lastfm') ? '' : 'display: none;' }}" class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+      {% include 'my_account/lastfm.html.twig' with {'form' : form} %}
     </div>
+
+    <div id="tab-content-user-import" style="{{ (selected == 'import') ? '' : 'display: none;' }}" class="tab-content-user p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+      {% block lastfmImport %}
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Import</h3>
+        <p class="mb-2"></p>
+        <p><a href="{{ path('app_import') }}">Import data from Last Fm</a></p>
+      {% endblock %}
+    </div>
+
   </div>
 
 
