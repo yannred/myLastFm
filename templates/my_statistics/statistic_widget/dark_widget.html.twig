@@ -1,0 +1,16 @@
+<div class="inline-block !w-60 h-full md:h-auto bg-stone-900 rounded-lg border border-gray-500 p-4">
+  <div class="flex">
+    <div class="bold">{{ title }}</div>
+
+    {% if progress is defined %}
+      <div class="ml-2 right">
+        <span class="rounded-full bg-stone-800 text-stone-400 border border-gray-500 text-xs p-0.5">
+          {% include 'base/icon/svg-icon.html.twig' with {'icon' : progressType, 'style' : 'width: 17px; padding-bottom: 2px; margin-bottom: 2px;'} %}{{ progress }}
+        </span>
+      </div>
+    {% endif %}
+
+  </div>
+  <div class="text-3xl my-2"  >{{ value }}<span class="ml-1 text-lg">{{ caption }}</span></div>
+  <div class="text-stone-400 text-sm">{{ subText }}</div>
+</div>

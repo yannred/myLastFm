@@ -1,0 +1,6 @@
+{% include 'my_statistics/statistic_widget/dark_widget.html.twig' with {
+  'title': 'Average scrobbles',
+  'caption': '/month',
+  'subText': subText,
+  'value': value|number_format( 0, ',', ' '),
+} %}
