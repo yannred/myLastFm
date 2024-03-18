@@ -47,7 +47,7 @@ class ImportController extends CustomAbsrtactController
       $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
       $finalizedScrobble = $scrobbleRepository->getTotalScrobbleForUser($user);
 
-      $importStatusMessage = $scrobbleNotImported . " scrobbles not imported yet";
+      $importStatusMessage = number_format($scrobbleNotImported, 0, ",", " ") . " scrobbles not imported yet";
       $totalScrobble = $scrobbleNotImported + $finalizedScrobble;
       $importStatusProportion = $finalizedScrobble * 100 / $totalScrobble;
     }

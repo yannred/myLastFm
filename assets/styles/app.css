@@ -26,8 +26,14 @@ select:checked{
 
 /* sub content frame */
 .sub-content{
-  @apply relative p-4 w-full max-w-lg h-full md:h-auto bg-gray-700 rounded-lg mx-10 border border-red-900;
+  @apply relative w-full max-w-lg h-full md:h-auto bg-gray-700 rounded-lg border border-red-900;
 }
+
+/* sub content frame */
+.full-sub-content{
+  @apply relative w-full h-full md:h-auto bg-gray-700 rounded-lg border border-gray-500 p-2;
+}
+
 
 /* regular button */
 .button-colored-std{
