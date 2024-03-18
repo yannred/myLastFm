@@ -5,29 +5,24 @@ namespace App\Controller;
 use App\Data\SearchBarData;
 use App\Entity\Artist;
 use App\Form\SearchBarType;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyArtistsController extends AbstractController
+class MyArtistsController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
-
   const LIMIT_PER_PAGE = 20;
 
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
-
+  /**
+   * Render the page with the list of artists
+   * @param Request $request
+   * @param PaginatorInterface $paginator
+   * @return Response
+   */
   #[Route('/myPage/myArtists', name: 'app_my_artists')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
-
     //TODO : use a GET request
 
     $artistRepository = $this->entityManager->getRepository(Artist::class);
@@ -56,7 +51,8 @@ class MyArtistsController extends AbstractController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $searchForm->createView(),
+        'form' => $searchForm,
+        'activeNavbarItem' => $request->get('_route'),
       ],
       $response);
   }

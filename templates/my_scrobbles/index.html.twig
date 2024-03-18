@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Your last Scrobbles{% endblock %}
+{% block title %} - Your last Scrobbles{% endblock %}
 
 {% block body %}
-  <div>
-    <h1>Your last Scrobbles</h1>
-  </div>
-  {% include 'searchBar/index.html.twig' %}
+
+  {% include 'base/html/page-title.html.twig' with {'title': 'Your last Scrobbles'} %}
+
+  {% include 'base/searchBar/index.html.twig' %}
+
   {% include 'my_scrobbles/my_scrobbles.html.twig' %}
+
 {% endblock %}

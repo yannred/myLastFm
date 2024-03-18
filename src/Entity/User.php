@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -18,6 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email(message: 'The email "{{ value }}" is not a valid email.')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -58,11 +60,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: WidgetGrid::class)]
     private Collection $widgetGrids;
 
+    #[ORM\ManyToOne]
+    private ?Image $image = null;
+
+    #[ORM\ManyToMany(targetEntity: Track::class)]
+    private Collection $lovedTrack;
+
     public function __construct()
     {
         $this->scrobbles = new ArrayCollection();
         $this->imports = new ArrayCollection();
         $this->widgetGrids = new ArrayCollection();
+        $this->lovedTrack = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,6 +290,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $widgetGrid->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Track>
+     */
+    public function getLovedTrack(): Collection
+    {
+        return $this->lovedTrack;
+    }
+
+    public function addLovedTrack(Track $lovedTrack): static
+    {
+        if (!$this->lovedTrack->contains($lovedTrack)) {
+            $this->lovedTrack->add($lovedTrack);
+        }
+
+        return $this;
+    }
+
+    public function removeLovedTrack(Track $lovedTrack): static
+    {
+        $this->lovedTrack->removeElement($lovedTrack);
 
         return $this;
     }

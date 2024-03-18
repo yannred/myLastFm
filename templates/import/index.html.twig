@@ -1,22 +1,38 @@
-{% extends 'base.html.twig' %}
+{% extends 'my_account/index.html.twig' %}
 
-{% block title %}Import from LastFm{% endblock %}
+{% block title %} - Import from LastFm{% endblock %}
 
-{% block body %}
-  <div>
-    <h1>My Account</h1>
+{% block lastfmImport %}
+
+
+  <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Import from last.fm</h2>
+  <p class="mb-2"></p>
+
+
+
+
+  {# IMPORT STATUS #}
+  <div class="full-sub-content my-4">
+    <div class="flex">
+      <h3 class="text-md font-bold text-gray-900 dark:text-gray-300 inline">Global import status</h3>
+      {# refresh #}
+      <span class="text-sm ml-2"><a href="{{ path('app_import') }}">
+        {% include 'base/icon/svg-icon.html.twig' with {'style': 'width: 20px;', 'icon' : 'refresh'} %}
+      </a></span>
+    </div>
+
+    <div class="max-w-2xl mt-4">{% include 'base/html/progress.html.twig' with {'percent': importStatusProportion, 'label' : importStatusMessage} %}</div>
   </div>
 
-  <div>
 
-    <h2 class="mt-4" style="display: inline-block">Import status</h2><a href="/myPage/myScrobbles"><span style="margin-left: 10px"><a href="{{ path('app_import') }}">refresh...</a></span>
+  {# LAST IMPORTS #}
+  <div class="full-sub-content my-4">
+    <h3 class="text-md font-bold text-gray-900 dark:text-gray-300 inline">Last imports</h3>
 
-    <div>{{ importStatusMessage }}</div>
-    {% include 'base/progressBar.html.twig' with {'proportion': importStatusProportion} %}
-
-    <h2 class="mt-4">Last imports</h2>
-
-    <p style="font-style: italic">Each import is a task that get scrobbles from LastFm to the database. Each task can only import 5 000 scrobbles at a time.</p>
+    <p class="italic my-2">
+      Each import is a task that get scrobbles from LastFm to the My Last Fm database. Each task can only import 5 000 scrobbles at a time.
+      When you start an import, a task is created and added to the queue, when the task is finished, a new task is created until all scrobbles are imported.
+    </p>
 
     {% if imports is empty %}
       <p>No imports yet</p>
@@ -25,7 +41,6 @@
         {% for import in imports %}
 
           {# If import is not started > import is in error > import is finalized > import is in progress #}
-
           {% if import.started == false %}
             {% set infoMessage = "Task not started" %}
           {% elseif import.error == true %}
@@ -40,11 +55,11 @@
           {% endif %}
 
           <li>
-            <div class="d-flex my-2">
-              <div class="col-8">{{ import.date|date('m/d/Y H:i:s') }} - {{ infoMessage }}</div>
-              <div class="col-4 pt-2">
+            <div class="my-2">
+              <div class=""></div>
+              <div class="pt-2 max-w-2xl">
                 {% if inProgress is defined %}
-                  {% include 'base/progressBar.html.twig' with {'proportion': inProgress} %}
+                  {% include 'base/html/progress.html.twig' with {'percent': inProgress, 'label' : import.date|date('m/d/Y H:i:s') ~ ' - ' ~ infoMessage} %}
                 {% endif %}
               </div>
             </div>
@@ -54,16 +69,18 @@
         {% endfor %}
       </ul>
     {% endif %}
-
   </div>
 
-  <div>
-    <h2 class="mt-4">Get last scrobbles from Last Fm</h2>
-    <p><a href={{ path('app_update_scrobble') }}>Start import</a></p>
 
-    {% if dev == 'dev' %}
-    <p><a href={{ path('app_update_scrobble_now') }}>Start import [NO QUEUE - DEV]</a></p>
-    {% endif %}
+  {# LAUNCH IMPORT #}
+  <div class="full-sub-content my-4">
+    <h3 class="text-md font-bold text-gray-900 dark:text-gray-300 inline">Get last scrobbles from Last Fm</h3>
+    <div class="flex mt-5">
+      <p><a href={{ path('app_update_scrobble') }}> <button class="button-colored-std">Start import</button></a></p>
+      {% if dev == 'dev' %}
+        <p><a href={{ path('app_update_scrobble_now') }}><button class="button-colored-std">Start import [NO QUEUE - DEV]</button></a></p>
+      {% endif %}
+    </div>
 
   </div>
 

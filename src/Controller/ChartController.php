@@ -53,8 +53,11 @@ class ChartController extends AbstractController
     } else {
       $chart->id = $widget->getId();
       $chart->type = $widget->getChartType();
-      $chart->label = $widget->getWording();
+      $chart->title = $widget->getWording();
       $chart->data = $this->statisticsService->getDataForChart($widget);
+      $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart($widget);
+      $chart->optionsAttribute = $this->statisticsService->getOptionsForChart($widget);
+      $chart->callbackOptions = $this->statisticsService->getCallbackOptionsForChart($widget);
 
       $response->setStatusCode(Response::HTTP_OK);
       $response->setContent(json_encode($chart));

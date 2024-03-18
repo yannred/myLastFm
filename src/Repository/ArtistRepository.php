@@ -33,14 +33,15 @@ class ArtistRepository extends ServiceEntityRepository
   {
     $user = $this->security->getUser();
 
-    $artists = $this->createQueryBuilder('artist')
-      ->select('artist, count(scrobble.id) as count')
-      ->join('artist.tracks', 'track')
-      ->join('track.scrobbles', 'scrobble')
-      ->where('scrobble.user = :user')
+    $artists = $this->createQueryBuilder('a')
+      ->select('a, count(s.id) as count, count(distinct t.id) as totalTrack, count(distinct al.id) as totalAlbum')
+      ->join('a.tracks', 't')
+      ->join('t.scrobbles', 's')
+      ->join('t.album', 'al')
+      ->where('s.user = :user')
       ->setParameter('user', $user->getId())
-      ->groupBy('artist.name')
-      ->orderBy('count(scrobble.id)', 'DESC')
+      ->groupBy('a.name')
+      ->orderBy('count(a.name)', 'DESC')
       ->getQuery()
       ->getResult();
 
@@ -53,9 +54,10 @@ class ArtistRepository extends ServiceEntityRepository
     $user = $this->security->getUser();
 
     $query = $this->createQueryBuilder('a')
-      ->select('a, count(s.id) as count')
+      ->select('a, count(s.id) as count, count(distinct t.id) as totalTrack, count(distinct al.id) as totalAlbum')
       ->join('a.tracks', 't')
       ->join('t.scrobbles', 's')
+      ->join('t.album', 'al')
       ->where('s.user = :user')
       ->setParameter('user', $user->getId())
       ->groupBy('a.name')

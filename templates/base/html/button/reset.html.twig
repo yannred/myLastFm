@@ -1,0 +1,6 @@
+{% if not onclick is defined %}
+  {% set onclick = '' %}
+{% endif %}
+<button type="reset" class="button-icon-std ml-2" onclick="{{ onclick }}">
+  {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'reset', 'style' : 'height:21px;', 'alt' : 'Reset form'}%}
+</button>

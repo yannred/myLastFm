@@ -1,0 +1,21 @@
+{#<label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>#}
+<select
+  name="{{ field_name(input) }}
+  id="{{ input.vars.id }}"
+  class="custom-border bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-800 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500"
+
+  {% for attr, value in input.vars.attr %}
+    {{ attr ~ '=' ~ value }}
+  {% endfor %}
+
+  {{ input.vars.required ? 'required="required"' }}
+>
+  {% for label, value in field_choices(input) %}
+    {% if input.vars.value == value %}
+      <option value="{{ value }}" selected>{{ label }}</option>
+    {% else %}
+      <option value="{{ value }}">{{ label }}</option>
+    {% endif %}
+  {% endfor %}
+</select>
+<span class="text-red-800">{{ form_help(input) }}{{ form_errors(input) }}</span>

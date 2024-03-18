@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}My statistics{% endblock %}
+{% block title %} - My statistics{% endblock %}
 
 {% block stylesheets %}
   <link href="{{ asset('styles/gridstack_layout.css') }}" rel="stylesheet">
@@ -9,20 +9,18 @@
 
 {% block body %}
 
+  {% include 'base/html/page-title.html.twig' with {'title': 'Your personal statistics'} %}
+  <hr class="mt-3 mb-3" />
+
   <div>
-    <div>
-      <h1>Statistics</h1>
-    </div>
 
     <div class="grid-stack">
       {# ********* GRID STACK HERE ********* #}
     </div>
 
     <p>
-      <button id="button-add-widget" onclick="addWidget(grid)" style="display: none">Add widget</button>
-      <span>      </span>
       <a href="{{ path('app_widget_new_statistic') }}">
-        <button id="button-add-widget-page" style="display: none">Add widget Page</button>
+        <button type="button" id="button-add-widget-page" class="button-colored-std" style="display: none">Add new statistic</button>
       </a>
     </p>
 

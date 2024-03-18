@@ -205,6 +205,9 @@ class ApiRequestService
 
   public function getUser(): User
   {
+    if ($this->user === null) {
+      throw new \LogicException("Error in ApiRequestService::getUser() : user must be set");
+    }
     return $this->user;
   }
 

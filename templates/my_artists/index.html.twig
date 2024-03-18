@@ -1,11 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Artists{% endblock %}
+{% block title %} - Artists{% endblock %}
 
 {% block body %}
-  <div>
-    <h1>Your Artists</h1>
+
+  {% include 'base/html/page-title.html.twig' with {'title': 'Your listened artists'} %}
+
+  {% include 'base/searchBar/index.html.twig' %}
+
+  <div class="mt-10">
+    {% include 'my_artists/artists.html.twig' %}
   </div>
-  {% include 'searchBar/index.html.twig' %}
-  {% include 'my_artists/artists.html.twig' %}
+
 {% endblock %}

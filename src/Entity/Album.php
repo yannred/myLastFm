@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Album
 {
 
-  const LIMIT_TOP_ALBUMS = 4;
+  const LIMIT_TOP_ALBUMS = 3;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]

@@ -1,0 +1,46 @@
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Last.fm</h3>
+<p class="mb-2"></p>
+<div>
+
+  {{ form_start(form) }}
+
+  <div>
+    {{ form_errors(form) }}
+  </div>
+
+
+    {% include 'base/form/input.html.twig' with {'input': form.email, 'type' : 'hidden' } %}
+
+    {% include 'base/form/input.html.twig' with {'input': form.password, 'type' : 'hidden'} %}
+
+
+
+    {% include 'base/form/input.html.twig' with {'input': form.userName, 'type' : 'hidden' } %}
+
+
+  <div class="my-3">
+    <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmUserName} %}</div>
+    <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmUserName } %}</div>
+  </div>
+
+  <div class="my-3">
+    <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmApiKey} %}</div>
+    <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmApiKey } %}</div>
+  </div>
+
+  <div class="my-3">
+    <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmApiSessionKey} %}</div>
+    <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmApiSessionKey } %}</div>
+  </div>
+
+  <div class="my-3">
+    <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lasFmApiSecret} %}</div>
+    <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lasFmApiSecret } %}</div>
+  </div>
+
+  <div class="flex items-center justify-center mr-3 col mt-14">
+    <button type="submit" class="button-main-std ml-2">Save</button>
+  </div>
+
+  {{ form_end(form, {'render_rest': false}) }}
+</div>

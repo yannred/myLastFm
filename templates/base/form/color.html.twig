@@ -1,0 +1,33 @@
+{% if not input.vars.attr.class is defined %}
+  {% set class = ""  %}
+{% else %}
+  {% set class = input.vars.attr.class  %}
+{%  endif %}
+
+{% if not input.vars.attr.style is defined %}
+  {% set style = ""  %}
+{% else %}
+  {% set style = input.vars.attr.style  %}
+{%  endif %}
+
+{% if not input.vars.attr.onchange is defined %}
+  {% set onchange = ""  %}
+{% else %}
+  {% set onchange = input.vars.attr.onchange  %}
+{%  endif %}
+
+{% if not visibility is defined %}
+  {% set visibility = ""  %}
+{%  endif %}
+
+
+<input
+  type="color"
+  id="{{ input.vars.id }}"
+  name="{{ field_name(input) }}"
+  style="{{ style }}"
+  class="{{ class }} {{ visibility }} p-1 h-10 w-14 block bg-gray border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-grey-900 dark:border-gray-700"
+  value="{{ input.vars.value is defined ? input.vars.value : '' }}"
+  {{ input.vars.required ? 'required="required"' }}
+>
+<span class="text-red-800">{{ form_help(input) }}{{ form_errors(input) }}</span>

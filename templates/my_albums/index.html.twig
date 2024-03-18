@@ -1,11 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Albums{% endblock %}
+{% block title %} - Albums{% endblock %}
 
 {% block body %}
-  <div>
-    <h1>Your Albums</h1>
+
+  {% include 'base/html/page-title.html.twig' with {'title': 'Your listened albums'} %}
+
+  {% include 'base/searchBar/index.html.twig' %}
+
+  <div class="mt-10">
+    {% include 'my_albums/albums.html.twig' %}
   </div>
-  {% include 'searchBar/index.html.twig' %}
-  {% include 'my_albums/albums.html.twig' %}
+
 {% endblock %}

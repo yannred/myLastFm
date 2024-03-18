@@ -1,38 +1,16 @@
-<div class="container text-center">
-  <div class="row">
+<div>
 
-    {% for track in tracks %}
-      <div class="col mb-3">
-        <div class="card" style="width: 18rem;">
-          {% for image in track[0].image %}
-            {% if image.size == 3 %}
-              {% if userPlaycount is defined and userPlaycount == 1 %}
-                <span>{{ track.count }} scrobbles</span>
-              {% endif %}
-              <img src="{{ image.url }}" class="card-img-top" alt='{{ track[0].name }}' style="width: 286px">
-            {% endif %}
-          {% endfor %}
-          <div class="card-body">
-            <h5 class="card-title">{{ track[0].name }}</h5>
-            <p class="card-text">
-              <p style="margin: 0 !important;">from <span style="font-weight: bold;">{{ track[0].artist.name }}</span></p>
-              <p style="margin: 0 !important;">in <span style="font-style: italic;font-weight: bold;">{{ track[0].album.name }}</span> album</p>
-            </p>
-            <a href="#" class="btn btn-primary">More</a>
-          </div>
-        </div>
-      </div>
+  {% if pagination is defined and pagination == 1 %}
+    {% set pagination = true %}
+  {% else %}
+    {% set pagination = false %}
+  {% endif %}
 
-
-    {% endfor %}
-  </div>
-
-  <div class="row">
-    <div class="col">
-      {% if pagination is defined and pagination == 1 %}
-        {{ knp_pagination_render(tracks) }}
-      {% endif %}
-    </div>
-  </div>
+  {% include 'base/html/table/table.html.twig' with {
+    'thead' : myTracksThead,
+    'tbody': tracks,
+    'tbodyUrl' : myTracksTbodyUrl,
+    'pagination' : pagination,
+  } %}
 
 </div>

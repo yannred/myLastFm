@@ -197,6 +197,8 @@ class ScrobbleImportMsgHandler
   private function createScrobble($lastFmScrobble): Scrobble
   {
 
+    $criteriaUser = ['user' => $this->getUser()];
+
     //Artist
     $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : artist : ' . $lastFmScrobble['artist']['#text']);
     $criteriaArtist = ['mbid' => $lastFmScrobble['artist']['mbid'], 'name' => $lastFmScrobble['artist']['#text']];
@@ -238,7 +240,7 @@ class ScrobbleImportMsgHandler
 
     //Scrobble
     $this->utilsService->logDevInfo('*** Scrobble Import Info : createScrobble : scrobble');
-    $criteriaScrobble = ['track' => $track, 'timestamp' => $lastFmScrobble['date']['uts']];
+    $criteriaScrobble = ['track' => $track, 'timestamp' => $lastFmScrobble['date']['uts'], ...$criteriaUser];
     $scrobble = $this->entityManager->getRepository(Scrobble::class)->findOneBy($criteriaScrobble);
     if ($scrobble === null) {
       $scrobble = new Scrobble();

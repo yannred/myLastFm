@@ -20,16 +20,27 @@
   {% set visibility = ""  %}
 {%  endif %}
 
+{% if not size is defined %}
+  {% set size = "" %}
+{%  endif %}
 
-<div class="d-flex align-items-center">
-  <input
-    type="{{ input.vars.type is defined ? input.vars.type : 'input'}}"
-    id="{{ input.vars.id }}" name="{{ field_name(input) }}"
-    class="form-control-sm {{ class }} {{ input.vars.required ? 'required' }} {{ visibility }}"
-    style="{{ style }}"
-    value="{{ input.vars.value }}"
-    onchange="{{ onchange }}"
-    {{ input.vars.required ? 'required="required"' }}
-  >
-  {{ form_help(input) }}{{ form_errors(input) }}
-</div>
+{% if not type is defined %}
+  {% if input.vars.type is defined %}
+    {% set type = input.vars.type %}
+  {% else %}
+    {% set type = "text" %}
+  {%  endif %}
+{%  endif %}
+
+<input
+  type="{{ type }}"
+  id="{{ input.vars.id }}"
+  name="{{ field_name(input) }}"
+  style="{{ style }}"
+  size="{{ size }}"
+  class="{{ class }} {{ visibility }} bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-1.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+  value="{{ input.vars.value is defined ? input.vars.value : '' }}"
+  {{ input.vars.required ? 'required="required"' }}
+/>
+<span class="text-red-800">{{ form_help(input) }}{{ form_errors(input) }}</span>
+

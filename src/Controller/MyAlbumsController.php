@@ -5,25 +5,22 @@ namespace App\Controller;
 use App\Data\SearchBarData;
 use App\Entity\Album;
 use App\Form\SearchBarType;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MyAlbumsController extends AbstractController
+class MyAlbumsController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
-
   const LIMIT_PER_PAGE = 20;
 
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
 
+  /**
+   * Render the page with the list of albums
+   * @param Request $request
+   * @param PaginatorInterface $paginator
+   * @return Response
+   */
   #[Route('/myPage/myAlbums', name: 'app_my_albums')]
   public function index(Request $request, PaginatorInterface $paginator): Response
   {
@@ -56,7 +53,8 @@ class MyAlbumsController extends AbstractController
         'pagination' => "1",
         'userPlaycount' => "1",
         'searchBar' => 'date',
-        'form' => $searchForm->createView(),
+        'form' => $searchForm,
+        'activeNavbarItem' => $request->get('_route'),
       ],
       $response
     );

@@ -123,7 +123,7 @@ class WidgetType extends AbstractType
           $form->remove('backgroundColor');
           $form
             ->add('backgroundColor', ColorType::class, [
-              'label' => 'Font Color',
+              'label' => 'Background color',
               'data' => Widget::WIDGET_DEFAULT_BACKGROUND_COLOR,
               'required' => true
             ]);

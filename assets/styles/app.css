@@ -1,19 +1,221 @@
-body {
-  background-color: skyblue;
+/*******************************/
+/****** TAILWIND CSS  ******/
+/*******************************/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card-popup{
+  @apply absolute z-10 inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200
+    rounded-lg shadow-sm w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400;
+  display: none;
+}
+.card-popup-parent:hover .card-popup{
+  display: block !important;
 }
 
-.page, .first, .next, .previous, .last, .current {
-  margin: 0 3px 0 3px;
+
+/* Inoput seclect */
+select option{
+  @apply bg-gray-700 text-gray-300;
+}
+select:checked{
+  @apply !bg-red-800;
 }
 
+/* sub content frame */
+.sub-content{
+  @apply relative w-full max-w-lg h-full md:h-auto bg-gray-700 rounded-lg border border-red-900;
+}
+
+/* sub content frame */
+.full-sub-content{
+  @apply relative w-full h-full md:h-auto bg-gray-700 rounded-lg border border-gray-500 p-2;
+}
+
+
+/* regular button */
+.button-colored-std{
+  @apply text-white bg-gray-800 font-medium rounded-lg text-sm font-medium px-5 py-2.5 me-2 mb-2 no-margin;
+  /*@apply w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;*/
+  border: 1px rgb(75 85 99) solid ;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.dark .button-colored-std:hover{
+  @apply bg-gray-700 ring-red-500 border-red-500;
+}
+
+/* hitlight button */
+.button-main-std{
+  @apply text-white !bg-red-800 font-medium rounded-lg text-sm font-medium px-5 py-2.5 me-2 mb-2 no-margin;
+  /*@apply w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;*/
+  border: 1px rgb(75 85 99) solid ;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.dark .button-main-std:hover{
+  @apply !bg-red-700 ring-red-500 border-red-500;
+}
+
+/* reset icon button */
+.button-icon-std{
+  @apply text-white bg-gray-800 font-medium rounded-lg text-sm px-1 py-1.5 no-margin border-gray-300 ml-1 flex items-center;
+  border: 1px rgb(75 85 99) solid;
+}
+.button-icon-std img{
+  max-width: inherit !important;
+}
+.button-icon-std:hover{
+  @apply bg-gray-700 ring-red-500 border-red-500;
+}
+
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+.dropdown-menu li:hover{
+  @apply cursor-pointer;
+  @apply font-bold;
+  @apply rounded-lg;
+  @apply bg-slate-900;
+}
+.dropdown-menu li:hover a{
+  @apply text-gray-200;
+}
+
+
+
+.no-margin{
+  margin: 0;
+}
+/*******************************/
+/****** END TAILWIND CSS  ******/
+/*******************************/
+
+
+
+
+
+
+
+/*******************************/
+/******* BASE *******/
+/*******************************/
+
+/******* Font *******/
 .bold {
   font-weight: bold;
 }
+/******* END Font *******/
 
-.inputFormInvisible{
-  display: none;
+/******* Icon color *******/
+.icon-svg{
+  filter: invert(100%) sepia(0%) saturate(7494%) hue-rotate(132deg) brightness(100%) contrast(103%);
 }
 
+/******* Input red border *******/
+.custom-border{
+  /*border: 1px rgb(55 65 81) solid !important;*/
+  border: 1px rgb(75 85 99) solid !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+/*******************************/
+/******* END BASE *******/
+/*******************************/
+
+
+
+
+
+
+
+
+/*******************************/
+/******* FOR MANY PAGES *******/
+/*******************************/
+
+/******* Pagination *******/
+.page, .first, .next, .previous, .last, .current {
+  margin: 0 3px 0 3px;
+}
+/******* END Pagination *******/
+
+/******* I love track *******/
+.button-love{
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 24px;
+  display: inline-block;
+}
+
+.not-loved-track{
+  background-image: url('../imgs/not-loved.png');
+}
+
+.loved-track{
+  background-image: url('../imgs/loved.png');
+}
+/******* END I love track *******/
+
+/******* I love track *******/
+.underline-when-hover:hover{
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: currentcolor;
+  text-decoration-thickness: auto;
+}
+
+/*******************************/
+/******* >END FOR MANY PAGES *******/
+/*******************************/
+
+
+
+
+/*******************************/
+/******* USER PAGE (settings, profile)  *******/
+/*******************************/
+
+/* panel */
+.menu-panel-selected{
+  @apply cursor-pointer inline-flex items-center px-4 py-3 text-white bg-gray-700 rounded-lg w-full dark:bg-gray-600 pr-5;
+}
+.dark .menu-panel-selected{
+  @apply bg-gray-600;
+}
+
+
+.menu-panel-select{
+  @apply cursor-pointer inline-flex items-center px-4 py-3 rounded-lg bg-gray-50 w-full pr-10;
+}
+.menu-panel-select:hover{
+  @apply text-gray-900 bg-gray-100;
+}
+.dark .menu-panel-select{
+  @apply bg-gray-800;
+}
+.dark .menu-panel-select:hover{
+  @apply bg-gray-700 text-white;
+}
+
+.menu-panel-select img{
+  filter: invert(47%) sepia(10%) saturate(526%) hue-rotate(182deg) brightness(92%) contrast(91%);
+}
+
+
+
+
+
+
+/*******************************/
+/******* My STATISTICS PAGE *******/
+/*******************************/
+
+/******* Grid, widget, statistics *******/
 .widget-chart{
   width: 100%;
   height: 100%;
@@ -79,3 +281,12 @@ button.info-widget{
 .period-custom{
   /*display: none;*/
 }
+
+.widget-spinner-hide{
+  display: none !important;
+}
+/******* END Grid, widget, statistics *******/
+
+/*******************************/
+/******* END My STATISTICS PAGE *******/
+/*******************************/

@@ -5,23 +5,13 @@ namespace App\Controller;
 use App\Data\Notification;
 use App\Entity\User;
 use App\Form\RegistrationType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegisterController extends AbstractController
+class RegisterController extends CustomAbsrtactController
 {
-
-  protected EntityManagerInterface $entityManager;
-
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-    $this->entityManager = $entityManager;
-  }
-
 
   #[Route('/register', name: 'app_register')]
   public function index(Request $request, UserPasswordHasherInterface $passwordHasher): Response
@@ -54,6 +44,9 @@ class RegisterController extends AbstractController
         if ($success) {
 
           //All Controls OK
+
+          //TODO : Get lastfm data
+
           $password = $passwordHasher->hashPassword($user, $user->getPassword());
           $user->setPassword($password);
           $this->entityManager->persist($user);

@@ -11,16 +11,14 @@ use App\Service\StatisticsService;
 use App\Service\UtilsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class WidgetController extends AbstractController
+class WidgetController extends CustomAbsrtactController
 {
 
-  protected EntityManagerInterface $entityManager;
   protected LoggerInterface $logger;
   protected Security $security;
   protected StatisticsService $statisticsService;
@@ -36,6 +34,8 @@ class WidgetController extends AbstractController
     UtilsService $utilsService
   )
   {
+    parent::__construct($entityManager);
+
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->security = $security;
@@ -51,6 +51,10 @@ class WidgetController extends AbstractController
     }
   }
 
+  /**
+   * Return a JSON response with the gridstack items
+   * @return Response
+   */
   #[Route('/myPage/grid', name: 'app_widget_load_grid', methods: ['GET'])]
   public function loadGrid(): Response
   {
@@ -76,69 +80,36 @@ class WidgetController extends AbstractController
   }
 
 
-  #[Route('/myPage/widget', name: 'app_widget_new', methods: ['POST'])]
-  public function createWidgetProto(): Response
+  /**
+   * Page for creating or updating a statistic
+   * @param Request $request
+   * @param $id
+   * @return Response
+   */
+  #[Route('/myPage/myStatistics/new/{id}', name: 'app_widget_new_statistic')]
+  public function statisticForm(Request $request, $id = null): Response
   {
     $response = new Response();
-//    $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
-//    $widgetRepository = $this->entityManager->getRepository(Widget::class);
-//
-//    $typeWidget = Widget::TYPE__TOP_ARTISTS;
-//    $subTypeWidget = Widget::SUB_TYPE__BAR;
-//
-//    $model = Widget::getWidgetModelFromType($typeWidget);
-//
-//    $widget = new Widget();
-//    $widget->applyModel($model);
-//    $widget->setPositionX(0);
-//    $widget->setPositionY($gridRepository->getNextPositionY($this->userWidgetGrid));
-//
-//    $widget->setSubTypeWidget($subTypeWidget);
-//    $widget->setWording('New widget');
-//
-//    $widget->setQuery(
-//      $widgetRepository
-//      ->createWidgetQuery($model->getQueryParameters())
-//      ->getDQL()
-//    );
-//
-//    $widget->setWidgetGrid($this->userWidgetGrid);
-//
-//    $this->entityManager->persist($widget);
-//    $this->entityManager->flush();
-//
-//    $gridstackItem = new gridstackItem($widget);
-//    $gridstackItem->content = $this->statisticsService->generateContent($widget, $model->getContentParameters());
-//
-//    $response->setStatusCode(Response::HTTP_CREATED);
-//    $response->setContent(json_encode($gridstackItem));
+    $view = 'my_statistics/new.html.twig';
+    $notifications = [];
+    $paramView = [];
 
-    return $response;
-  }
-
-  #[Route('/myPage/myStatistics/new/{id}', name: 'app_widget_new_statistic')]
-  public function newStatistic(Request $request, $id = null): Response
-  {
     $creating = true;
     if ($id != null ){
       $creating = false;
     }
 
-    $response = new Response();
-    $view = 'my_statistics/new.html.twig';
-    $notifications = [];
-
     $gridRepository = $this->entityManager->getRepository(WidgetGrid::class);
-    $widgetRepository = $this->entityManager->getRepository(Widget::class);
 
     if ($creating){
-      $form = $this->createForm(WidgetType::class);
+      $widget = new Widget();
     } else {
       $widget = $this->entityManager->getRepository(Widget::class)->findOneBy(['id' => $id, 'widgetGrid' => $this->userWidgetGrid]);
-      $form = $this->createForm(WidgetType::class, $widget);
+      $paramView['modify'] = true;
     }
+    $form = $this->createForm(WidgetType::class, $widget);
     $form->handleRequest($request);
-    $paramView = ['form' => $form];
+    $paramView['form'] = $form;
 
     if ($form->isSubmitted() && $form->isValid()) {
 
@@ -220,6 +191,11 @@ class WidgetController extends AbstractController
   }
 
 
+  /**
+   * Update chart datas (position, size)
+   * @param Request $request
+   * @return Response
+   */
   #[Route('/myPage/widget/{id}', name: 'app_widget_update', methods: ['UPDATE'])]
   public function updateWidget(Request $request): Response
   {
@@ -249,6 +225,11 @@ class WidgetController extends AbstractController
   }
 
 
+  /**
+   * Delete a widget
+   * @param Request $request
+   * @return Response
+   */
   #[Route('/myPage/widget/{id}', name: 'app_widget_delete', methods: ['DELETE'])]
   public function deleteWidget(Request $request, ): Response
   {

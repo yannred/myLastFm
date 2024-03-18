@@ -10,23 +10,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('email')
-            ->add('password', PasswordType::class)
-            ->add('userName')
-            ->add('lastFmApiKey')
-            ->add('lastFmApiSessionKey')
-            ->add('lasFmApiSecret')
-            ->add('lastFmUserName')
-        ;
-    }
+  public function buildForm(FormBuilderInterface $builder, array $options): void
+  {
+    $builder
+      ->add('email')
+      ->add('password', PasswordType::class)
+      ->add('userName')
+      ->add('lastFmApiKey')
+      ->add('lastFmApiSessionKey')
+      ->add('lasFmApiSecret')
+      ->add('lastFmUserName')
+    ;
+  }
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-        ]);
-    }
+  public function configureOptions(OptionsResolver $resolver): void
+  {
+    $resolver->setDefaults([
+      'data_class' => User::class
+    ]);
+  }
 }
