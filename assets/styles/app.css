@@ -123,6 +123,11 @@ select:checked{
   padding-bottom: 6px !important;
 }
 
+.txt-2xs{
+  font-size: 0.37rem; /* 6px */
+  line-height: 0.5rem; /* 8px */
+}
+
 /*******************************/
 /******* END BASE *******/
 /*******************************/
