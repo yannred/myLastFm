@@ -14,14 +14,18 @@ use Doctrine\ORM\Mapping as ORM;
 class Widget
 {
 
-  const TYPE__TOP_ARTISTS = 1;
-  const TYPE__TOP_ALBUMS = 2;
-  const TYPE__TOP_TRACKS = 3;
+  const TYPE__NATIVE = 1; //type reserved for native widgets (not created by the user)
+  const TYPE__TOP_ARTISTS = 2;
+  const TYPE__TOP_ALBUMS = 3;
+  const TYPE__TOP_TRACKS = 4;
   const TYPES = [
     'Top Artists' => self::TYPE__TOP_ARTISTS,
     'Top Albums' => self::TYPE__TOP_ALBUMS,
     'Top Tracks' => self::TYPE__TOP_TRACKS
   ];
+
+  //Subtype reserved for NATIVE TYPE
+  const SUB_TYPE_NATIVE__SCROBBLES_ANNUALY = 1;
 
   const SUB_TYPE__BAR = 1;
   const SUB_TYPE__PIE = 2;

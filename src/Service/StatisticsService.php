@@ -2,18 +2,28 @@
 
 namespace App\Service;
 
-use App\Data\chartItem;
+use App\Data\ChartItem;
+use App\Data\ChartOptions;
 use App\Entity\Widget;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class StatisticsService
 {
 
   private EntityManagerInterface $em;
+  private Security $security;
 
-  public function __construct(EntityManagerInterface $em)
+  private ChartItem $chartItem;
+  private Widget $widget;
+
+  public function __construct(EntityManagerInterface $em, Security $security)
   {
     $this->em = $em;
+    $this->security = $security;
+
+    $this->chartItem = new ChartItem();
   }
 
   public function generateContent(?Widget $widget, array $parameters): string
@@ -54,6 +64,12 @@ class StatisticsService
   }
 
 
+  /**
+   * Return the data attribute of the JSON chart definition
+   * @param Widget $widget
+   * @return array[]
+   * @throws Exception
+   */
   public function getDataAttributeForChart(Widget $widget): array
   {
     //the returned value
@@ -90,112 +106,177 @@ class StatisticsService
       'borderWidth' => 5
     ];
 
+    //For native widget, we need to call a specific function
+    if ($widget->getTypeWidget() == Widget::TYPE__NATIVE){
+
+      $dataAttribute = $this->getDataSetsForNativeWidget($widget, $dataSets);
+
+    } else {
+
+      switch ($widget->getSubTypeWidget()) {
+
+        case Widget::SUB_TYPE__BAR :
+
+          $query = $widget->getQuery();
+          $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+
+          if (count($allResults) > 0) {
+            $total = 0;
+            foreach ($allResults as $result) {
+              $total += $result['count'];
+            }
+            $total = ['name' => 'All', 'count' => $total];
+
+            $firstResults = array_slice($allResults, 0, 5);
+            $results = array_merge([$total], $firstResults);
+
+            $labels = [];
+            $datas = [];
+            foreach ($results as $result) {
+              $labels[] = $result['name'];
+              $datas[] = $result['count'];
+            }
+            $dataAttribute['labels'] = $labels;
+            $dataSets['data'] = $datas;
+          }
+          break;
+
+        case Widget::SUB_TYPE__PIE :
+        case Widget::SUB_TYPE__DONUT :
+          break;
+
+      }
+      //END SWITCH
+
+      $dataAttribute['datasets'][] = $dataSets;
+    }
+
+    $this->chartItem->dataAttribute = $dataAttribute;
+    $this->widget = $widget;
+    return $dataAttribute;
+  }
+
+  /**
+   * Return the data attribute of the JSON chart definition for native widget
+   * @param Widget $widget
+   * @param array $dataSets
+   * @return array
+   */
+  private function getDataSetsForNativeWidget(Widget $widget)
+  {
+    $dataAttribute = [];
+
     switch ($widget->getSubTypeWidget()) {
 
-      case Widget::SUB_TYPE__BAR :
+      case Widget::SUB_TYPE_NATIVE__SCROBBLES_ANNUALY :
 
-        $query = $widget->getQuery();
-        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+        $user = $this->security->getUser();
 
-        if (count($allResults) > 0) {
-          $total = 0;
-          foreach ($allResults as $result) {
-            $total += $result['count'];
-          }
-          $total = ['name' => 'All', 'count' => $total];
-
-          $firstResults = array_slice($allResults, 0, 5);
-          $results = array_merge([$total], $firstResults);
-
-          $labels = [];
-          $datas = [];
-          foreach ($results as $result) {
-            $labels[] = $result['name'];
-            $datas[] = $result['count'];
-          }
-          $dataAttribute['labels'] = $labels;
-          $dataSets['data'] = $datas;
+        $widgetRepository = $this->em->getRepository(Widget::class);
+        $results = $widgetRepository->getScrobblesPerMonthAnnually($user);
+        $allResults = [];
+        foreach ($results as $result) {
+          $allResults[$result['year']][$result['month']] = $result['count'];
         }
-        break;
 
-      case Widget::SUB_TYPE__PIE :
-      case Widget::SUB_TYPE__DONUT :
+        $curentYear = date('Y');
+        $lastYear = date('Y') - 1;
+
+        $dataAttribute['labels'] = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+        $datas = [];
+        for ($year = $lastYear; $year <= $curentYear; $year++) {
+          for ($month = 1; $month <= 12; $month++) {
+            if (isset($allResults[$year][$month])) {
+              $datas[$year][] = $allResults[$year][$month];
+            } else {
+              $datas[$year][] = 0;
+            }
+          }
+        }
+
+        $firstDataSets['data'] = $datas[$curentYear];
+        $firstDataSets['label'] = $curentYear;
+        $secondDataSets['data'] = $datas[$lastYear];
+        $secondDataSets['label'] = $lastYear;
+        $dataAttribute['datasets'][] = $firstDataSets;
+        $dataAttribute['datasets'][] = $secondDataSets;
+
         break;
     }
 
-    $dataAttribute['datasets'][] = $dataSets;
-
+    $this->chartItem->dataAttribute = $dataAttribute;
+    $this->widget = $widget;
     return $dataAttribute;
   }
 
 
-  public function getDataForChart(Widget $widget): array
-  {
-    $data = [];
-
-    switch ($widget->getSubTypeWidget()) {
-
-      case Widget::SUB_TYPE__BAR :
-
-        $query = $widget->getQuery();
-        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
-
-        if (count($allResults) > 0) {
-          $total = 0;
-          foreach ($allResults as $result) {
-            $total += $result['count'];
-          }
-          $total = ['name' => 'All', 'count' => $total];
-
-          $firstResults = array_slice($allResults, 0, 5);
-
-          $results = array_merge([$total], $firstResults);
-
-          foreach ($results as $result) {
-            $data[] = [
-              'label' => $result['name'],
-              'data' => $result['count']
-            ];
-          }
-        }
-        break;
-
-      case Widget::SUB_TYPE__PIE :
-      case Widget::SUB_TYPE__DONUT :
-
-        $query = $widget->getQuery();
-        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
-
-        if (count($allResults) > 0) {
-          $firstResults = array_slice($allResults, 0, 5);
-
-          $total = 0;
-          foreach ($allResults as $result) {
-            $total += $result['count'];
-          }
-
-          $totalFirstResults = 0;
-          foreach ($firstResults as $result) {
-            $totalFirstResults += $result['count'];
-          }
-          $others = ['name' => 'Others', 'count' => $total - $totalFirstResults];
-
-          $results = array_merge([$others], $firstResults);
-
-          foreach ($results as $result) {
-            $data[] = [
-              'label' => $result['name'],
-              'data' => $result['count']
-            ];
-          }
-        }
-
-        break;
-    }
-
-    // dump($data);
-    return $data;
-  }
+//  public function getDataForChart(Widget $widget): array
+//  {
+//    $data = [];
+//
+//    switch ($widget->getSubTypeWidget()) {
+//
+//      case Widget::SUB_TYPE__BAR :
+//
+//        $query = $widget->getQuery();
+//        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+//
+//        if (count($allResults) > 0) {
+//          $total = 0;
+//          foreach ($allResults as $result) {
+//            $total += $result['count'];
+//          }
+//          $total = ['name' => 'All', 'count' => $total];
+//
+//          $firstResults = array_slice($allResults, 0, 5);
+//
+//          $results = array_merge([$total], $firstResults);
+//
+//          foreach ($results as $result) {
+//            $data[] = [
+//              'label' => $result['name'],
+//              'data' => $result['count']
+//            ];
+//          }
+//        }
+//        break;
+//
+//      case Widget::SUB_TYPE__PIE :
+//      case Widget::SUB_TYPE__DONUT :
+//
+//        $query = $widget->getQuery();
+//        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+//
+//        if (count($allResults) > 0) {
+//          $firstResults = array_slice($allResults, 0, 5);
+//
+//          $total = 0;
+//          foreach ($allResults as $result) {
+//            $total += $result['count'];
+//          }
+//
+//          $totalFirstResults = 0;
+//          foreach ($firstResults as $result) {
+//            $totalFirstResults += $result['count'];
+//          }
+//          $others = ['name' => 'Others', 'count' => $total - $totalFirstResults];
+//
+//          $results = array_merge([$others], $firstResults);
+//
+//          foreach ($results as $result) {
+//            $data[] = [
+//              'label' => $result['name'],
+//              'data' => $result['count']
+//            ];
+//          }
+//        }
+//
+//        break;
+//    }
+//
+//    // dump($data);
+//    return $data;
+//  }
 
 
   /**
@@ -204,9 +285,10 @@ class StatisticsService
    * @param Widget $widget
    * @return array
    */
-  public function getOptionsForChart(Widget $widget): array
+  public function getOptionsForChart(Widget $widget, ?ChartOptions $chartOptions = null): array
   {
     $options = [];
+    $chartOptions = $chartOptions ?? new chartOptions();
 
     switch ($widget->getSubTypeWidget()) {
 
@@ -220,16 +302,22 @@ class StatisticsService
               //https://www.chartjs.org/docs/latest/axes/_common_ticks.html
               'ticks' => [
                 'font' => [
-                  'size' => 14
-                ]
+                  'size' => $chartOptions->ticksFontSizeX
+                ],
+                'display' => $chartOptions->ticksVisibleX
               ],
               'grid' => [
                 'display' => false
               ]
             ],
             'y' => [
-              //max value of the axis
-              'max' => 200,
+              'ticks' => [
+                'font' => [
+                  'size' => $chartOptions->ticksFontSizeY
+                ],
+                'display' => $chartOptions->ticksVisibleY
+              ],
+              'max' => $this->getMaxAxisValue(),//max value of the axis
               'grid' => [
                 'display' => false
               ]
@@ -238,9 +326,10 @@ class StatisticsService
           'plugins' => [
             //Legend is the element outside the chart
             'legend' => [
-              'display' => false
+              'display' => $chartOptions->legendVisible
             ]
-          ]
+          ],
+          'indexAxis' => $chartOptions->indexAxis
         ];
 
         break;
@@ -285,7 +374,7 @@ class StatisticsService
 
       case Widget::SUB_TYPE__BAR :
 
-        $callbackOptions[] = chartItem::CALLBACK_OPTION__TRUNCATE_TICKS_X;
+        $callbackOptions[] = ChartItem::CALLBACK_OPTION__TRUNCATE_TICKS_X;
         break;
 
       case Widget::SUB_TYPE__PIE :
@@ -323,6 +412,47 @@ class StatisticsService
     }
 
     return $query;
+  }
+
+  /**
+   * Get the max value of the axis
+   * (For Top Type widget, we keep the second max value)
+   * @return int
+   */
+  private function getMaxAxisValue(): int
+  {
+    $max = 0;
+    $secondMax = 0;
+
+    If (
+      //For this type we keep the second max value
+      $this->widget->getTypeWidget() == Widget::TYPE__TOP_ARTISTS
+      OR $this->widget->getTypeWidget() == Widget::TYPE__TOP_ALBUMS
+      OR $this->widget->getTypeWidget() == Widget::TYPE__TOP_TRACKS
+    ){
+      foreach ($this->chartItem->dataAttribute['datasets'] as $dataSet){
+        foreach ($dataSet['data'] as $data){
+          if ($data > $max){
+            $secondMax = $max;
+            $max = $data;
+          } else if ($data > $secondMax AND $data <= $max){
+            $secondMax = $data;
+          }
+        }
+      }
+      $max = $secondMax;
+
+    } else {
+      foreach ($this->chartItem->dataAttribute['datasets'] as $dataSet){
+        foreach ($dataSet['data'] as $data){
+          if ($data > $max){
+            $max = $data;
+          }
+        }
+      }
+    }
+
+    return $max;
   }
 
 }
