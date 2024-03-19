@@ -66,7 +66,7 @@ class WidgetController extends CustomAbsrtactController
 
     foreach ($widgetEntities as $widgetEntity) {
       $gridStackWidget = new GridstackItem($widgetEntity);
-      $modelWidget = $widgetEntity->getWidgetModel();
+      $modelWidget = $widgetEntity->getTypeModel();
 
       $gridStackWidget->content = $this->statisticsService->generateContent($widgetEntity, $modelWidget->getContentParameters());
 
@@ -148,7 +148,7 @@ class WidgetController extends CustomAbsrtactController
           //All Controls OK
           $widget->setWidgetGrid($this->userWidgetGrid);
 
-          $model = $widget->getWidgetModel();
+          $model = $widget->getTypeModel();
           $widget->applyModel($model, $creating);
           if ($creating){
             $widget->setPositionX(0);

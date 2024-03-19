@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Data\Widget;
+namespace App\Data\Statisitc\TypeModel;
 
 use App\Entity\Widget;
 
-abstract class WidgetModel
+abstract class AbstractTypeModel
 {
   protected string $code;
   protected string $wording;

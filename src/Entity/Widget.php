@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Data\Widget\TopAlbumsModel;
-use App\Data\Widget\TopArtistsModel;
-use App\Data\Widget\TopTracksModel;
-use App\Data\Widget\WidgetModel;
+use App\Data\ChartOptions;
+use App\Data\Statisitc\TypeModel\TopAlbumsModel;
+use App\Data\Statisitc\TypeModel\TopArtistsModel;
+use App\Data\Statisitc\TypeModel\TopTracksModel;
+use App\Data\Statisitc\TypeModel\AbstractTypeModel;
+use App\Data\SubTypeModel\AbstractSubTypeModel;
+use App\Data\SubTypeModel\BarModel;
 use App\Repository\WidgetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -113,6 +116,37 @@ class Widget
   #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
   private ?\DateTimeInterface $dateTo = null;
 
+  private ?ChartOptions $option = null;
+
+
+
+  public function getId(): ?int {return $this->id;}
+  public function getWidgetGrid(): ?WidgetGrid {return $this->widgetGrid;}
+  public function setWidgetGrid(?WidgetGrid $widgetGrid): static {$this->widgetGrid = $widgetGrid;return $this;}
+  public function getCode(): ?string {return $this->code;}
+  public function setCode(string $code): static {$this->code = $code;return $this;}
+  public function getWording(): ?string {return $this->wording;}
+  public function setWording(?string $wording): static {$this->wording = $wording;return $this;}
+  public function getComment(): ?string {return $this->comment;}
+  public function setComment(?string $comment): static {$this->comment = $comment;return $this;}
+  public function getTypeWidget(): ?int {return $this->typeWidget;}
+  public function setTypeWidget(int $typeWidget): static {$this->typeWidget = $typeWidget;return $this;}
+  public function getSubTypeWidget(): ?int {return $this->subTypeWidget;}
+  public function setSubTypeWidget(?int $subTypeWidget): static {$this->subTypeWidget = $subTypeWidget;return $this;}
+  public function getQuery(): ?string {return $this->query;}
+  public function setQuery(?string $query): static {$this->query = $query;return $this;}
+  public function getWidth(): ?float {return $this->width;}
+  public function setWidth(?float $width): static {$this->width = $width;return $this;}
+  public function getHeight(): ?float {return $this->height;}
+  public function setHeight(?float $height): static {$this->height = $height;return $this;}
+  public function getPositionX(): ?float {return $this->positionX;}
+  public function setPositionX(?float $positionX): static {$this->positionX = $positionX;return $this;}
+  public function getPositionY(): ?float {return $this->positionY;}
+  public function setPositionY(?float $positionY): static {$this->positionY = $positionY;return $this;}
+  public function getFontColor(): ?string {return $this->fontColor;}
+  public function setFontColor(?string $fontColor): static {$this->fontColor = $fontColor;return $this;}
+  public function getBackgroundColor(): ?string {return $this->backgroundColor;}
+  public function setBackgroundColor(?string $backgroundColor): static {$this->backgroundColor = $backgroundColor;return $this;}
 
 
 
@@ -148,168 +182,6 @@ class Widget
   }
 
 
-
-  public function getId(): ?int
-  {
-    return $this->id;
-  }
-
-  public function getWidgetGrid(): ?WidgetGrid
-  {
-    return $this->widgetGrid;
-  }
-
-  public function setWidgetGrid(?WidgetGrid $widgetGrid): static
-  {
-    $this->widgetGrid = $widgetGrid;
-
-    return $this;
-  }
-
-  public function getCode(): ?string
-  {
-    return $this->code;
-  }
-
-  public function setCode(string $code): static
-  {
-    $this->code = $code;
-
-    return $this;
-  }
-
-  public function getWording(): ?string
-  {
-    return $this->wording;
-  }
-
-  public function setWording(?string $wording): static
-  {
-    $this->wording = $wording;
-
-    return $this;
-  }
-
-  public function getComment(): ?string
-  {
-    return $this->comment;
-  }
-
-  public function setComment(?string $comment): static
-  {
-    $this->comment = $comment;
-
-    return $this;
-  }
-
-  public function getTypeWidget(): ?int
-  {
-    return $this->typeWidget;
-  }
-
-  public function setTypeWidget(int $typeWidget): static
-  {
-    $this->typeWidget = $typeWidget;
-
-    return $this;
-  }
-
-  public function getSubTypeWidget(): ?int
-  {
-    return $this->subTypeWidget;
-  }
-
-  public function setSubTypeWidget(?int $subTypeWidget): static
-  {
-    $this->subTypeWidget = $subTypeWidget;
-
-    return $this;
-  }
-
-  public function getQuery(): ?string
-  {
-    return $this->query;
-  }
-
-  public function setQuery(?string $query): static
-  {
-    $this->query = $query;
-
-    return $this;
-  }
-
-  public function getWidth(): ?float
-  {
-    return $this->width;
-  }
-
-  public function setWidth(?float $width): static
-  {
-    $this->width = $width;
-
-    return $this;
-  }
-
-  public function getHeight(): ?float
-  {
-    return $this->height;
-  }
-
-  public function setHeight(?float $height): static
-  {
-    $this->height = $height;
-
-    return $this;
-  }
-
-  public function getPositionX(): ?float
-  {
-    return $this->positionX;
-  }
-
-  public function setPositionX(?float $positionX): static
-  {
-    $this->positionX = $positionX;
-
-    return $this;
-  }
-
-  public function getPositionY(): ?float
-  {
-    return $this->positionY;
-  }
-
-  public function setPositionY(?float $positionY): static
-  {
-    $this->positionY = $positionY;
-
-    return $this;
-  }
-
-  public function getFontColor(): ?string
-  {
-    return $this->fontColor;
-  }
-
-  public function setFontColor(?string $fontColor): static
-  {
-    $this->fontColor = $fontColor;
-
-    return $this;
-  }
-
-  public function getBackgroundColor(): ?string
-  {
-    return $this->backgroundColor;
-  }
-
-  public function setBackgroundColor(?string $backgroundColor): static
-  {
-    $this->backgroundColor = $backgroundColor;
-
-    return $this;
-  }
-
   public function applyModel(mixed $widgetModel, bool $creating = true): void
   {
     if ($creating) {
@@ -343,7 +215,12 @@ class Widget
     return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">M</button>';
   }
 
-  public static function getWidgetModelFromType(int $typeWidget): ?WidgetModel
+  /**
+   * Get the Type Model (TopArtistsModel, TopAlbumsModel, TopTracksModel) from given typeWidget
+   * @param int $typeWidget
+   * @return AbstractTypeModel|null
+   */
+  public static function getTypeModelFrom(int $typeWidget): ?AbstractTypeModel
   {
     $model = null;
     switch ($typeWidget) {
@@ -377,9 +254,59 @@ class Widget
     return $model;
   }
 
-  public function getWidgetModel(): ?WidgetModel
+  /**
+   * Get the Type Model (TopArtistsModel, TopAlbumsModel, TopTracksModel) from the instance
+   * @return AbstractTypeModel|null
+   */
+  public function getTypeModel(): ?AbstractTypeModel
   {
-    return self::getWidgetModelFromType($this->typeWidget, $this->subTypeWidget);
+    return self::getTypeModelFrom($this->getTypeWidget());
+  }
+
+  /**
+   * Get the SubType Model (BarModel, PieModel, DonutModel) from given subTypeWidget
+   * @param int $typeWidget
+   * @return ChartOptions
+   */
+  public static function getSubTypeModelFrom(int $typeWidget): AbstractSubTypeModel
+  {
+    $model = null;
+    switch ($typeWidget) {
+
+      /** ********************* */
+      /**    BAR    */
+      /** ********************* */
+      case Widget::SUB_TYPE__BAR:
+
+        $model = new BarModel();
+        break;
+
+      /** ********************* */
+      /**        */
+      /** ********************* */
+      case '  ':
+
+        break;
+
+      /** ********************* */
+      /**        */
+      /** ********************* */
+      case ' ':
+
+        break;
+
+    }
+
+    return $model;
+  }
+
+  /**
+   * Get the SubType Model (BarModel, PieModel, DonutModel) from the instance
+   * @return AbstractSubTypeModel|null
+   */
+  public function getSubTypeModel(): ?AbstractSubTypeModel
+  {
+    return self::getSubTypeModelFrom($this->getSubTypeWidget());
   }
 
 

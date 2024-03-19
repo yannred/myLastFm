@@ -7,6 +7,9 @@ namespace App\Data;
  */
 class ChartOptions
 {
+  /** @var int Ratio : 1 for square, 2 for rectangle */
+  public int $aspectRatio;
+
   /** @var bool Set visibility of legend chart */
   public bool $legendVisible;
 
@@ -25,6 +28,7 @@ class ChartOptions
 
   public function __construct()
   {
+    $this->aspectRatio = 1;
     $this->legendVisible = true;
     $this->indexAxis = 'x';
     $this->ticksVisibleX = true;

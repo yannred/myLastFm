@@ -96,7 +96,9 @@ class ChartController extends AbstractController
     $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart($widget);
     $widget->setSubTypeWidget(Widget::SUB_TYPE__BAR);
 
-//    $options->indexAxis = "y";
+    //TODO : Get options from somewhere ...
+
+    $options->aspectRatio = 2;
     $options->ticksVisibleY = false;
     $chart->optionsAttribute = $this->statisticsService->getOptionsForChart($widget, $options);
 

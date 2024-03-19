@@ -288,14 +288,19 @@ class StatisticsService
   public function getOptionsForChart(Widget $widget, ?ChartOptions $chartOptions = null): array
   {
     $options = [];
-    $chartOptions = $chartOptions ?? new chartOptions();
+
+    //if chartOptions is null, we use the subTypeModel of the widget for get it
+    if ($chartOptions === null){
+      $model = $widget->getSubTypeModel();
+      $chartOptions = $model->getChartOptions();
+    }
 
     switch ($widget->getSubTypeWidget()) {
 
       case Widget::SUB_TYPE__BAR :
 
         $options = [
-          'aspectRatio' => 1,
+          'aspectRatio' => $chartOptions->aspectRatio,
           'scales' => [
             'x' => [
               //Tick is the label of the axis, not of the legend
@@ -338,7 +343,7 @@ class StatisticsService
       case Widget::SUB_TYPE__DONUT :
 
       $options = [
-        'aspectRatio' => 1,
+//        'aspectRatio' => 1,
         'scales' => [
           'x' => [],
           'y' => []
