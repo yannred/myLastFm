@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use App\Data\ChartOptions;
+use App\Data\Statisitc\TypeModel\NativeTypeModel;
 use App\Data\Statisitc\TypeModel\TopAlbumsModel;
 use App\Data\Statisitc\TypeModel\TopArtistsModel;
 use App\Data\Statisitc\TypeModel\TopTracksModel;
 use App\Data\Statisitc\TypeModel\AbstractTypeModel;
 use App\Data\SubTypeModel\AbstractSubTypeModel;
 use App\Data\SubTypeModel\BarModel;
+use App\Data\SubTypeModel\ScrobblesPerMonthAnnualyModel;
+use App\Data\SubTypeModel\TotalScrobblesPerYearModel;
 use App\Repository\WidgetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,7 +31,8 @@ class Widget
   ];
 
   //Subtype reserved for NATIVE TYPE
-  const SUB_TYPE_NATIVE__SCROBBLES_ANNUALY = 1;
+  const SUB_TYPE_NATIVE__SCROBBLES_PER_MONTH_ANNUALY = 1;
+  const SUB_TYPE_NATIVE__TOTAL_SCROBBLES_PER_YEAR = 2;
 
   const SUB_TYPE__BAR = 1;
   const SUB_TYPE__PIE = 2;
@@ -229,7 +233,6 @@ class Widget
       /**    TOP ARTIST TYPE    */
       /** ********************* */
       case Widget::TYPE__TOP_ARTISTS:
-
         $model = new TopArtistsModel();
         break;
 
@@ -237,7 +240,6 @@ class Widget
       /**    TOP ARTIST TYPE    */
       /** ********************* */
       case Widget::TYPE__TOP_ALBUMS:
-
         $model = new TopAlbumsModel();
         break;
 
@@ -245,8 +247,11 @@ class Widget
       /**    TOP TRACKS TYPE    */
       /** ********************* */
       case Widget::TYPE__TOP_TRACKS:
-
         $model = new TopTracksModel();
+        break;
+
+      case Widget::TYPE__NATIVE:
+        $model = new NativeTypeModel();
         break;
 
     }
@@ -266,33 +271,49 @@ class Widget
   /**
    * Get the SubType Model (BarModel, PieModel, DonutModel) from given subTypeWidget
    * @param int $typeWidget
-   * @return ChartOptions
+   * @return AbstractSubTypeModel
    */
-  public static function getSubTypeModelFrom(int $typeWidget): AbstractSubTypeModel
+  public static function getSubTypeModelFrom(int $subTypeWidget, int $typeWidget = 0): AbstractSubTypeModel
   {
     $model = null;
+
+    if ($typeWidget == Widget::TYPE__NATIVE) {
+      $model = self::getSubTypeModelForNativeWidget($subTypeWidget);
+    } else {
+      switch ($subTypeWidget) {
+
+        case Widget::SUB_TYPE__BAR:
+          $model = new BarModel();
+          break;
+
+
+
+
+      }
+    }
+
+
+    return $model;
+  }
+
+  /**
+   * Get the SubType Model (ScrollblesPerMonthAnnualyModel, TotalScrobblesPerYearModel) from given subTypeWidget
+   * Used only for native widgets
+   * @param int $typeWidget
+   * @return AbstractSubTypeModel
+   */
+  public static function getSubTypeModelForNativeWidget(int $typeWidget): AbstractSubTypeModel
+  {
+    $model = null;
+
     switch ($typeWidget) {
 
-      /** ********************* */
-      /**    BAR    */
-      /** ********************* */
-      case Widget::SUB_TYPE__BAR:
-
-        $model = new BarModel();
+      case Widget::SUB_TYPE_NATIVE__SCROBBLES_PER_MONTH_ANNUALY :
+        $model = new ScrobblesPerMonthAnnualyModel();
         break;
 
-      /** ********************* */
-      /**        */
-      /** ********************* */
-      case '  ':
-
-        break;
-
-      /** ********************* */
-      /**        */
-      /** ********************* */
-      case ' ':
-
+      case Widget::SUB_TYPE_NATIVE__TOTAL_SCROBBLES_PER_YEAR :
+        $model = new TotalScrobblesPerYearModel();
         break;
 
     }
@@ -306,7 +327,7 @@ class Widget
    */
   public function getSubTypeModel(): ?AbstractSubTypeModel
   {
-    return self::getSubTypeModelFrom($this->getSubTypeWidget());
+    return self::getSubTypeModelFrom($this->getSubTypeWidget(), $this->getTypeWidget());
   }
 
 

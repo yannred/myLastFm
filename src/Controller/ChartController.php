@@ -45,9 +45,10 @@ class ChartController extends AbstractController
 
   /**
    * Return the json data for build the chart
+   * Used for the user statistic
    * @param int $id
    * @return Response
-   * @throws Exception
+   * @throws \Exception
    */
   #[Route('/myPage/chart/{id}', name: 'app_chart', methods: ['GET'])]
   public function getChart(int $id): Response
@@ -63,9 +64,13 @@ class ChartController extends AbstractController
       $chart->id = $widget->getId();
       $chart->type = $widget->getChartType();
       $chart->title = $widget->getWording();
-      $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart($widget);
-      $chart->optionsAttribute = $this->statisticsService->getOptionsForChart($widget);
-      $chart->callbackOptions = $this->statisticsService->getCallbackOptionsForChart($widget);
+
+      $this->statisticsService->setWidget($widget);
+      $this->statisticsService->setModels();
+
+      $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart();
+      $chart->optionsAttribute = $this->statisticsService->getOptionsForChart();
+      $chart->callbackOptions = $this->statisticsService->getCallbackOptionsForChart();
 
       $response->setStatusCode(Response::HTTP_OK);
       $response->setContent(json_encode($chart));
@@ -76,9 +81,11 @@ class ChartController extends AbstractController
 
 
   /**
-   * @param int $subType
+   * Return the json data for build the chart
+   * Used for the native statistic (not saved in the database, not unique for a user)
+   * @param int $subType The id of the native widget (ncanva-{id}) also used as the subType
    * @return Response
-   * @throws Exception
+   * @throws \Exception
    */
   #[Route('/myPage/chart/native/{subType}', name: 'app_chart_native', methods: ['GET'])]
   public function getNativeChart(int $subType): Response
@@ -90,17 +97,16 @@ class ChartController extends AbstractController
 
     $widget->setTypeWidget(Widget::TYPE__NATIVE);
     $widget->setSubTypeWidget($subType);
+    $this->statisticsService->setWidget($widget);
+    $this->statisticsService->setModels();
 
+    //the widget is defined by the subType and saved in the id attribute (ncanva-{id})
     $chart->id = $subType;
-    $chart->type = "bar";
-    $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart($widget);
-    $widget->setSubTypeWidget(Widget::SUB_TYPE__BAR);
 
-    //TODO : Get options from somewhere ...
+    $chart->type = $this->statisticsService->getChartTypeForNativeWidget();
+    $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart();
 
-    $options->aspectRatio = 2;
-    $options->ticksVisibleY = false;
-    $chart->optionsAttribute = $this->statisticsService->getOptionsForChart($widget, $options);
+    $chart->optionsAttribute = $this->statisticsService->getOptionsForChart();
 
     $response->setStatusCode(Response::HTTP_OK);
     $response->setContent(json_encode($chart));

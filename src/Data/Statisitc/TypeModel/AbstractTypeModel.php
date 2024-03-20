@@ -4,6 +4,11 @@ namespace App\Data\Statisitc\TypeModel;
 
 use App\Entity\Widget;
 
+/**
+ * Class for the type model of a widget
+ * Can be extended to create different types
+ * Mainly used to set the SQL query and the widget parameters (width etc) of a user statistic
+ */
 abstract class AbstractTypeModel
 {
   protected string $code;

@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Data\SubTypeModel;
-class BarModel extends AbstractSubTypeModel
+
+class TotalScrobblesPerYearModel extends AbstractSubTypeModel
 {
   public function __construct(){
     parent::__construct();
@@ -9,5 +10,7 @@ class BarModel extends AbstractSubTypeModel
     $this->chartType = 'bar';
 
     $this->chartOptions->legendVisible = false;
+    $this->chartOptions->indexAxis = 'y';
+    $this->chartOptions->aspectRatio = 2;
   }
 }

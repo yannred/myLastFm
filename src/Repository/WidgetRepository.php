@@ -140,4 +140,31 @@ class WidgetRepository extends ServiceEntityRepository
     return $result->fetchAllAssociative();
   }
 
+  /**
+   * @param User $user
+   * @return array[]
+   * @throws \Doctrine\DBAL\Exception
+   */
+  public function getTotalScrobblesPerYear(User $user): array
+  {
+    $sql = '
+      SELECT
+          YEAR(FROM_UNIXTIME(scrobble.timestamp)) as "year",
+          COUNT(scrobble.id) as count
+      FROM
+          scrobble
+      WHERE
+          scrobble.user_id = :userId
+      GROUP BY
+          year
+      ORDER BY
+          year;
+    ';
+
+    $query = $this->getEntityManager()->getConnection()->prepare($sql);
+    $result = $query->executeQuery(['userId' => $user->getId()]);
+
+    return $result->fetchAllAssociative();
+  }
+
 }
