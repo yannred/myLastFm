@@ -103,6 +103,8 @@ class ChartController extends AbstractController
     //the widget is defined by the subType and saved in the id attribute (ncanva-{id})
     $chart->id = $subType;
 
+    //TODO : Case where no scorbbles are found ?
+
     $chart->type = $this->statisticsService->getChartTypeForNativeWidget();
     $chart->dataAttribute = $this->statisticsService->getDataAttributeForChart();
 

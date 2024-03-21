@@ -1,0 +1,58 @@
+<div style="width: 500px;" class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
+  {# Tab Titiles #}
+  <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800 dark:text-red-600" id="defaultTab" data-tabs-toggle="#defaultTabContent" role="tablist">
+    <li class="me-2">
+      <button id="about-tab" data-tabs-target="#week" type="button" role="tab" aria-controls="week" aria-selected="true" class="inline-block p-2 text-red-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-red-500">
+{#      <button id="about-tab" data-tabs-target="#week" type="button" role="tab" aria-controls="week" aria-selected="true" class="inline-block p-2 text-red-600 rounded-ss-lg hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:!text-red-800">#}
+        This Week
+      </button>
+    </li>
+    <li class="me-2">
+      <button id="services-tab" data-tabs-target="#month" type="button" role="tab" aria-controls="month" aria-selected="false" class="inline-block p-2 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300">
+        This Month
+      </button>
+    </li>
+    <li class="me-2">
+      <button id="statistics-tab" data-tabs-target="#year" type="button" role="tab" aria-controls="year" aria-selected="false" class="inline-block p-2 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-300">
+        This Year
+      </button>
+    </li>
+  </ul>
+
+  {# Content #}
+  <div id="defaultTabContent">
+
+    <div class="hidden p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800" id="week" role="tabpanel" aria-labelledby="week-tab">
+      <h2 class="mb-3 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+        Total Scrobbles This Week
+      </h2>
+      <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">
+        {% include 'base/html/progress.html.twig' with {'percent': '75', 'label' : '24 scrobbles', 'percentText' : ''} %}
+        {% include 'base/html/progress.html.twig' with {'percent': '100', 'label' : '35 scrobbles last week', 'percentText' : ''} %}
+      </p>
+    </div>
+
+    <div class="hidden p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800" id="month" role="tabpanel" aria-labelledby="month-tab">
+      <h2 class="mb-3 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+        Total Scrobbles This Month
+      </h2>
+      <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">
+        {% include 'base/html/progress.html.twig' with {'percent': '100', 'label' : '150 scrobbles', 'percentText' : ''} %}
+        {% include 'base/html/progress.html.twig' with {'percent': '75', 'label' : '100 scrobbles last week', 'percentText' : ''} %}
+      </p>
+    </div>
+
+    <div class="hidden p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800" id="year" role="tabpanel" aria-labelledby="year-tab">
+      <h2 class="mb-3 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+        Total Scrobbles This Year
+      </h2>
+      <p class="text-sm mb-3 text-gray-500 dark:text-gray-400">
+        {% include 'base/html/progress.html.twig' with {'percent': '100', 'label' : '1050 scrobbles', 'percentText' : ''} %}
+        {% include 'base/html/progress.html.twig' with {'percent': '52', 'label' : '500 scrobbles last week', 'percentText' : ''} %}
+      </p>
+    </div>
+
+
+  </div>
+</div>
