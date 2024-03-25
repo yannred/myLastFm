@@ -17,7 +17,7 @@
 
   <div>
     <p><span class="mx-4"><a href="{{ path('app_my_tracks') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top tracks', 'withLink': true } %}</a></span></p>
-    {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': scrobbles, 'tbodyUrl' : myTracksTbodyUrl} %}
+    {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': tracks, 'tbodyUrl' : myTracksTbodyUrl} %}
   </div>
 
   <div>

@@ -30,17 +30,30 @@ class ScrobbleRepository extends ServiceEntityRepository
   }
 
 
+  /**
+   * Get query for pagination
+   * @return Query
+   */
   public function paginationQuery(): Query
   {
     $user = $this->security->getUser();
 
-    return $this->createQueryBuilder('s')
-      ->where('s.user = :user')
+    return $this->createQueryBuilder('scrobble')
+      ->select('scrobble, user, lovedTrack, track_loved, track_loved.id as loved_track')
+      ->leftJoin('scrobble.user', 'user')
+      ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = scrobble.track')
+      ->leftJoin('lovedTrack.track', 'track_loved')
+      ->where('scrobble.user = :user')
       ->setParameter('user', $user->getId())
-      ->orderBy('s.timestamp', 'DESC')
+      ->orderBy('scrobble.timestamp', 'DESC')
       ->getQuery();
   }
 
+  /**
+   * Get query for pagination with filters
+   * @param SearchBarData $dataSearchBar
+   * @return Query
+   */
   public function paginationFilteredQuery(SearchBarData $dataSearchBar): Query
   {
     $user = $this->security->getUser();
@@ -63,49 +76,51 @@ class ScrobbleRepository extends ServiceEntityRepository
       $albumFilter = true;
     }
 
-    $query = $this->createQueryBuilder('s')
-      ->select('s, t, u , lt')
-      ->join('s.track', 't')
-      ->join('s.user', 'u')
-      ->leftJoin('u.lovedTrack', 'lt', 'WITH', 'lt.id = t.id')
-      ->where('s.user = :user')
+    $query = $this->createQueryBuilder('scrobble')
+      ->select('scrobble, track, user, lovedTrack, track_loved, track_loved.id as loved_track')
+      ->join('scrobble.track', 'track')
+      ->join('scrobble.user', 'user')
+      ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = track.id')
+      ->leftJoin('lovedTrack.track', 'track_loved')
+
+      ->where('scrobble.user = :user')
       ->setParameter('user', $user->getId())
-      ->orderBy('s.timestamp', 'ASC');
+      ->orderBy('scrobble.timestamp', 'ASC');
 
     if ($dateFilter) {
       $query
-        ->andWhere('s.timestamp BETWEEN :from AND :to')
+        ->andWhere('scrobble.timestamp BETWEEN :from AND :to')
         ->setParameter('from', $dataSearchBar->from->getTimestamp())
         ->setParameter('to', $dataSearchBar->to->getTimestamp());
     }
 
     if ($trackFilter) {
       $query
-        ->andWhere('t.name LIKE :trackName')
+        ->andWhere('track.name LIKE :trackName')
         ->setParameter('trackName', '%' . trim($dataSearchBar->track) . '%');
     }
 
     if ($artistFilter) {
       $query
-        ->join('t.artist', 'artist')
+        ->join('track.artist', 'artist')
         ->andWhere('artist.name LIKE :artistName')
         ->setParameter('artistName', '%' . trim($dataSearchBar->artist) . '%');
     }
 
     if ($albumFilter) {
       $query
-        ->join('t.album', 'album')
+        ->join('track.album', 'album')
         ->andWhere('album.name LIKE :albumName')
         ->setParameter('albumName', '%' . trim($dataSearchBar->album) . '%');
     }
 
-    $query->orderBy('s.timestamp', 'DESC');
+    $query->orderBy('scrobble.timestamp', 'DESC');
 
     return $query->getQuery();
   }
 
   /**
-   * Get total scrobble imported for a user
+   * Get total scrobbles imported for a user
    * @param UserInterface $user
    * @return mixed
    */
