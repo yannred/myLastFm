@@ -1,7 +1,7 @@
-# My Last Fm
+# Music Intelligence Fm
 
 ## Description
-MylastFm est une application web utilisant l'API Last.fm et permettant de gérer vos scrobbles et vos statistiques.
+Music Intelligence Fm est une application web utilisant l'API Last.fm et permettant de gérer vos scrobbles et vos statistiques.
 
 >*Last.fm c'est quoi ?*
 >>[Last.fm](https://last.fm) est une plateforme en ligne qui propose de multiples services liés à l'écoute et aux bibliothèques musicales.
@@ -13,10 +13,10 @@ La fonctionnalité principale de Last.fm est le scrobbling.
 > à Last.fm et ajouté à votre profil musical.  
   
 
->*Et My Last Fm là de-dans ?*
->>#### My Last Fm propose de compléter les fonctionnalités de Last.fm en permettant une gestion complète de ses statistiques.
+>*Et Music Intelligence Fm là dedans ?*
+>>#### Music Intelligence Fm propose de compléter les fonctionnalités de Last.fm en permettant une gestion complète de ses statistiques.
 
-## Features of My Last Fm
+## Features of Music Intelligence Fm
 
 - Import des scrobbles à partir de Last.fm.
 - Synchronisation quotidienne des scrobbles.

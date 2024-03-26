@@ -1,4 +1,4 @@
-# My Last Fm
+# Music Intelligence Fm
 
 ## Description
 MylastFm is a web application using the Last.fm API and allowing to manage your scrobbles and your statistics.
@@ -10,10 +10,10 @@ The main functionalitie of Last.fm is scrobbling
 >*What is Scrobbling ?*
 >>Scrobbling is the process of tracking the music you listen to. The Last.fm app on your computer or phone will scrobble the music you play on your device (streaming app like Spotify or media player like Winamp). This means that when you listen to a song, the name of the song is sent to Last.fm and added to your music profile.
 
->*And about My Last Fm ?*
->>#### My Last Fm offers to complete the Last.fm features by allowing complete management of its own statistics.
+>*And about Music Intelligence Fm ?*
+>>#### Music Intelligence Fm offers to complete the Last.fm features by allowing complete management of its own statistics.
 
-## Features of My Last Fm
+## Features of Music Intelligence Fm
 
 - Import scrobbles from Last.fm.
 - Daily scrobble synchronization (in progress...).
