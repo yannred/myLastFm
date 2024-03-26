@@ -26,7 +26,7 @@ select:checked{
 
 /* sub content frame */
 .sub-content{
-  @apply relative w-full max-w-lg h-full md:h-auto bg-gray-700 rounded-lg border border-red-900;
+  @apply relative w-full max-w-lg h-full md:h-auto bg-gray-500 rounded-lg border border-red-900;
 }
 
 /* sub content frame */
@@ -121,6 +121,11 @@ select:checked{
   border: 1px rgb(75 85 99) solid !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
+}
+
+.txt-2xs{
+  font-size: 0.37rem; /* 6px */
+  line-height: 0.5rem; /* 8px */
 }
 
 /*******************************/

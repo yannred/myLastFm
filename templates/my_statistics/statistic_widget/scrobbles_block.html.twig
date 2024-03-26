@@ -1,0 +1,60 @@
+<div class="flex">
+  <div class="m-0.5">
+    {% include 'my_statistics/statistic_widget/scrobbles_per_day.html.twig' with {
+      'value' : 74,
+      'subText': 'versus 21 (2023)',
+      'progress' : '4%',
+      'progressType' : 'up'
+    } %}
+  </div>
+  <div class="m-0.5">
+    {% include 'my_statistics/statistic_widget/scrobbles_per_week.html.twig' with {
+        'value' : 451,
+        'subText': 'versus 254 (2023)',
+        'progress' : '12%',
+        'progressType' : 'up'
+      } %}
+  </div>
+  <div class="m-0.5">
+    {% include 'my_statistics/statistic_widget/scrobbles_per_month.html.twig' with {
+        'value' : 1559,
+        'subText': 'versus 943 (2023)',
+        'progress' : '47%',
+        'progressType' : 'down'
+      } %}
+  </div>
+</div>
+<div class="flex">
+  <div class="m-0.5">
+    {% include 'my_statistics/statistic_widget/max_scrobble_per_day.twig' with {
+      'value' : 79,
+      'caption': 'april 2019',
+      'subText': '2nd : febr. 2024 (120)'
+    } %}
+  </div>
+  <div class="m-0.5">
+    {% include 'my_statistics/statistic_widget/max_scrobble_per_week.twig' with {
+        'value' : 310,
+        'caption': 'oct. 2017',
+        'subText': '2nd : may 2022 (299)'
+      } %}
+  </div>
+  <div class="m-0.5">
+    {% include 'my_statistics/statistic_widget/max_scrobble_per_month.twig' with {
+        'value' : 459,
+        'caption': 'sept. 2019',
+        'subText': '2nd : march 2020 (419)'
+      } %}
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+</div>

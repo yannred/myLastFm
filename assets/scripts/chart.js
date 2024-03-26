@@ -1,29 +1,39 @@
 /**
- * Load all the charts in the page
+ * Load all charts in page
+ * @param nativeChart boolean to know if we load native charts only
  */
-function loadCharts() {
+function loadCharts(nativeChart = false) {
   console.log('Loading charts ...');
 
-  const charts = $('.widget-canvas');
+  let chartClass = ".widget-canvas";
+  if (nativeChart) {
+    chartClass = ".native-widget-canvas";
+  }
+
+  const charts = $(chartClass);
   console.log('charts', charts);
 
   for (let chart of charts) {
-    loadChart(chart);
+    loadChart(chart, nativeChart);
   }
 }
 
 
 /**
  * Load a chart from the server (API call) and create it in the page
- * @param chart
+ * @param chart Chart node
+ * @param nativeChart boolean to know if the chart is a native chart
  */
-function loadChart(chart) {
+function loadChart(chart, nativeChart = false) {
 
   const chartId = chart.id.split('-')[1];
   console.log('Loading chart id : ' + chartId);
 
   let url = '/myPage/chart/' + chartId;
-  // url = url + '?XDEBUG_SESSION_START=1';
+  if (nativeChart) {
+    url = '/myPage/chart/native/' + chartId;
+  }
+  url = url + '?XDEBUG_SESSION_START=1';
   console.log('url : ' + url);
 
   const myHeaders = new Headers();
@@ -41,13 +51,10 @@ function loadChart(chart) {
     .then((chartParametersFromApi) => {
 
       console.log('chartParametersFromApi', chartParametersFromApi);
-      console.log('datasets test', chartParametersFromApi.dataAttribute.datasets);
 
-      //dataSets contains the labels of the chart
-      const dataLabel = chartParametersFromApi.data.map(row => row.label)
 
-      //dataFormated contains the data of the chart
-      const dataFormated = chartParametersFromApi.data.map(row => row.data)
+      const dataLabel = chartParametersFromApi.dataAttribute.labels
+      const datasets = chartParametersFromApi.dataAttribute.datasets
 
       //Json for generate the chart
       const temporaryChartDefinition = {
@@ -57,11 +64,15 @@ function loadChart(chart) {
       }
 
       // Set the callback functions for the chart options
-      const chartDefinition = getJsonChartDefinition(temporaryChartDefinition, chartParametersFromApi, dataLabel, dataFormated);
+      const chartDefinition = getJsonChartDefinition(temporaryChartDefinition, chartParametersFromApi, dataLabel, datasets);
       console.log('final chart definition', chartDefinition);
 
       // remove spinner
-      const chartNode = document.getElementById('canvas-' + chartParametersFromApi.id)
+      let chartId = 'canvas-' + chartParametersFromApi.id;
+      if (nativeChart) {
+        chartId = 'ncanvas-' + chartParametersFromApi.id;
+      }
+      const chartNode = document.getElementById(chartId)
       removeSpinner(chartNode)
 
 
