@@ -1,10 +1,13 @@
-# Music Intelligence Fm
+# ![Music Intelligence Fm logo](/assets/imgs/music-intelligence-fm.png)
+
+- French version of this README is available [here](README.fr.md).
+- Demo will be available soon [here](http://perdu.com/).
 
 ## Description
-MylastFm is a web application using the Last.fm API and allowing to manage your scrobbles and your statistics.
+Music Intelligence Fm is a web application using the Last.fm API and allowing to manage your scrobbles and your statistics.
 
 >*What is Last.fm ?*
->>[Last.fm ](https://last.fm) is a music-oriented website and online platform that serves multiple purposes related to music discovery, recommendation, and social interaction.
+>>Last.fm is a music-oriented website and online platform that serves multiple purposes related to music discovery, recommendation, and social interaction.
 The main functionalitie of Last.fm is scrobbling
 
 >*What is Scrobbling ?*
@@ -21,7 +24,7 @@ The main functionalitie of Last.fm is scrobbling
 - Top artists, albums, tracks, genres.
 - Customizable statistics dashboard.
 
-Upcoming features:
+Upcoming features :
 
 - Favorites management.
 - Playlist management.

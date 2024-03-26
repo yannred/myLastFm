@@ -1,10 +1,13 @@
-# Music Intelligence Fm
+# ![Music Intelligence Fm logo](/assets/imgs/music-intelligence-fm.png)
+
+- La version anglaise de ce README est disponible [ici](README.md).
+- Une démo sera bientôt disponible [ici](http://perdu.com/).
 
 ## Description
 Music Intelligence Fm est une application web utilisant l'API Last.fm et permettant de gérer vos scrobbles et vos statistiques.
 
 >*Last.fm c'est quoi ?*
->>[Last.fm](https://last.fm) est une plateforme en ligne qui propose de multiples services liés à l'écoute et aux bibliothèques musicales.
+>>Last.fm est une plateforme en ligne qui propose de multiples services liés à l'écoute et aux bibliothèques musicales.
 La fonctionnalité principale de Last.fm est le scrobbling.
 
 >*Qu'est-ce que le Scrobbling ?*
@@ -24,7 +27,7 @@ La fonctionnalité principale de Last.fm est le scrobbling.
 - Top artistes, albums, morceaux, genres.
 - Dashboard de statistiques personnalisable.
 
-Features à venir:
+Features à venir :
 
 - Gestion des favoris.
 - Gestion des playlists.
