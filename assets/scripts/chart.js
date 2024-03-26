@@ -3,14 +3,14 @@
  * @param nativeChart boolean to know if we load native charts only
  */
 function loadCharts(nativeChart = false) {
-  console.log('Loading charts ...');
+  console.log('Loading charts (nativeChart : ' + nativeChart ? 'true' : 'false' + ') ...');
 
-  let chartClass = ".widget-canvas";
+  let chartClass = "widget-canvas";
   if (nativeChart) {
-    chartClass = ".native-widget-canvas";
+    chartClass = "native-widget-canvas";
   }
 
-  const charts = $(chartClass);
+  const charts = document.getElementsByClassName(chartClass);
   console.log('charts', charts);
 
   for (let chart of charts) {
@@ -73,7 +73,7 @@ function loadChart(chart, nativeChart = false) {
         chartId = 'ncanvas-' + chartParametersFromApi.id;
       }
       const chartNode = document.getElementById(chartId)
-      removeSpinner(chartNode)
+      nativeChart ? removeSpinnerForNativeStatistic(chartNode) : removeSpinnerForUserStatistic(chartNode)
 
 
       // Create the chart
@@ -90,10 +90,19 @@ function loadChart(chart, nativeChart = false) {
  * Remove the spinner from the chart
  * @param chartNode
  */
-function removeSpinner(chartNode) {
+function removeSpinnerForUserStatistic(chartNode) {
   const parentNewChart = chartNode.parentElement
   parentNewChart.style.height = "95%"
   const spinner = parentNewChart.previousElementSibling
+  spinner.classList.add('widget-spinner-hide')
+}
+
+/**
+ * Remove the spinner from the native statistic chart
+ * @param chartNode
+ */
+function removeSpinnerForNativeStatistic(chartNode) {
+  const spinner = chartNode.previousElementSibling
   spinner.classList.add('widget-spinner-hide')
 }
 
