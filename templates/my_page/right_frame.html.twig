@@ -1,42 +1,26 @@
 <div>
   {% include 'my_page/user_card.html.twig' %}
 </div>
+<br />
 
-<br /><br />
-
-
-
-
-{% include 'my_statistics/statistic_widget/compare_scrobbles_per_period.html.twig' %}
-
-<br /><br />
-
-
-
-
+<div style="" class="">
+  {% include 'my_statistics/statistic_widget/compare_scrobbles_per_period.html.twig' %}
+</div>
+<br />
 
 <div style="height: 200px;" class="native-widget-container">
-    {% include 'my_statistics/statistic_widget/horizontalSkeletonWidget.html.twig' with {'height': 180} %}
+    {% include 'my_statistics/statistic_widget/verticalSkeletonWidget.html.twig' with {'height': 180} %}
   <canvas style="" class="native-widget-canvas" id="ncanvas-1"></canvas>
 </div>
+<br />
 
-<br /><br />
+<div style="height: 200px;" class="native-widget-container">
+  {% include 'my_statistics/statistic_widget/horizontalSkeletonWidget.html.twig' with {'height': 180} %}
+  <canvas style="" class="native-widget-canvas" id="ncanvas-2"></canvas>
+</div>
+<br />
 
-
-
-
-
-
-
-
-
-{#<div style="width: 100%; max-height: 150px; border: black 1px solid">#}
-{#  <canvas style="" class="native-widget-canvas" id="ncanvas-2"></canvas>#}
-{#</div>#}
-
-{#<br /><br />#}
-
-{#{% include 'my_statistics/statistic_widget/scrobbles_block.html.twig' %}#}
-
-{#<br /><br />#}
-
+<div style="height: 200px;" class="native-widget-container">
+  {% include 'my_statistics/statistic_widget/scrobbles_block.html.twig' %}
+</div>
+<br />
