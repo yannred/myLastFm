@@ -1,6 +1,6 @@
 <div class="flex">
   <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/scrobbles_per_day.html.twig' with {
+    {% include 'my_statistics/statistic_widget/average_scrobbles_daily.html.twig' with {
       'value' : 74,
       'subText': 'versus 21 (2023)',
       'progress' : '4%',
@@ -8,7 +8,7 @@
     } %}
   </div>
   <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/scrobbles_per_week.html.twig' with {
+    {% include 'my_statistics/statistic_widget/average_scrobbles_weekly.html.twig' with {
         'value' : 451,
         'subText': 'versus 254 (2023)',
         'progress' : '12%',
@@ -16,7 +16,7 @@
       } %}
   </div>
   <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/scrobbles_per_month.html.twig' with {
+    {% include 'my_statistics/statistic_widget/average_scrobbles_monthly.html.twig' with {
         'value' : 1559,
         'subText': 'versus 943 (2023)',
         'progress' : '47%',
